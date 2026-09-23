@@ -853,6 +853,9 @@ Smart filtering component with toggle-able menu for managing active filters and 
           "q-avatar": {
             "color": "primary",
             "textColor": "white"
+          },
+          "q-spinner": {
+            "color": "primary"
           }
         }
       },
@@ -1370,6 +1373,9 @@ Page that contain table with search and filtering capabilities.
           "q-avatar": {
             "color": "primary",
             "textColor": "white"
+          },
+          "q-spinner": {
+            "color": "primary"
           }
         }
       },
@@ -1845,6 +1851,9 @@ A full example showing all CatalogUI components configured together:
             "q-avatar": {
               "color": "primary",
               "textColor": "white"
+            },
+            "q-spinner": {
+              "color": "primary"
             }
           }
         },
