@@ -77,6 +77,12 @@ const tickedNodeKeys = ref<string[]>([]);
 const items = ref<TreeNode<Record<string, unknown>>[]>([]);
 const { Notify } = useNotify();
 
+/**
+ * Flat nodes indexed by key. The panel has already fetched every node, so each emitted filter
+ * value carries its node as the resolved item and the chip has nothing left to request.
+ */
+const nodesByKey = new Map<string, Record<string, unknown>>();
+
 const uiProps = {
   searchButton: ui<LinidQBtnProps>(localUiNamespace, 'q-btn'),
 };
@@ -87,7 +93,7 @@ const uiProps = {
 function onSearch() {
   const filterValues: LinidFilterValue[] = tickedNodeKeys.value.map(
     (key: string) => {
-      return new LinidFilterValue(false, '', key);
+      return new LinidFilterValue(false, '', key, nodesByKey.get(key));
     }
   );
   emit('search', {
@@ -142,6 +148,8 @@ async function loadData() {
     if (!nodes || nodes.length === 0) {
       return;
     }
+
+    nodes.forEach((node) => nodesByKey.set(String(node[props.idKey]), node));
 
     const root = nodes.find((item) => {
       const parentValue: unknown[] | null = item[props.parentsKey] as unknown[];

@@ -149,6 +149,19 @@ describe('TreeSearchFilterPanel', () => {
       });
     });
 
+    it('should attach the loaded node to each emitted value as its item', async () => {
+      mockHttpClient.get.mockResolvedValue({
+        data: buildPage(mockNodesData, { last: true }),
+      });
+      await wrapper.vm.loadData();
+      wrapper.vm.tickedNodeKeys = [CHILD1_ID];
+
+      await wrapper.vm.onSearch();
+
+      const event = wrapper.emitted('search')[0][0];
+      expect(event.values[0].item).toEqual(mockNodesData[1]);
+    });
+
     it('should emit search event with empty array when no nodes ticked', async () => {
       wrapper.vm.tickedNodeKeys = [];
       await wrapper.vm.onSearch();
