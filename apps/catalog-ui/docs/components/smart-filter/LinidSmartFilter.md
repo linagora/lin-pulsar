@@ -110,6 +110,63 @@ Each applied filter is displayed as a chip in the search field. The chip shows t
 
 **All chips disappear at once** when the user clicks the × displayed at the right of the search field. That icon is only rendered while at least one filter is active, and clicking it emits `update:filters` with an empty array without opening the menu.
 
+### Dynamic value labels
+
+A filter holding identifiers — an organizational unit id, for instance — would display raw UUIDs in its chip. When its definition carries `dynamicLabelOptions`, the chip resolves the item behind each value and displays it with the `value` translation key, whose named parameters are the fields of the resolved item.
+
+By default a single request resolves every value at once, against an endpoint returning a collection:
+
+```json
+{
+  "name": "organizationalUnitId",
+  "type": "tree",
+  "dynamicLabelOptions": {
+    "url": "/organizational-units?id={{ values | join('|') }}",
+    "responseItemsPath": "content",
+    "valuePath": "id"
+  }
+}
+```
+
+With `multipleRequests: true`, one request is performed per value, against an endpoint returning a single item — the whole response — so `responseItemsPath` and `valuePath` are not used:
+
+```json
+{
+  "name": "organizationalUnitId",
+  "type": "tree",
+  "dynamicLabelOptions": {
+    "multipleRequests": true,
+    "url": "/organizational-units/{{ value }}"
+  }
+}
+```
+
+Both work with the matching translation:
+
+```json
+{
+  "[INSTANCE_ID]": {
+    "LinidSmartFilter": {
+      "LinidFilterChip": {
+        "organizationalUnitId": {
+          "value": "{name}"
+        }
+      }
+    }
+  }
+}
+```
+
+- Only the values missing an item are requested: a chip whose values are all resolved performs no request, and a resolved item is never requested again as long as its `LinidFilterValue` instance lives. Favorites rebuild their filters whenever the user preferences change, so their chips resolve their values again.
+- The tree panel already holds every node, so it attaches each ticked node to its value as the item: applying a tree filter displays the labels without any request.
+- With `multipleRequests` left to its default, a single request sized to the number of unresolved values resolves them all at once. The next pages are requested while the API answers `206 Partial Content`, the page is not marked `last` and the page resolved at least one value — the API answers `206` whenever the collection spans several pages, including on the last one, so the status alone is not enough. With `multipleRequests: true`, one request per value is performed and the whole response becomes the item.
+- The values are percent-encoded before the template is rendered, and the query string of the rendered URL is encoded again afterwards: a `&`, `=` or `|` inside a value cannot be confused with the syntax around it, and the `|` separator joining the values reaches the API as `%7C`, which servers such as Tomcat require. Write the template with the separator as-is — a `| urlencode` filter would encode the already encoded values a second time.
+- A spinner replaces each unresolved value while the requests are running.
+- A value that cannot be resolved — no `dynamicLabelOptions`, no `value` translation key, or a failed request — falls back to its raw value, so the chip always stays readable.
+- Only the top-level fields of the item can be displayed: vue-i18n rejects dotted paths such as `{item.name}` in a placeholder.
+
+The `dynamicLabelOptions` contract itself is documented in the corelib `docs/filters.md`.
+
 ---
 
 ## **Example Usage**
@@ -267,6 +324,7 @@ The component uses the LinID design system through `useUiDesign()` and applies p
 | `{uiNamespace}.linid-smart-filter.iconMenuOpen`                                       | `q-icon`         | Right dropdown icon styling (menu closed)                                                                   |
 | `{uiNamespace}.linid-smart-filter.linid-filter-chip.[FILTER]`                         | `q-chip`         | Configures the chip container that displays the selected values associated with a specific filter field.    |
 | `{uiNamespace}.linid-smart-filter.linid-filter-chip.[FILTER]`                         | `q-avatar`       | Configures the avatar section of the chip, which displays the filter field name before the selected values. |
+| `{uiNamespace}.linid-smart-filter.linid-filter-chip.[FILTER]`                         | `q-spinner`      | Configures the spinner displayed in place of a value while its item is being resolved.                      |
 | `{uiNamespace}.linid-smart-filter.linid-filter-panel.header`                          | `q-icon`         | Icon displayed in the panel title bar                                                                       |
 | `{uiNamespace}.linid-smart-filter.linid-filter-panel.header`                          | `q-separator`    | Horizontal separator below the panel title                                                                  |
 | `{uiNamespace}.linid-smart-filter.linid-filter-panel.content`                         | `q-list`         | Filter navigation list styling                                                                              |
@@ -333,6 +391,7 @@ The component uses scoped i18n with the following translation keys:
 | `[INSTANCE_ID].LinidSmartFilter.suffix`                                        | Input suffix (optional)                                   | Input suffix           | -          |
 | `[INSTANCE_ID].LinidSmartFilter.LinidFilterChip.[FILTER].type`                 | Filter type label (optional, default filter.name)         | Filter label           | -          |
 | `[INSTANCE_ID].LinidSmartFilter.LinidFilterChip.[FILTER].separator`            | Separator between filter values                           | Filter separator label | -          |
+| `[INSTANCE_ID].LinidSmartFilter.LinidFilterChip.[FILTER].value`                | Label of a resolved value (optional)                      | Filter value label     | Item keys  |
 | `[INSTANCE_ID].LinidSmartFilter.LinidFilterPanel.title`                        | Panel section title                                       | Header title           | -          |
 | `[INSTANCE_ID].LinidSmartFilter.LinidFilterPanel.columnFilter.[columnName]`    | Column filter label                                       | Column filter label    | -          |
 | `[INSTANCE_ID].LinidSmartFilter.TextSearchFilterPanel.inputLabel`              | Text input label (optional, defaults to empty string)     | QInput label           | -          |
@@ -398,7 +457,8 @@ Example:
       "LinidFilterChip": {
         "[FILTER]": {
           "type": "Filter name",
-          "separator": "or"
+          "separator": "or",
+          "value": "{name}"
         }
       },
       "LinidFilterPanel": {
