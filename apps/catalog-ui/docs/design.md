@@ -34,6 +34,7 @@ The examples in this document use placeholders that should be replaced with actu
 | `[FILTER]`                        | The filter name for LinidSmartFilter instance             | `insertDate`, `email`                                   |
 | `[FILTER_TYPE]`                   | The filter type for LinidFilterPanel icon configuration   | `text`, `date`, `number`, `list`, `tree`                |
 | `[SECTION_KEY]`                   | The section key of a generic details page                 | `identity`, `audit`                                     |
+| `[STATUS]`                        | The row import status of a generic import page            | `READY`, `ERROR`                                        |
 
 ---
 
@@ -1055,6 +1056,53 @@ Generic page to edit an existing entity.
 
 ---
 
+### GenericImportPage
+
+Generic page to import entities from CSV files.
+
+**Namespace:** `{uiNamespace}` (direct, no suffix)
+
+```json
+{
+  "[INSTANCE_ID]": {
+    "import-card": {
+      "q-card": {},
+      "files-section": {
+        "q-card-section": {}
+      },
+      "table-section": {
+        "q-card-section": {}
+      }
+    },
+    "load-files-field": {
+      "q-file": { "outlined": true }
+    },
+    "imported-data-table": {
+      "q-table": { "flat": true },
+      "q-spinner": {},
+      "expand-button-open": {
+        "q-btn": { "flat": true }
+      },
+      "expand-button-close": {
+        "q-btn": { "flat": true }
+      },
+      "delete-button": {
+        "q-btn": { "flat": true, "color": "negative" }
+      },
+      "[STATUS]": {
+        "q-badge": { "color": "primary" }
+      }
+    },
+    "buttons-card": {},
+    "dropdown-button": {}
+  }
+}
+```
+
+`[STATUS]` is one of `READY`, `IMPORTING`, `IMPORTED`, `ERROR`. See [ButtonsCard](#buttonscard) and [DropdownButton](#dropdownbutton) for their keys.
+
+---
+
 ### GenericTablePage
 
 Generic page to display entity inside table.
@@ -1836,6 +1884,38 @@ A full example showing all CatalogUI components configured together:
     "generic-entity-table": {
       "q-table": { "dense": true, "bordered": true, "flat": true }
     }
+  },
+  "[GENERIC_IMPORT_PAGE_ID]": {
+    "import-card": {
+      "q-card": {},
+      "files-section": {
+        "q-card-section": {}
+      },
+      "table-section": {
+        "q-card-section": {}
+      }
+    },
+    "load-files-field": {
+      "q-file": { "outlined": true }
+    },
+    "imported-data-table": {
+      "q-table": { "flat": true },
+      "q-spinner": {},
+      "expand-button-open": {
+        "q-btn": { "flat": true }
+      },
+      "expand-button-close": {
+        "q-btn": { "flat": true }
+      },
+      "delete-button": {
+        "q-btn": { "flat": true, "color": "negative" }
+      },
+      "[STATUS]": {
+        "q-badge": { "color": "primary" }
+      }
+    },
+    "buttons-card": {},
+    "dropdown-button": {}
   },
   "[INSTANCE_ID]": {
     "[PAGE_NAME]": {

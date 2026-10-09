@@ -70,6 +70,9 @@ These implementations are intended to simplify module configuration when no cust
 - 🌐 **EmptyI18n** — Default i18n configuration with no translations
   → Exposed as: `catalogUI/EmptyI18n`
 
+- 🌐 **ImportPageI18n** — Default i18n configuration for Import page
+  → Exposed as: `catalogUI/ImportPageI18n`
+
 ### **Generic Page Modules**
 
 `catalogUI` also provides generic page module building blocks used to structure page-based federated modules.
