@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.138](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.137...v0.2.138) (2026-10-12)
+
+
+### Features
+
+* **catalog-ui:** resolve dynamic filter items in LinidFilterChip ([f2cd5bb](https://github.com/linagora/linid-im-front-community-plugins/commit/f2cd5bb08edcbe9005c0946722d9c9f8ca28ca9a))
+
+
+### Bug Fixes
+
+* **catalog-ui:** keep the filter chip inside the filter field ([05d8114](https://github.com/linagora/linid-im-front-community-plugins/commit/05d81142ec31eff1e2e2ea3ce5295208b4525182)), closes [#302](https://github.com/linagora/linid-im-front-community-plugins/issues/302)
+* **catalog-ui:** restore filter definitions on rebuilt filters ([4f8fdcf](https://github.com/linagora/linid-im-front-community-plugins/commit/4f8fdcf6c91df814ae68617aba4943920829184b))
+
 ### [0.2.137](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.136...v0.2.137) (2026-10-09)
 
 
