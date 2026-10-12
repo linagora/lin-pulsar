@@ -159,7 +159,8 @@ The `header-actions` zone receives a `uiNamespace` scoped to `.buttons-card` and
 `.ButtonsCard`, so injected buttons share the design and translations of the card header actions.
 
 In the `columns.{name}` zones, `entity` is the rendered row, not the entity owning the card that
-the other zones receive.
+the other zones receive. For a column configured with `multiItem` and `itemPath` (see
+[GenericEntityTable](../table/GenericEntityTable.md)), `entity` is the current array item instead.
 
 See [Generic Pages](../../generic-pages.md) for how to register a component in a zone.
 

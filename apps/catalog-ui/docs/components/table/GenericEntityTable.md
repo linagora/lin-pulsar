@@ -212,6 +212,63 @@ See [Generic Pages](../../generic-pages.md) for how to register a component in a
 
 ---
 
+## **🧩 Multi-Item Columns**
+
+A column can render its zone once per item of an array contained in the row entity, instead of
+once per row. Each rendered instance receives the current item as its `entity` prop, so existing
+zone components are reused without modification. The other zone props (`uiNamespace`, `i18nScope`)
+are unchanged.
+
+| Key         | Description                                                                             |
+| ----------- | --------------------------------------------------------------------------------------- |
+| `multiItem` | Whether the column zone is rendered once per item of the array resolved from `itemPath` |
+| `itemPath`  | Dotted path to the array, resolved against `{ entity: row }` (e.g. `entity.data.items`) |
+
+The resolved value must be an array: when the path does not resolve or resolves to a non-array
+value, the column renders nothing. Multi-item columns require a registered column zone; without
+one, the standard cell rendering applies. Items are passed as-is and may be primitives (e.g. an
+array of labels), so zone components must not assume `entity` is an object.
+
+### **Example**
+
+Given the following row entity:
+
+```json
+{
+  "id": "123",
+  "data": {
+    "items": [{ "name": "Item A" }, { "name": "Item B" }]
+  }
+}
+```
+
+The column and zone configuration:
+
+```json
+{
+  "columns": [
+    {
+      "name": "items",
+      "label": "Items",
+      "field": "id",
+      "multiItem": true,
+      "itemPath": "entity.data.items"
+    }
+  ],
+  "zones": [
+    {
+      "zone": "moduleUsers.columns.items",
+      "plugin": "myModule/ItemChip"
+    }
+  ]
+}
+```
+
+The `myModule/ItemChip` component is rendered twice in the cell: first with
+`entity = { "name": "Item A" }`, then with `entity = { "name": "Item B" }`.
+
+---
+
 ## **🎨 UI Customization**
 
 The component uses the LinID design system through `useUiDesign()` and applies
