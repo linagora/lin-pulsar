@@ -174,6 +174,44 @@ unchanged.
 
 ---
 
+## **🧩 Column Zones**
+
+Each column exposes a zone named `${uiNamespace}.columns.${columnName}`. When at least one
+component is registered in that zone, the cell content is rendered by the zone instead of the
+default column configuration. Columns without a registered zone keep the standard rendering, so
+existing tables work without modification.
+
+The zone receives the following props, plus any props declared when registering the component:
+
+| Prop          | Description            |
+| ------------- | ---------------------- |
+| `entity`      | The row entity         |
+| `uiNamespace` | The table UI namespace |
+| `i18nScope`   | The table i18n scope   |
+
+Column zones are rendered both by the default table body and by the built-in body used with the
+`actions` scope. Parent rendering always takes precedence over a zone: a `body-cell-{columnName}`
+slot overrides the zone of that column, the `actions` scope overrides a zone registered on the
+`table_actions` column, and a `body` slot overrides the whole table body, including column zones.
+
+See [Generic Pages](../../generic-pages.md) for how to register a component in a zone.
+
+### **Example Configuration**
+
+```json
+{
+  "zones": [
+    {
+      "zone": "moduleUsers.columns.status",
+      "plugin": "myModule/StatusBadge",
+      "props": { "dense": true }
+    }
+  ]
+}
+```
+
+---
+
 ## **🎨 UI Customization**
 
 The component uses the LinID design system through `useUiDesign()` and applies
@@ -343,4 +381,3 @@ This is typically where you:
 ## **📌 Notes**
 
 - Uses `row-key="id"` by default (override with `rowKey`)
-- No custom cells, slots, actions, or events yet

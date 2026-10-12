@@ -149,13 +149,17 @@ Extra actions can be added around the built-in buttons, without replacing them:
 The same extension points are also exposed as zones, so other modules can inject actions without owning the template.
 Zone names are prefixed by `${uiNamespace}.generic-editable-table-card`:
 
-| Zone                                                        | Props                                                               | Description                                |
-| ----------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------ |
-| `${uiNamespace}.generic-editable-table-card.header-actions` | `entity`, `instanceId`, `uiNamespace`, `i18nScope`                  | Before the add button                      |
-| `${uiNamespace}.generic-editable-table-card.row-actions`    | `entity`, `row`, `rowKey`, `instanceId`, `uiNamespace`, `i18nScope` | Before the per-row edit and delete buttons |
+| Zone                                                        | Props                                                               | Description                                                                                                 |
+| ----------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `${uiNamespace}.generic-editable-table-card.header-actions` | `entity`, `instanceId`, `uiNamespace`, `i18nScope`                  | Before the add button                                                                                       |
+| `${uiNamespace}.generic-editable-table-card.row-actions`    | `entity`, `row`, `rowKey`, `instanceId`, `uiNamespace`, `i18nScope` | Before the per-row edit and delete buttons                                                                  |
+| `${uiNamespace}.generic-editable-table-card.columns.{name}` | `entity`, `uiNamespace`, `i18nScope`                                | Replaces the cell content of the column `{name}` (see [GenericEntityTable](../table/GenericEntityTable.md)) |
 
 The `header-actions` zone receives a `uiNamespace` scoped to `.buttons-card` and an `i18nScope` scoped to
 `.ButtonsCard`, so injected buttons share the design and translations of the card header actions.
+
+In the `columns.{name}` zones, `entity` is the rendered row, not the entity owning the card that
+the other zones receive.
 
 See [Generic Pages](../../generic-pages.md) for how to register a component in a zone.
 

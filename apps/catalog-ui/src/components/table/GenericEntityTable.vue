@@ -55,6 +55,24 @@
     </template>
 
     <template
+      v-for="name in zoneColumnNames"
+      :key="name"
+      #[`body-cell-${name}`]="cellProps"
+    >
+      <q-td
+        :props="cellProps"
+        :data-cy="`entity-cell-${name}_${cellProps.key}`"
+      >
+        <LinidZoneRenderer
+          :zone="columnZone(name)"
+          :entity="cellProps.row"
+          :ui-namespace="props.uiNamespace"
+          :i18n-scope="props.i18nScope"
+        />
+      </q-td>
+    </template>
+
+    <template
       v-if="hasActionScope && !$slots.body"
       #body="bodyProps"
     >
@@ -68,7 +86,7 @@
           :props="bodyProps"
           :data-cy="`entity-cell-${col.name}_${bodyProps.key}`"
         >
-          <template v-if="col.name === 'table_actions'">
+          <template v-if="col.name === ACTIONS_COLUMN_NAME">
             <div
               class="flex justify-end q-gutter-x-sm generic-entity-table--actions"
               :data-cy="`entity-actions_${bodyProps.key}`"
@@ -79,6 +97,15 @@
                 :row-key="bodyProps.key"
               />
             </div>
+          </template>
+
+          <template v-else-if="zoneColumnNames.includes(col.name)">
+            <LinidZoneRenderer
+              :zone="columnZone(col.name)"
+              :entity="bodyProps.row"
+              :ui-namespace="props.uiNamespace"
+              :i18n-scope="props.i18nScope"
+            />
           </template>
 
           <template v-else>
@@ -94,6 +121,8 @@
 import {
   getNestedValue,
   type LinidQTableProps,
+  LinidZoneRenderer,
+  useLinidZoneStore,
   useScopedI18n,
   useUiDesign,
   useValueFormatter,
@@ -102,6 +131,9 @@ import { computed, useSlots } from 'vue';
 import type { GenericEntityTableProps } from '../../types/genericEntityTable';
 
 const ACTION_SCOPE_NAME = 'actions';
+
+/** Name of the column hosting the actions scope. */
+const ACTIONS_COLUMN_NAME = 'table_actions';
 
 const props = withDefaults(defineProps<GenericEntityTableProps>(), {
   rowKey: 'id',
@@ -114,6 +146,31 @@ const { t, translateOrDefault } = useScopedI18n(
 const { ui } = useUiDesign();
 const { formatValue } = useValueFormatter();
 const slots = useSlots();
+const linidZoneStore = useLinidZoneStore();
+
+/**
+ * Returns the zone identifier hosting the custom rendering of a column.
+ * @param name - The column name.
+ * @returns The zone identifier.
+ */
+const columnZone = (name: string) => `${props.uiNamespace}.columns.${name}`;
+
+/**
+ * Names of the columns rendered through a registered column zone. Parent
+ * rendering takes precedence: a column whose `body-cell-*` slot is provided
+ * keeps the parent rendering, and the actions column keeps the actions scope
+ * when it is provided.
+ */
+const zoneColumnNames = computed(() =>
+  props.columns
+    .map((column) => column.name)
+    .filter(
+      (name) =>
+        !slots[`body-cell-${name}`] &&
+        !(name === ACTIONS_COLUMN_NAME && slots[ACTION_SCOPE_NAME]) &&
+        linidZoneStore.hasZoneEntries(columnZone(name))
+    )
+);
 
 const uiProps = ui<LinidQTableProps>(
   `${props.uiNamespace}.generic-entity-table`,
