@@ -36,7 +36,21 @@ import type { ModulePageOptions } from './ModulePageOptions';
  * Extends Quasar's QTableColumn with additional properties for formatting.
  */
 export interface GenericTableColumn
-  extends QTableColumn, FormatterConfiguration {}
+  extends QTableColumn, FormatterConfiguration {
+  /**
+   * Whether the column zone is rendered once per item of the array resolved
+   * from `itemPath`, each instance receiving the item as its `entity` prop
+   * instead of the row.
+   */
+  multiItem?: boolean;
+
+  /**
+   * Dotted path to the array rendered by a multi-item column, resolved
+   * against `{ entity: row }` (e.g. `entity.data.items`). A value that does
+   * not resolve to an array renders nothing.
+   */
+  itemPath?: string;
+}
 
 /**
  * Configuration options for a generic table page.

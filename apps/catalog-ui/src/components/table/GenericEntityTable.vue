@@ -64,8 +64,10 @@
         :data-cy="`entity-cell-${name}_${cellProps.key}`"
       >
         <LinidZoneRenderer
+          v-for="(item, index) in cellEntities.get(cellProps.key)?.[name] ?? []"
+          :key="index"
           :zone="columnZone(name)"
-          :entity="cellProps.row"
+          :entity="item"
           :ui-namespace="props.uiNamespace"
           :i18n-scope="props.i18nScope"
         />
@@ -101,8 +103,12 @@
 
           <template v-else-if="zoneColumnNames.includes(col.name)">
             <LinidZoneRenderer
+              v-for="(item, index) in cellEntities.get(bodyProps.key)?.[
+                col.name
+              ] ?? []"
+              :key="index"
               :zone="columnZone(col.name)"
-              :entity="bodyProps.row"
+              :entity="item"
               :ui-namespace="props.uiNamespace"
               :i18n-scope="props.i18nScope"
             />
@@ -171,6 +177,47 @@ const zoneColumnNames = computed(() =>
         linidZoneStore.hasZoneEntries(columnZone(name))
     )
 );
+
+/**
+ * Resolves the key of a row, as QTable does with the `rowKey` prop.
+ * @param row - The row entity.
+ * @returns The row key value.
+ */
+const resolveRowKey = (row: Record<string, unknown>) =>
+  typeof props.rowKey === 'function' ? props.rowKey(row) : row[props.rowKey];
+
+/**
+ * Entities rendered by the column zones, keyed by row key then by column
+ * name. A single-item column renders the row itself; a multi-item column
+ * renders each item of the array resolved from `itemPath` against
+ * `{ entity: row }`, and a value that is not an array renders nothing.
+ */
+const cellEntities = computed(() => {
+  const entitiesByRow = new Map<unknown, Record<string, unknown[]>>();
+  const zoneNames = new Set(zoneColumnNames.value);
+
+  for (const row of props.rows) {
+    const entitiesByColumn: Record<string, unknown[]> = {};
+
+    for (const column of props.columns) {
+      if (!zoneNames.has(column.name)) {
+        continue;
+      }
+
+      if (!column.multiItem) {
+        entitiesByColumn[column.name] = [row];
+        continue;
+      }
+
+      const items = getNestedValue({ entity: row }, column.itemPath ?? '');
+      entitiesByColumn[column.name] = Array.isArray(items) ? items : [];
+    }
+
+    entitiesByRow.set(resolveRowKey(row), entitiesByColumn);
+  }
+
+  return entitiesByRow;
+});
 
 const uiProps = ui<LinidQTableProps>(
   `${props.uiNamespace}.generic-entity-table`,

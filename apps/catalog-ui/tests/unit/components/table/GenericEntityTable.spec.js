@@ -174,6 +174,90 @@ describe('Test component: GenericEntityTable', () => {
     });
   });
 
+  describe('Test computed: cellEntities', () => {
+    const row = {
+      id: '123',
+      data: { items: [{ name: 'Item A' }, { name: 'Item B' }] },
+    };
+
+    /**
+     * Mounts the component with a single column and the multi-item row.
+     * @param column - Column configuration merged into the base column.
+     * @returns The component wrapper.
+     */
+    function mountWithColumn(column = {}) {
+      return shallowMount(GenericEntityTable, {
+        props: {
+          ...defaultProps,
+          rows: [row],
+          columns: [{ name: 'items', label: 'Items', field: 'id', ...column }],
+        },
+      });
+    }
+
+    it('should map each row to itself for a regular zone column', () => {
+      mockHasZoneEntries.mockReturnValue(true);
+
+      wrapper = mountWithColumn();
+
+      expect(wrapper.vm.cellEntities.get('123')).toEqual({
+        items: [row],
+      });
+    });
+
+    it('should ignore the columns rendered without a zone', () => {
+      wrapper = mountWithColumn();
+
+      expect(wrapper.vm.cellEntities.get('123')).toEqual({});
+    });
+
+    it('should map a multi-item column to the items resolved from the path', () => {
+      mockHasZoneEntries.mockReturnValue(true);
+
+      wrapper = mountWithColumn({
+        multiItem: true,
+        itemPath: 'entity.data.items',
+      });
+
+      expect(wrapper.vm.cellEntities.get('123')).toEqual({
+        items: [{ name: 'Item A' }, { name: 'Item B' }],
+      });
+    });
+
+    it('should map no entity when the resolved value is not an array', () => {
+      mockHasZoneEntries.mockReturnValue(true);
+
+      wrapper = mountWithColumn({ multiItem: true, itemPath: 'entity.data' });
+
+      expect(wrapper.vm.cellEntities.get('123')).toEqual({
+        items: [],
+      });
+    });
+
+    it('should map no entity when the path does not resolve', () => {
+      mockHasZoneEntries.mockReturnValue(true);
+
+      wrapper = mountWithColumn({
+        multiItem: true,
+        itemPath: 'entity.missing.items',
+      });
+
+      expect(wrapper.vm.cellEntities.get('123')).toEqual({
+        items: [],
+      });
+    });
+
+    it('should map no entity when the path is not provided', () => {
+      mockHasZoneEntries.mockReturnValue(true);
+
+      wrapper = mountWithColumn({ multiItem: true });
+
+      expect(wrapper.vm.cellEntities.get('123')).toEqual({
+        items: [],
+      });
+    });
+  });
+
   describe('Test computed: columns', () => {
     const plainColumn = { name: 'name', label: 'Name', field: 'name' };
 
