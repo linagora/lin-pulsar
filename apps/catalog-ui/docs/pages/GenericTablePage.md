@@ -267,6 +267,10 @@ The `header.actions` zone is rendered inside the actions card, before the create
 The actions column itself is always rendered. If `enableSeeButton` is set to `false` and no plugin is configured
 for the `row-actions` zone, the column is displayed empty.
 
+The column zones of [`GenericEntityTable`](../components/table/GenericEntityTable.md)
+(`{instanceId}.columns.{name}`) are not available on this page: it overrides the whole table `body`
+slot, which takes precedence over column zones.
+
 ### **Example: per-row update button with table reload**
 
 The `row-actions` zone receives the row through its `entity` prop, so a

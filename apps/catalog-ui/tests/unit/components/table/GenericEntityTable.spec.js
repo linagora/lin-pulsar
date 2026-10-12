@@ -29,6 +29,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import GenericEntityTable from '../../../../src/components/table/GenericEntityTable.vue';
 
 const mockFormatValue = vi.fn(() => 'formatted-value');
+const mockHasZoneEntries = vi.fn(() => false);
 
 vi.mock('@linagora/linid-im-front-corelib', async () => {
   const { getNestedValue } = await vi.importActual(
@@ -36,6 +37,10 @@ vi.mock('@linagora/linid-im-front-corelib', async () => {
   );
   return {
     getNestedValue,
+    LinidZoneRenderer: { name: 'LinidZoneRenderer', template: '<div />' },
+    useLinidZoneStore: () => ({
+      hasZoneEntries: mockHasZoneEntries,
+    }),
     useScopedI18n: () => ({
       t: vi.fn((v) => v),
       translateOrDefault: vi.fn((v) => v),
@@ -76,6 +81,7 @@ describe('Test component: GenericEntityTable', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockHasZoneEntries.mockReturnValue(false);
   });
 
   describe('Test props: rowKey', () => {
@@ -125,6 +131,46 @@ describe('Test component: GenericEntityTable', () => {
       });
 
       expect(wrapper.vm.forwardedSlotNames).toEqual(['top-row']);
+    });
+  });
+
+  describe('Test computed: zoneColumnNames', () => {
+    it('should check the zone of each column against the store', () => {
+      wrapper = mountWithSlots();
+
+      expect(wrapper.vm.zoneColumnNames).toEqual([]);
+      expect(mockHasZoneEntries).toHaveBeenCalledWith(
+        'test-namespace.columns.name'
+      );
+      expect(mockHasZoneEntries).toHaveBeenCalledWith(
+        'test-namespace.columns.table_actions'
+      );
+    });
+
+    it('should include the columns whose zone has registered entries', () => {
+      mockHasZoneEntries.mockImplementation(
+        (zone) => zone === 'test-namespace.columns.name'
+      );
+
+      wrapper = mountWithSlots();
+
+      expect(wrapper.vm.zoneColumnNames).toEqual(['name']);
+    });
+
+    it('should let a parent body-cell slot take precedence over the zone', () => {
+      mockHasZoneEntries.mockReturnValue(true);
+
+      wrapper = mountWithSlots({ 'body-cell-name': '<td />' });
+
+      expect(wrapper.vm.zoneColumnNames).toEqual(['table_actions']);
+    });
+
+    it('should let the actions scope take precedence over a zone on the actions column', () => {
+      mockHasZoneEntries.mockReturnValue(true);
+
+      wrapper = mountWithSlots({ actions: '<button />' });
+
+      expect(wrapper.vm.zoneColumnNames).toEqual(['name']);
     });
   });
 
