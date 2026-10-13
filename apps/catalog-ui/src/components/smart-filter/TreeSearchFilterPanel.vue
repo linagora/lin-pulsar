@@ -78,8 +78,9 @@ const items = ref<TreeNode<Record<string, unknown>>[]>([]);
 const { Notify } = useNotify();
 
 /**
- * Flat nodes indexed by key. The panel has already fetched every node, so each emitted filter
- * value carries its node as the resolved item and the chip has nothing left to request.
+ * Flat nodes indexed by key. The panel has already fetched every node, so when the filter defines
+ * `dynamicLabelOptions` each emitted filter value carries its node as the resolved item and the
+ * chip has nothing left to request.
  */
 const nodesByKey = new Map<string, Record<string, unknown>>();
 
@@ -88,12 +89,18 @@ const uiProps = {
 };
 
 /**
- * Emits a 'search' event with the ticked nodes.
+ * Emits a 'search' event with the ticked nodes. Their items are only populated for a filter with
+ * `dynamicLabelOptions`: they are display information the chip would otherwise have to resolve.
  */
 function onSearch() {
   const filterValues: LinidFilterValue[] = tickedNodeKeys.value.map(
     (key: string) => {
-      return new LinidFilterValue(false, '', key, nodesByKey.get(key));
+      return new LinidFilterValue(
+        false,
+        '',
+        key,
+        props.dynamicLabelOptions ? nodesByKey.get(key) : undefined
+      );
     }
   );
   emit('search', {

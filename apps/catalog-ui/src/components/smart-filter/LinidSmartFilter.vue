@@ -243,6 +243,7 @@ const selectedFilter = computed<LinidFilter | undefined>(() =>
 const currentPanelProps = computed(() => ({
   ...(selectedFilter.value?.options as Record<string, unknown>),
   fieldName: selectedFilter.value?.name,
+  dynamicLabelOptions: selectedFilter.value?.dynamicLabelOptions,
   uiNamespace: localUiNamespace,
   i18nScope: localI18nScope,
 }));

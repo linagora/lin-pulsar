@@ -149,7 +149,10 @@ describe('TreeSearchFilterPanel', () => {
       });
     });
 
-    it('should attach the loaded node to each emitted value as its item', async () => {
+    it('should attach the loaded node as the item of each value when the filter has dynamic label options', async () => {
+      await wrapper.setProps({
+        dynamicLabelOptions: { url: 'http://test.api/nodes?id={{ value }}' },
+      });
       mockHttpClient.get.mockResolvedValue({
         data: buildPage(mockNodesData, { last: true }),
       });
@@ -160,6 +163,19 @@ describe('TreeSearchFilterPanel', () => {
 
       const event = wrapper.emitted('search')[0][0];
       expect(event.values[0].item).toEqual(mockNodesData[1]);
+    });
+
+    it('should leave the item of each value undefined when the filter has no dynamic label options', async () => {
+      mockHttpClient.get.mockResolvedValue({
+        data: buildPage(mockNodesData, { last: true }),
+      });
+      await wrapper.vm.loadData();
+      wrapper.vm.tickedNodeKeys = [CHILD1_ID];
+
+      await wrapper.vm.onSearch();
+
+      const event = wrapper.emitted('search')[0][0];
+      expect(event.values[0].item).toBeUndefined();
     });
 
     it('should emit search event with empty array when no nodes ticked', async () => {
