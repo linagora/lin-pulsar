@@ -229,6 +229,11 @@ The library organizes components by category. For each component, documentation 
 - 🏷️ **StatusBadge** — Reusable badge component that standardizes the display of entity statuses with i18n support and design configuration
   → Documentation is inside: [`StatusBadge.md`](./docs/components/badge/StatusBadge.md)
 
+### **Avatar Components**
+
+- 👤 **EntityAvatar** — Deterministic DiceBear avatar generated from the provided entity, sharing the generation logic of EntityProfilePanel
+  → Documentation is inside: [`EntityAvatar.md`](./docs/components/avatar/EntityAvatar.md)
+
 > More categories and components will be added as the library evolves.
 
 ---

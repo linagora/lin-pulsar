@@ -35,3 +35,24 @@ export interface DiceBearStyleModule {
    */
   default: StyleDefinition;
 }
+
+/**
+ * Configuration for DiceBear avatar generation.
+ */
+export interface AvatarOptions {
+  /**
+   * Array of Nunjucks templates rendered with `{ entity }` and joined to form the avatar seed.
+   * Example: `["{{ entity.uid }}"]` or `["{{ entity.givenName }}", " ", "{{ entity.sn }}"]`.
+   */
+  seed: string[];
+  /**
+   * DiceBear style name, e.g. `"adventurer"`, `"bottts"`, `"lorelei"`.
+   * Must match a style exported by `@dicebear/styles`.
+   */
+  style: string;
+  /**
+   * Style-specific options forwarded to DiceBear (backgroundColor, radius, etc.).
+   * Must be plain, structured-cloneable data: DiceBear deep-clones the object with structuredClone.
+   */
+  styleOptions?: Record<string, unknown>;
+}
