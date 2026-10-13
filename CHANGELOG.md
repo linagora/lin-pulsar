@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.140](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.139...v0.2.140) (2026-10-13)
+
+
+### Features
+
+* **catalog-ui:** add multi-item column support to GenericEntityTable ([6c7b003](https://github.com/linagora/linid-im-front-community-plugins/commit/6c7b003421ad6f008fc2d3fe97cb274aa81c40e6))
+
 ### [0.2.139](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.138...v0.2.139) (2026-10-13)
 
 
