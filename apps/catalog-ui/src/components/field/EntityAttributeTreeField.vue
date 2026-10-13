@@ -84,6 +84,7 @@ import {
 } from '@linagora/linid-im-front-corelib';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { fetchAllPages } from '../../services/paginationService';
+import { useRouteDependencies } from '../../composables/useRouteDependencies';
 import { toTreeNodes } from '../../services/treeService';
 import type {
   AttributeFieldProps,
@@ -157,12 +158,8 @@ const rules = computed(() =>
 /** The context the route template and the dependency paths are both resolved against. */
 const renderContext = computed(() => ({ entity: props.entity }));
 
-/** Whether every declared dependency holds a non-empty value. */
-const areDependenciesSatisfied = computed(() =>
-  settings.value.routeDependencies
-    .map((dependency) => getNestedValue(renderContext.value, dependency))
-    .every(hasValue)
-);
+const { areRouteDependenciesSatisfied: areDependenciesSatisfied } =
+  useRouteDependencies(renderContext, () => settings.value.routeDependencies);
 
 const renderedRoute = computed(() =>
   renderString(settings.value.route, renderContext.value)
@@ -215,24 +212,6 @@ watch(
 );
 
 onBeforeUnmount(() => abortController?.abort());
-
-/**
- * Tells whether a dependency value allows the route to be requested.
- * @param value - The value read at the dependency path.
- * @returns True when the dependency holds a non-empty value.
- */
-function hasValue(value: unknown): boolean {
-  if (value === null || value === undefined) {
-    return false;
-  }
-  if (typeof value === 'string') {
-    return value.trim().length > 0;
-  }
-  if (Array.isArray(value)) {
-    return value.length > 0;
-  }
-  return true;
-}
 
 /**
  * Loads the complete flat node list from the route and builds the tree. A load still in flight

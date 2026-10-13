@@ -73,6 +73,7 @@ import {
 } from '@linagora/linid-im-front-corelib';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { getDynamicListPage } from '../../services/dynamicListService';
+import { useRouteDependencies } from '../../composables/useRouteDependencies';
 import type {
   AttributeFieldProps,
   DynamicListElement,
@@ -149,17 +150,11 @@ const rules = computed(() =>
 /** The context the route template and the dependency paths are both resolved against. */
 const renderContext = computed(() => ({ entity: props.entity }));
 
-/** Whether every declared dependency holds a non-empty value. */
-const areDependenciesSatisfied = computed(() => {
-  const routeDependencies =
-    props.definition.inputSettings?.routeDependencies ?? [];
-
-  const dependencyValues = routeDependencies.map((dependency) =>
-    getNestedValue(renderContext.value, dependency)
+const { areRouteDependenciesSatisfied: areDependenciesSatisfied } =
+  useRouteDependencies(
+    renderContext,
+    () => props.definition.inputSettings?.routeDependencies ?? []
   );
-
-  return dependencyValues.every(hasValue);
-});
 
 const renderedRoute = computed(() =>
   renderString(props.definition.inputSettings?.route ?? '', renderContext.value)
@@ -224,25 +219,6 @@ watch(
 // Leaving the page is one more way for a fetch to become useless: abort it instead of paying for a
 // response nobody will read.
 onBeforeUnmount(cancelFetch);
-
-/**
- * Whether a dependency value is usable to build the route. `null`, `undefined`, blank strings and
- * empty arrays count as missing; every other value, including `0` and `false`, is a value.
- * @param value - The value read at the dependency path.
- * @returns True when the dependency holds a non-empty value.
- */
-function hasValue(value: unknown): boolean {
-  if (value === null || value === undefined) {
-    return false;
-  }
-  if (typeof value === 'string') {
-    return value.trim().length > 0;
-  }
-  if (Array.isArray(value)) {
-    return value.length > 0;
-  }
-  return true;
-}
 
 /**
  * Whether a fetch was replaced while it was awaiting, which makes its outcome no longer applicable.
