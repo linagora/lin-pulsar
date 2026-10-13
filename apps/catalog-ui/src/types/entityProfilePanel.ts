@@ -26,28 +26,8 @@
 
 import type { LinidAttributeConfiguration } from '@linagora/linid-im-front-corelib';
 import type { CommonComponentProps } from './common';
+import type { AvatarOptions } from './diceBear';
 import type { FieldFormatter } from './ModuleGenericDetailsPageOptions';
-
-/**
- * Configuration for DiceBear avatar generation.
- */
-export interface AvatarOptions {
-  /**
-   * Array of Nunjucks templates rendered with `{ entity }` and joined to form the avatar seed.
-   * Example: `["{{ entity.uid }}"]` or `["{{ entity.givenName }}", " ", "{{ entity.sn }}"]`.
-   */
-  seed: string[];
-  /**
-   * DiceBear style name, e.g. `"adventurer"`, `"bottts"`, `"lorelei"`.
-   * Must match a style exported by `@dicebear/styles`.
-   */
-  style: string;
-  /**
-   * Style-specific options forwarded to DiceBear (backgroundColor, radius, etc.).
-   * Must be plain, structured-cloneable data: DiceBear deep-clones the object with structuredClone.
-   */
-  styleOptions?: Record<string, unknown>;
-}
 
 /**
  * Configuration of the avatar image import.

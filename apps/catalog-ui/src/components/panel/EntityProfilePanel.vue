@@ -311,7 +311,6 @@
 </template>
 
 <script setup lang="ts">
-import { Avatar } from '@dicebear/core';
 import type {
   LinidAttributeConfiguration,
   LinidQBtnProps,
@@ -329,17 +328,9 @@ import {
   useUiDesign,
 } from '@linagora/linid-im-front-corelib';
 import type { Subscription } from 'rxjs';
-import {
-  computed,
-  onMounted,
-  onUnmounted,
-  ref,
-  toRaw,
-  watch,
-  watchEffect,
-} from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { loadDiceBearStyle } from '../../services/diceBearLoaderService';
+import { useDiceBearAvatar } from '../../composables/useDiceBearAvatar';
 import type {
   EntityProfilePanelOutputs,
   EntityProfilePanelProps,
@@ -444,7 +435,11 @@ const uiProps = computed(() => ({
   ),
 }));
 
-const diceBearSrc = ref<string | undefined>(undefined);
+/** Generated DiceBear avatar, the displayed image while no stored image loads. */
+const diceBearSrc = useDiceBearAvatar(
+  () => (props.enableAvatar ? props.avatarOptions : undefined),
+  () => props.entity
+);
 const avatarVersion = ref(Date.now());
 const avatarLocationFailed = ref(false);
 
@@ -529,43 +524,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   avatarSubscription?.unsubscribe();
-});
-
-watchEffect(async (onCleanup) => {
-  let cancelled = false;
-  onCleanup(() => {
-    cancelled = true;
-  });
-
-  if (!props.enableAvatar || !props.avatarOptions) {
-    diceBearSrc.value = undefined;
-    return;
-  }
-
-  const { seed, style, styleOptions } = props.avatarOptions;
-
-  try {
-    const renderedSeed = seed
-      .map((template) => renderString(template, { entity: props.entity }))
-      .join('');
-
-    const loadedStyle = await loadDiceBearStyle(style);
-
-    if (cancelled) {
-      return;
-    }
-
-    // DiceBear clones its options with structuredClone, which throws on the reactive
-    // proxies wrapping zone props: hand it the raw object.
-    diceBearSrc.value = new Avatar(loadedStyle, {
-      ...toRaw(styleOptions ?? {}),
-      seed: renderedSeed,
-    }).toDataUri();
-  } catch {
-    if (!cancelled) {
-      diceBearSrc.value = undefined;
-    }
-  }
 });
 
 /**

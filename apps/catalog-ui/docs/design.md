@@ -288,6 +288,29 @@ The status badge renders different styles based on the entity's status value.
 
 ---
 
+### EntityAvatar
+
+Deterministic DiceBear avatar generated from the provided entity.
+
+**Namespace:** `{uiNamespace}.entity-avatar`
+
+```json
+{
+  "[NAMESPACE]": {
+    "entity-avatar": {
+      "q-avatar": { "size": "42px" },
+      "q-icon": { "name": "question_mark", "color": "grey-6" }
+    }
+  }
+}
+```
+
+The avatar size is configured through the `q-avatar` `size` key. The `q-icon` key styles the
+fallback icon displayed when no avatar is generated, for example when no `avatarOptions` is
+provided or the style is unknown.
+
+---
+
 ### DropdownButton
 
 Dropdown action button supporting flat actions and one submenu level.
@@ -2131,6 +2154,10 @@ A full example showing all CatalogUI components configured together:
             }
           }
         }
+      },
+      "entity-avatar": {
+        "q-avatar": { "size": "42px" },
+        "q-icon": { "name": "question_mark", "color": "grey-6" }
       },
       "entity-profile-panel": {
         "q-card": { "flat": true, "bordered": true },
