@@ -187,6 +187,10 @@ export default defineConfig({
           __dirname,
           'src/components/panel/EntityProfilePanel.vue'
         ),
+        './EntityLink': resolve(
+          __dirname,
+          'src/components/link/EntityLink.vue'
+        ),
       },
       shared: {
         vue: {

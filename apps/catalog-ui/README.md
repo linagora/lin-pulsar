@@ -219,6 +219,11 @@ The library organizes components by category. For each component, documentation 
 - ☰ **MenuButton** — Button opening a menu of actions, hosting the other action buttons directly or through a plugin zone
   → Documentation is inside: [`MenuButton.md`](./docs/components/button/MenuButton.md)
 
+### **Link Components**
+
+- 🔗 **EntityLink** — Link whose destination and label are dynamically generated from the provided entity, the destination being rendered from a Nunjucks template such as `/accounts/{{ entity.id }}`
+  → Documentation is inside: [`EntityLink.md`](./docs/components/link/EntityLink.md)
+
 ### **Badge Components**
 
 - 🏷️ **StatusBadge** — Reusable badge component that standardizes the display of entity statuses with i18n support and design configuration
