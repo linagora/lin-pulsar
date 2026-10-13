@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.139](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.138...v0.2.139) (2026-10-13)
+
+
+### Features
+
+* **catalog-ui:** render column zones in GenericEntityTable ([f590cd8](https://github.com/linagora/linid-im-front-community-plugins/commit/f590cd8ff8bae1990949a3c13d90aca5d380c8f0))
+
 ### [0.2.138](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.137...v0.2.138) (2026-10-12)
 
 
