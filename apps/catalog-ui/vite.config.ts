@@ -191,6 +191,10 @@ export default defineConfig({
           __dirname,
           'src/components/link/EntityLink.vue'
         ),
+        './EntityAvatar': resolve(
+          __dirname,
+          'src/components/avatar/EntityAvatar.vue'
+        ),
       },
       shared: {
         vue: {
