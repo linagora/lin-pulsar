@@ -255,6 +255,25 @@ describe('Test component: LinidSmartFilter', () => {
         i18nScope: 'myScope.LinidSmartFilter',
       });
     });
+
+    it('should forward the dynamic label options of the selected filter', () => {
+      const dynamicLabelOptions = { url: '/api/users?id={{ value }}' };
+      const filterWithDynamicLabel = makeFilter(
+        TEXT_FILTER_ID,
+        'username',
+        'text',
+        {},
+        dynamicLabelOptions
+      );
+      const w = mountComponent({
+        options: { filters: [filterWithDynamicLabel] },
+      });
+      w.vm.selectedFilterName = 'username';
+
+      expect(w.vm.currentPanelProps.dynamicLabelOptions).toEqual(
+        dynamicLabelOptions
+      );
+    });
   });
 
   describe('Test function: onSearch', () => {
