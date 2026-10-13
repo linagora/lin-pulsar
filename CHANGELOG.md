@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.141](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.140...v0.2.141) (2026-10-13)
+
+
+### Features
+
+* **catalog-ui:** populate tree filter items only with dynamic labels ([a977585](https://github.com/linagora/linid-im-front-community-plugins/commit/a97758594aa77dc93c7434499e11adea41ea1533))
+
 ### [0.2.140](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.139...v0.2.140) (2026-10-13)
 
 
