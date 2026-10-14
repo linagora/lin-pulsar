@@ -251,12 +251,13 @@ Each active filter is serialized to a query param using `filter.toString()`, key
 
 ## **Zones**
 
-This page exposes all default generic page zones described in the main **Zones** documentation, plus one
-page-specific zone:
+This page exposes all default generic page zones described in the main **Zones** documentation, plus two
+page-specific zones:
 
-| Zone                       | Props                                                               | Description                   |
-| -------------------------- | ------------------------------------------------------------------- | ----------------------------- |
-| `{instanceId}.row-actions` | `entity`, `row`, `rowKey`, `instanceId`, `uiNamespace`, `i18nScope` | Before the per-row See button |
+| Zone                          | Props                                                               | Description                                                                                                            |
+| ----------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `{instanceId}.row-actions`    | `entity`, `row`, `rowKey`, `instanceId`, `uiNamespace`, `i18nScope` | Before the per-row See button                                                                                          |
+| `{instanceId}.columns.{name}` | `entity`, `instanceId`, `uiNamespace`, `i18nScope`                  | Replaces the cell content of the column `{name}` (see [GenericEntityTable](../components/table/GenericEntityTable.md)) |
 
 `entity` and `row` both carry the row data — `entity` is provided for consistency with other zones injecting
 components that expect an `entity` prop (e.g. `GenericEditableTableCard`).
@@ -267,9 +268,11 @@ The `header.actions` zone is rendered inside the actions card, before the create
 The actions column itself is always rendered. If `enableSeeButton` is set to `false` and no plugin is configured
 for the `row-actions` zone, the column is displayed empty.
 
-The column zones of [`GenericEntityTable`](../components/table/GenericEntityTable.md)
-(`{instanceId}.columns.{name}`) are not available on this page: it overrides the whole table `body`
-slot, which takes precedence over column zones.
+The page renders the column zones itself, with the same behavior as the
+[`GenericEntityTable`](../components/table/GenericEntityTable.md) column zones: the zone replaces
+the cell content of the column, `entity` carries the row, and a `multiItem` column renders the zone
+once per item of the array resolved from `itemPath`. In the zones of a `multiItem` column, `entity`
+carries the item instead of the row.
 
 ### **Example: per-row update button with table reload**
 

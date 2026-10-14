@@ -154,6 +154,17 @@
                 />
               </div>
             </template>
+            <template v-else-if="hasColumnZone(col.name)">
+              <LinidZoneRenderer
+                v-for="(item, index) in columnEntities(col, props.row)"
+                :key="index"
+                :zone="columnZone(col.name)"
+                :entity="item"
+                :instance-id="instanceId"
+                :ui-namespace="uiNamespace"
+                :i18n-scope="i18nScope"
+              />
+            </template>
             <template v-else>
               {{ col.value }}
             </template>
@@ -201,6 +212,7 @@ import { useRoute, useRouter } from 'vue-router';
 import ButtonsCard from '../components/card/ButtonsCard.vue';
 import LinidSmartFilter from '../components/smart-filter/LinidSmartFilter.vue';
 import GenericEntityTable from '../components/table/GenericEntityTable.vue';
+import { useColumnZones } from '../composables/useColumnZones';
 import type {
   GenericTableColumn,
   ModuleGenericTablePageOptions,
@@ -260,6 +272,10 @@ const columns = computed<GenericTableColumn[]>(() =>
     ...column,
     label: t(column.label),
   }))
+);
+
+const { columnZone, hasColumnZone, columnEntities } = useColumnZones(
+  () => uiNamespace.value
 );
 const { ui } = useUiDesign();
 const uiProps = computed(() => ({

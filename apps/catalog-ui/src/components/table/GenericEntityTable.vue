@@ -128,12 +128,12 @@ import {
   getNestedValue,
   type LinidQTableProps,
   LinidZoneRenderer,
-  useLinidZoneStore,
   useScopedI18n,
   useUiDesign,
   useValueFormatter,
 } from '@linagora/linid-im-front-corelib';
 import { computed, useSlots } from 'vue';
+import { useColumnZones } from '../../composables/useColumnZones';
 import type { GenericEntityTableProps } from '../../types/genericEntityTable';
 
 const ACTION_SCOPE_NAME = 'actions';
@@ -152,14 +152,9 @@ const { t, translateOrDefault } = useScopedI18n(
 const { ui } = useUiDesign();
 const { formatValue } = useValueFormatter();
 const slots = useSlots();
-const linidZoneStore = useLinidZoneStore();
-
-/**
- * Returns the zone identifier hosting the custom rendering of a column.
- * @param name - The column name.
- * @returns The zone identifier.
- */
-const columnZone = (name: string) => `${props.uiNamespace}.columns.${name}`;
+const { columnZone, hasColumnZone, columnEntities } = useColumnZones(
+  () => props.uiNamespace
+);
 
 /**
  * Names of the columns rendered through a registered column zone. Parent
@@ -174,7 +169,7 @@ const zoneColumnNames = computed(() =>
       (name) =>
         !slots[`body-cell-${name}`] &&
         !(name === ACTIONS_COLUMN_NAME && slots[ACTION_SCOPE_NAME]) &&
-        linidZoneStore.hasZoneEntries(columnZone(name))
+        hasColumnZone(name)
     )
 );
 
@@ -204,13 +199,7 @@ const cellEntities = computed(() => {
         continue;
       }
 
-      if (!column.multiItem) {
-        entitiesByColumn[column.name] = [row];
-        continue;
-      }
-
-      const items = getNestedValue({ entity: row }, column.itemPath ?? '');
-      entitiesByColumn[column.name] = Array.isArray(items) ? items : [];
+      entitiesByColumn[column.name] = columnEntities(column, row);
     }
 
     entitiesByRow.set(resolveRowKey(row), entitiesByColumn);
