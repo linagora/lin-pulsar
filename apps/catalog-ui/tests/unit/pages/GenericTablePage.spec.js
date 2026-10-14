@@ -39,6 +39,7 @@ const mockRoute = {
 
 const mockNotify = vi.fn();
 const mockRouterPush = vi.fn();
+const mockHasZoneEntries = vi.fn(() => false);
 const baseModuleOptions = {
   idKey: 'id',
   creationPagePath: '/new',
@@ -97,6 +98,12 @@ const { MockLinidFilterSet } = vi.hoisted(() => ({
 
 vi.mock('@linagora/linid-im-front-corelib', () => ({
   getEntities: vi.fn(() => Promise.resolve(buildEntityPage())),
+  getNestedValue: (obj, path) =>
+    path.split('.').reduce((acc, key) => acc?.[key], obj),
+  useLinidZoneStore: () => ({
+    hasZoneEntries: mockHasZoneEntries,
+  }),
+  LinidZoneRenderer: { name: 'LinidZoneRenderer', template: '<div />' },
   useScopedI18n: () => ({
     t: vi.fn((v) => v),
     te: vi.fn(() => false),
@@ -206,6 +213,50 @@ describe('Test component: GenericTablePage', () => {
 
       expect(cols[0].label).toBe('ID');
       expect(cols[1].label).toBe('Name');
+    });
+  });
+
+  describe('Test column zones', () => {
+    it('should build the zone name from the page namespace and the column name', () => {
+      expect(wrapper.vm.columnZone('avatar')).toBe(
+        'test-instance-id.columns.avatar'
+      );
+    });
+
+    it('should check the zone entries of the column zone', () => {
+      mockHasZoneEntries.mockReturnValueOnce(true);
+
+      expect(wrapper.vm.hasColumnZone('avatar')).toBe(true);
+      expect(mockHasZoneEntries).toHaveBeenCalledWith(
+        'test-instance-id.columns.avatar'
+      );
+    });
+
+    it('should resolve the row itself for a single-item column', () => {
+      const row = { id: '1', name: 'John' };
+
+      expect(wrapper.vm.columnEntities({ name: 'name' }, row)).toEqual([row]);
+    });
+
+    it('should resolve each item of a multi-item column from its itemPath', () => {
+      const row = { id: '1', roles: [{ code: 'a' }, { code: 'b' }] };
+      const column = {
+        name: 'roles',
+        multiItem: true,
+        itemPath: 'entity.roles',
+      };
+
+      expect(wrapper.vm.columnEntities(column, row)).toEqual(row.roles);
+    });
+
+    it('should resolve nothing when the multi-item path does not hold an array', () => {
+      const column = {
+        name: 'roles',
+        multiItem: true,
+        itemPath: 'entity.roles',
+      };
+
+      expect(wrapper.vm.columnEntities(column, { id: '1' })).toEqual([]);
     });
   });
 
