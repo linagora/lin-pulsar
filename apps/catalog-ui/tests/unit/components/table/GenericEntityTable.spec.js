@@ -30,6 +30,7 @@ import GenericEntityTable from '../../../../src/components/table/GenericEntityTa
 
 const mockFormatValue = vi.fn(() => 'formatted-value');
 const mockHasZoneEntries = vi.fn(() => false);
+const mockUi = vi.fn(() => ({}));
 
 vi.mock('@linagora/linid-im-front-corelib', async () => {
   const { getNestedValue } = await vi.importActual(
@@ -46,7 +47,7 @@ vi.mock('@linagora/linid-im-front-corelib', async () => {
       translateOrDefault: vi.fn((v) => v),
     }),
     useUiDesign: () => ({
-      ui: vi.fn(() => ({})),
+      ui: mockUi,
     }),
     useValueFormatter: () => ({
       formatValue: mockFormatValue,
@@ -82,6 +83,7 @@ describe('Test component: GenericEntityTable', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockHasZoneEntries.mockReturnValue(false);
+    mockUi.mockImplementation(() => ({}));
   });
 
   describe('Test props: rowKey', () => {
@@ -255,6 +257,33 @@ describe('Test component: GenericEntityTable', () => {
       expect(wrapper.vm.cellEntities.get('123')).toEqual({
         items: [],
       });
+    });
+  });
+
+  describe('Test computed: headerIcons', () => {
+    it('should read the q-icon design of each column header under the table namespace', () => {
+      wrapper = mountWithSlots();
+
+      expect(wrapper.vm.headerIcons).toHaveProperty('name');
+      expect(mockUi).toHaveBeenCalledWith(
+        'test-namespace.generic-entity-table.columns.name',
+        'q-icon'
+      );
+      expect(mockUi).toHaveBeenCalledWith(
+        'test-namespace.generic-entity-table.columns.table_actions',
+        'q-icon'
+      );
+    });
+
+    it('should resolve the configured icon props of a column', () => {
+      mockUi.mockImplementation((namespace) =>
+        namespace.endsWith('.columns.name') ? { name: 'sym_o_verified' } : {}
+      );
+
+      wrapper = mountWithSlots();
+
+      expect(wrapper.vm.headerIcons.name).toEqual({ name: 'sym_o_verified' });
+      expect(wrapper.vm.headerIcons.table_actions).toEqual({});
     });
   });
 

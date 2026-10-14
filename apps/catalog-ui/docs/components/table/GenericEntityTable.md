@@ -275,13 +275,35 @@ The component uses the LinID design system through `useUiDesign()` and applies
 props to Quasar's `QTable`:
 
 - **Table props**: `{uiNamespace}.generic-entity-table` → applies to `q-table`
+- **Column header icons**: `{uiNamespace}.generic-entity-table.columns.{columnName}` → applies to
+  the `q-icon` rendered before the column label
 
 Example:
 
 ```typescript
 // For uiNamespace = 'catalogUI'
 // Table: ui('catalogUI.generic-entity-table', 'q-table')
+// Header icon of the "status" column: ui('catalogUI.generic-entity-table.columns.status', 'q-icon')
 ```
+
+A column header icon is only rendered when its design configuration resolves a `name`:
+
+```json
+{
+  "catalogUI": {
+    "generic-entity-table": {
+      "columns": {
+        "status": {
+          "q-icon": { "name": "sym_o_verified" }
+        }
+      }
+    }
+  }
+}
+```
+
+A `header-cell` slot provided by the parent takes precedence over the built-in header rendering,
+including the configured icons.
 
 ---
 

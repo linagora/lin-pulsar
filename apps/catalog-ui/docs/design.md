@@ -164,11 +164,22 @@ Data table for displaying entity lists.
 {
   "[PARENT_NAMESPACE]": {
     "generic-entity-table": {
-      "q-table": { "dense": true, "bordered": true, "flat": true }
+      "q-table": { "dense": true, "bordered": true, "flat": true },
+      "columns": {
+        "[COLUMN_NAME]": {
+          "q-icon": { "name": "sym_o_verified" }
+        }
+      }
     }
   }
 }
 ```
+
+The `columns` section customizes individual column headers, keyed by the column name. The `q-icon`
+key renders an icon before the column label; the icon is only rendered when a `name` resolves, so
+columns without configuration keep the default header. Components hosting the table, such as
+GenericTablePage and GenericEditableTableCard, expose this section under their own
+`generic-entity-table` namespace.
 
 ### GenericTree
 
@@ -1810,7 +1821,12 @@ A full example showing all CatalogUI components configured together:
       }
     },
     "generic-entity-table": {
-      "q-table": { "dense": true, "bordered": true, "flat": true }
+      "q-table": { "dense": true, "bordered": true, "flat": true },
+      "columns": {
+        "[COLUMN_NAME]": {
+          "q-icon": { "name": "sym_o_verified" }
+        }
+      }
     }
   },
   "[INSTANCE_ID]": {

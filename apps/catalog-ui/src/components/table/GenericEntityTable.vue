@@ -55,6 +55,21 @@
     </template>
 
     <template
+      v-if="!$slots['header-cell']"
+      #header-cell="headerProps"
+    >
+      <q-th :props="headerProps">
+        <q-icon
+          v-if="headerIcons[headerProps.col.name]?.name"
+          v-bind="headerIcons[headerProps.col.name]"
+          class="q-mr-xs generic-entity-table--header-icon"
+          :data-cy="`entity-header-icon_${headerProps.col.name}`"
+        />
+        {{ headerProps.col.label }}
+      </q-th>
+    </template>
+
+    <template
       v-for="name in zoneColumnNames"
       :key="name"
       #[`body-cell-${name}`]="cellProps"
@@ -126,6 +141,7 @@
 <script setup lang="ts">
 import {
   getNestedValue,
+  type LinidQIconProps,
   type LinidQTableProps,
   LinidZoneRenderer,
   useScopedI18n,
@@ -211,6 +227,23 @@ const cellEntities = computed(() => {
 const uiProps = ui<LinidQTableProps>(
   `${props.uiNamespace}.generic-entity-table`,
   'q-table'
+);
+
+/**
+ * Design icon props of each column header, read under
+ * `${uiNamespace}.generic-entity-table.columns.${name}`. The icon is only rendered when it
+ * resolves a `name`, so columns without configuration keep the default header.
+ */
+const headerIcons = computed<Record<string, LinidQIconProps>>(() =>
+  Object.fromEntries(
+    props.columns.map((column) => [
+      column.name,
+      ui<LinidQIconProps>(
+        `${props.uiNamespace}.generic-entity-table.columns.${column.name}`,
+        'q-icon'
+      ),
+    ])
+  )
 );
 
 const forwardedSlotNames = computed(() =>
