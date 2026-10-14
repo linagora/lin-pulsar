@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.142](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.141...v0.2.142) (2026-10-14)
+
+
+### Features
+
+* **catalog-ui:** add EntityLink component ([5203c16](https://github.com/linagora/linid-im-front-community-plugins/commit/5203c164938d54fe062529021869a1f6bb2cd40c))
+
 ### [0.2.141](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.140...v0.2.141) (2026-10-13)
 
 
