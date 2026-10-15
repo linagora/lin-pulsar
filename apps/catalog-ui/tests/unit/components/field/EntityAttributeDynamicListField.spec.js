@@ -31,6 +31,7 @@ import EntityAttributeDynamicListField from '../../../../src/components/field/En
 
 const mockUi = vi.fn(() => ({}));
 const mockT = vi.fn((key) => key);
+const mockTranslateOrDefault = vi.fn((defaultValue) => defaultValue);
 
 vi.mock('@linagora/linid-im-front-corelib', async () => {
   const { getNestedValue, setNestedValue } = await vi.importActual(
@@ -43,17 +44,21 @@ vi.mock('@linagora/linid-im-front-corelib', async () => {
       ui: mockUi,
     }),
     useScopedI18n: () => ({
-      translateOrDefault: vi.fn(),
+      translateOrDefault: mockTranslateOrDefault,
       t: mockT,
     }),
     useQuasarRules: () => [vi.fn(), vi.fn(), vi.fn()],
     useNunjucks: () => ({
       renderString: (value, context) =>
-        value.replace(
-          /\{\{\s*([\w.]+)\s*\}\}/g,
-          (_, path) =>
-            path.split('.').reduce((acc, key) => acc?.[key], context) ?? ''
-        ),
+        value.includes('{%')
+          ? (() => {
+              throw new Error('template error');
+            })()
+          : value.replace(
+              /\{\{\s*([\w.]+)\s*\}\}/g,
+              (_, path) =>
+                path.split('.').reduce((acc, key) => acc?.[key], context) ?? ''
+            ),
     }),
   };
 });
@@ -143,6 +148,7 @@ describe('Test component: EntityAttributeDynamicListField', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockTranslateOrDefault.mockImplementation((defaultValue) => defaultValue);
     mockGetDynamicListPage.mockResolvedValue(mockPage);
     mountingOptions = {
       ...initialMountingOptions,
@@ -1050,6 +1056,128 @@ describe('Test component: EntityAttributeDynamicListField', () => {
       ]);
     });
 
+    it('should disable an option when its disabled template renders to true', async () => {
+      mountingOptions.props.definition.inputSettings.optionDisabled =
+        '{{ disabled }}';
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [
+          { label: 'Taken', value: 'taken', disabled: true },
+          { label: 'Free', value: 'free', disabled: false },
+        ],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      wrapper.vm.allOptions = [];
+
+      await wrapper.vm.fetchPage();
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'Taken', value: 'taken', disable: true },
+        { label: 'Free', value: 'free', disable: false },
+      ]);
+    });
+
+    it('should keep an option enabled when its disabled template renders to anything but true', async () => {
+      mountingOptions.props.definition.inputSettings.optionDisabled =
+        '{{ disabled }}';
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [
+          { label: 'Yes', value: 'yes', disabled: 'yes' },
+          { label: 'One', value: 'one', disabled: 1 },
+          { label: 'Unset', value: 'unset' },
+        ],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      wrapper.vm.allOptions = [];
+
+      await wrapper.vm.fetchPage();
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'Yes', value: 'yes', disable: false },
+        { label: 'One', value: 'one', disable: false },
+        { label: 'Unset', value: 'unset', disable: false },
+      ]);
+    });
+
+    it('should expose the edited entity to the disabled template without shadowing the element', async () => {
+      mountingOptions.props.definition.inputSettings.optionDisabled =
+        '{{ entity.ownerId }}';
+      mountingOptions.props.entity = { ownerId: true };
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [
+          { label: 'Plain', value: 'plain' },
+          {
+            label: 'Shadowing',
+            value: 'shadowing',
+            entity: { ownerId: false },
+          },
+        ],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      wrapper.vm.allOptions = [];
+
+      await wrapper.vm.fetchPage();
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'Plain', value: 'plain', disable: true },
+        { label: 'Shadowing', value: 'shadowing', disable: false },
+      ]);
+    });
+
+    it('should never disable the option holding the preset value', async () => {
+      mountingOptions.props.definition.inputSettings.optionDisabled =
+        '{{ disabled }}';
+      mountingOptions.props.entity = { name: 'entity-name', type: 'taken' };
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [
+          { label: 'Taken', value: 'taken', disabled: true },
+          { label: 'Other', value: 'other', disabled: true },
+        ],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      wrapper.vm.allOptions = [];
+
+      await wrapper.vm.fetchPage();
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'Taken', value: 'taken', disable: false },
+        { label: 'Other', value: 'other', disable: true },
+      ]);
+    });
+
+    it('should report a template that fails to render as a fetch error and leave the page to be requested again', async () => {
+      mountingOptions.props.definition.inputSettings.optionDisabled =
+        '{% broken';
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+      await nextTick();
+
+      expect(wrapper.vm.error).toBe('validation.dynamicList.fetchError');
+      expect(wrapper.vm.allOptions).toEqual([]);
+      expect(wrapper.vm.isLoading).toBe(false);
+      expect(wrapper.vm.currentFetch.nextPage).toBe(0);
+      expect(wrapper.vm.currentFetch.hasMore).toBe(true);
+    });
+
+    it('should leave the option without a disabled state when no disabled template is set', async () => {
+      mountingOptions.props.definition.inputSettings.optionValue = '{{ id }}';
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [{ id: 'account-1', label: 'Taken', disabled: true }],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      wrapper.vm.allOptions = [];
+
+      await wrapper.vm.fetchPage();
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'Taken', value: 'account-1' },
+      ]);
+    });
+
     it('should set hasMore based on last page flag', async () => {
       wrapper.vm.currentFetch.hasMore = true;
       mockGetDynamicListPage.mockResolvedValue({
@@ -1096,6 +1224,150 @@ describe('Test component: EntityAttributeDynamicListField', () => {
       await stalePage;
 
       expect(wrapper.vm.error).toBeNull();
+    });
+  });
+
+  describe('Test ref: presetValue', () => {
+    beforeEach(() => {
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+    });
+
+    it('should be initialized with the entity value', async () => {
+      mountingOptions.props.entity.type = 'value1';
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      expect(wrapper.vm.presetValue).toBe('value1');
+    });
+
+    it('should follow a value set from outside the field', async () => {
+      await wrapper.setProps({
+        entity: { name: 'entity-name', type: 'value2' },
+      });
+
+      expect(wrapper.vm.presetValue).toBe('value2');
+      expect(wrapper.vm.localValue).toBe('value2');
+    });
+
+    it('should not follow a value picked in the field once the parent sends it back', async () => {
+      wrapper.vm.localValue = 'value3';
+      wrapper.vm.updateValue();
+      await wrapper.setProps({
+        entity: { name: 'entity-name', type: 'value3' },
+      });
+
+      expect(wrapper.vm.presetValue).toBeNull();
+      expect(wrapper.vm.localValue).toBe('value3');
+    });
+
+    it('should be dropped with the selection when the route changes', async () => {
+      mountingOptions.props.entity = {
+        name: 'entity-name',
+        organizationId: 'org-1',
+        type: 'unit-a',
+      };
+      mountingOptions.props.definition.inputSettings.route =
+        '/api/organizations/{{ entity.organizationId }}/units';
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+      await nextTick();
+      expect(wrapper.vm.presetValue).toBe('unit-a');
+
+      await wrapper.setProps({
+        entity: {
+          name: 'entity-name',
+          organizationId: 'org-2',
+          type: 'unit-a',
+        },
+      });
+      await nextTick();
+
+      expect(wrapper.vm.presetValue).toBeNull();
+    });
+  });
+
+  describe('Test function: refreshOptions', () => {
+    beforeEach(async () => {
+      mountingOptions.props.definition.inputSettings.optionDisabled =
+        '{{ hasItem }}';
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [{ label: 'Value 1', value: 'value1', hasItem: false }],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+      await nextTick();
+      mockGetDynamicListPage.mockClear();
+    });
+
+    it('should render the loaded options again when the entity changes, without any request', async () => {
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [{ label: 'Value 1', value: 'value1', hasItem: true }],
+      });
+      wrapper.vm.loadedElements[0].hasItem = true;
+
+      await wrapper.setProps({ entity: { name: 'renamed' } });
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'Value 1', value: 'value1', disable: true },
+      ]);
+      expect(mockGetDynamicListPage).not.toHaveBeenCalled();
+    });
+
+    it('should keep the placeholder of a value the options do not hold', async () => {
+      await wrapper.setProps({
+        entity: { name: 'entity-name', type: 'missing' },
+      });
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'missing', value: 'missing' },
+        { label: 'Value 1', value: 'value1', disable: false },
+      ]);
+    });
+
+    it('should keep the options as they are when a template fails to render', async () => {
+      await wrapper.setProps({
+        definition: {
+          ...mountingOptions.props.definition,
+          inputSettings: {
+            ...mountingOptions.props.definition.inputSettings,
+            optionDisabled: '{% broken',
+          },
+        },
+      });
+      await wrapper.setProps({ entity: { name: 'renamed' } });
+
+      expect(wrapper.vm.error).toBe('validation.dynamicList.fetchError');
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'Value 1', value: 'value1', disable: false },
+      ]);
+    });
+
+    it('should do nothing while no element is loaded', async () => {
+      wrapper.vm.loadedElements.length = 0;
+      wrapper.vm.allOptions = [];
+
+      await wrapper.setProps({ entity: { name: 'renamed' } });
+
+      expect(wrapper.vm.allOptions).toEqual([]);
+    });
+  });
+
+  describe('Test computed: disabledText', () => {
+    it('should be empty when the field has no disabledText translation', () => {
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      expect(wrapper.vm.disabledText).toBe('');
+      expect(mockTranslateOrDefault).toHaveBeenCalledWith('', 'disabledText');
+    });
+
+    it('should hold the disabledText translation when the field has one', () => {
+      mockTranslateOrDefault.mockImplementation((defaultValue, key) =>
+        key === 'disabledText' ? 'Already assigned' : defaultValue
+      );
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      expect(wrapper.vm.disabledText).toBe('Already assigned');
     });
   });
 

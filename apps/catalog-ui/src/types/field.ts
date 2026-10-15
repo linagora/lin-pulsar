@@ -303,6 +303,8 @@ export interface DynamicListElement {
   label: string;
   /** The stored value used for entity binding. */
   value: string;
+  /** Whether the option is shown but cannot be selected. */
+  disable?: boolean;
 }
 
 /**
@@ -330,17 +332,28 @@ export interface FieldDynamicListSettings extends FieldSettings {
   size?: number;
 
   /**
-   * Nunjucks template rendered with each fetched element as context to build the option label.
-   * Allows the field to consume any paginated entity endpoint (e.g. "{{ lastname }} {{ firstname }}").
-   * When omitted, the element `label` property is used.
+   * Nunjucks template rendered with each fetched element as context, the edited entity being
+   * available as `entity`, to build the option label. Allows the field to consume any paginated
+   * entity endpoint (e.g. "{{ lastname }} {{ firstname }}"). When omitted, the element `label`
+   * property is used.
    */
   optionLabel?: string;
 
   /**
-   * Nunjucks template rendered with each fetched element as context to build the option value
-   * (e.g. "{{ id }}"). When omitted, the element `value` property is used.
+   * Nunjucks template rendered with each fetched element as context, the edited entity being
+   * available as `entity`, to build the option value (e.g. "{{ id }}"). When omitted, the element
+   * `value` property is used.
    */
   optionValue?: string;
+
+  /**
+   * Nunjucks template rendered with each fetched element as context, the edited entity being
+   * available as `entity` (e.g. "{{ disabled }}" or "{{ hasItem(entity.members, 'id', id) }}").
+   * The option is disabled only when it renders to `true`: it stays listed but cannot be selected.
+   * The options are rendered again whenever the entity changes, and the option holding the value
+   * the entity was given is never disabled, so it can always be picked again.
+   */
+  optionDisabled?: string;
 
   /**
    * Controls uniqueness validation for this field.
