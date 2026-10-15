@@ -30,7 +30,7 @@
     v-model="localValue"
     :data-cy="`field_${definition.name}`"
     class="entity-attribute-dynamic-list-field"
-    v-bind="uiProps"
+    v-bind="uiProps.select"
     :disable="isDisabled"
     :label="translateOrDefault('', 'label')"
     :hint="translateOrDefault('', 'hint')"
@@ -46,6 +46,24 @@
     @virtual-scroll="onVirtualScroll"
     @update:model-value="updateValue"
   >
+    <template
+      v-if="disabledText"
+      #option="scope"
+    >
+      <q-item v-bind="{ ...uiProps.item, ...scope.itemProps }">
+        <q-item-section v-bind="uiProps.section">
+          <q-item-label v-bind="uiProps.label">
+            {{ scope.opt.label }}
+          </q-item-label>
+          <q-item-label
+            v-if="scope.opt.disable"
+            v-bind="uiProps.disabledCaption"
+          >
+            {{ disabledText }}
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+    </template>
     <template
       v-if="displayedError"
       #no-option
@@ -63,6 +81,9 @@
 <script setup lang="ts">
 import {
   getNestedValue,
+  type LinidQItemLabelProps,
+  type LinidQItemProps,
+  type LinidQItemSectionProps,
   type LinidQSelectProps,
   type Page,
   setNestedValue,
@@ -124,17 +145,40 @@ const error = ref<string | null>(null);
 let currentFetch: PagedFetch | null = null;
 /** The last route a request was opened on; outlives the fetches, `null` until the first one. */
 let requestedRoute: string | null = null;
+/** The elements the options are rendered from, kept so they can be rendered again when the entity changes. */
+let loadedElements: DynamicListElement[] = [];
 
 const pageSize = computed(() => props.definition.inputSettings?.size ?? 20);
 
 const localValue = ref(
   getNestedValue(props.entity, props.definition.name) ?? null
 );
+/**
+ * The value the entity holds from outside the field, as opposed to one picked in it: its option is
+ * never disabled, so the user can always come back to it after choosing another one.
+ */
+let presetValue = localValue.value;
 
-const uiProps = ui<LinidQSelectProps>(
-  `${props.uiNamespace}.${props.definition.name}`,
-  'q-select'
-);
+const localUiNamespace = `${props.uiNamespace}.${props.definition.name}`;
+
+/** The option entries are only used when a `disabledText` translation calls for the two-line layout. */
+const uiProps = {
+  select: ui<LinidQSelectProps>(localUiNamespace, 'q-select'),
+  item: ui<LinidQItemProps>(localUiNamespace, 'q-item'),
+  section: ui<LinidQItemSectionProps>(localUiNamespace, 'q-item-section'),
+  label: ui<LinidQItemLabelProps>(localUiNamespace, 'q-item-label'),
+  /** A caption by default: the design configuration can still turn it into any other label style. */
+  disabledCaption: {
+    caption: true,
+    ...ui<LinidQItemLabelProps>(
+      `${localUiNamespace}.disabled-caption`,
+      'q-item-label'
+    ),
+  },
+};
+
+/** The caption of a disabled option, empty when the field has no `disabledText` translation. */
+const disabledText = computed(() => translateOrDefault('', 'disabledText'));
 
 const rules = computed(() =>
   !props.ignoreRules && !props.definition.inputSettings?.ignoreRules
@@ -180,7 +224,13 @@ const isDisabled = computed(
 watch(
   () => getNestedValue(props.entity, props.definition.name),
   (newValue) => {
-    localValue.value = newValue ?? null;
+    const value = newValue ?? null;
+    // A selection made here comes back through the parent already equal to `localValue`: only a
+    // value set from outside, such as the entity once loaded, becomes the preset.
+    if (value !== localValue.value) {
+      presetValue = value;
+    }
+    localValue.value = value;
   }
 );
 
@@ -194,6 +244,8 @@ watch(
     cancelFetch();
     if (requestedRoute !== null) {
       clearSelection();
+      presetValue = null;
+      loadedElements = [];
       allOptions.value = [];
     }
     requestedRoute = nextRoute;
@@ -215,6 +267,10 @@ watch(
   },
   { immediate: true }
 );
+
+// The templates read the entity: a change of another field, such as a member added in the same
+// form, can disable or re-enable options already loaded.
+watch(() => props.entity, refreshOptions, { deep: true });
 
 // Leaving the page is one more way for a fetch to become useless: abort it instead of paying for a
 // response nobody will read.
@@ -286,8 +342,14 @@ async function fetchPage() {
     return;
   }
 
-  if (page.content.length > 0) {
-    allOptions.value.push(...page.content.map(toOption));
+  const options = mapOptions(page.content);
+  if (!options) {
+    return;
+  }
+
+  loadedElements.push(...page.content);
+  if (options.length > 0) {
+    allOptions.value.push(...options);
     removePlaceholderIfResolved();
   }
   pagedFetch.hasMore = !page.last;
@@ -295,25 +357,69 @@ async function fetchPage() {
 }
 
 /**
- * Maps a fetched element to a dropdown option. When the `optionLabel` or `optionValue` settings
- * are configured, they are rendered as Nunjucks templates with the element as context, allowing
- * the field to consume any paginated entity endpoint. Otherwise the element is used as-is.
+ * Maps fetched elements to options. A template that fails to render is reported as a fetch error:
+ * the list is as unusable as after a failed request, and the page is left to be requested again.
+ * @param elements - The elements to map.
+ * @returns The options, or `null` when a template failed.
+ */
+function mapOptions(
+  elements: DynamicListElement[]
+): DynamicListElement[] | null {
+  try {
+    return elements.map(toOption);
+  } catch {
+    error.value = t('validation.dynamicList.fetchError');
+    return null;
+  }
+}
+
+/** Renders the loaded elements again, with the placeholder the preset value may still need. */
+function refreshOptions() {
+  if (loadedElements.length === 0) {
+    return;
+  }
+
+  const options = mapOptions(loadedElements);
+  if (!options) {
+    return;
+  }
+
+  allOptions.value = options;
+  ensurePresetValueInOptions();
+}
+
+/**
+ * Maps a fetched element to a dropdown option. When the `optionLabel`, `optionValue` or
+ * `optionDisabled` settings are configured, they are rendered as Nunjucks templates with the
+ * element as context and the edited entity as `entity`, allowing the field to consume any
+ * paginated entity endpoint. Otherwise the element is used as-is.
  * @param element - The element fetched from the backend.
  * @returns The dropdown option.
  */
 function toOption(element: DynamicListElement): DynamicListElement {
-  const { optionLabel, optionValue } = props.definition.inputSettings ?? {};
+  const { optionLabel, optionValue, optionDisabled } =
+    props.definition.inputSettings ?? {};
 
-  if (!optionLabel && !optionValue) {
+  if (!optionLabel && !optionValue && !optionDisabled) {
     return element;
   }
 
-  const context = element as unknown as Record<string, unknown>;
-
-  return {
+  // The element wins over `entity`: an element carrying an `entity` property keeps its own.
+  const context = { entity: props.entity, ...element };
+  const option: DynamicListElement = {
     label: optionLabel ? renderString(optionLabel, context) : element.label,
     value: optionValue ? renderString(optionValue, context) : element.value,
   };
+
+  if (optionDisabled) {
+    // A template renders to a string: only the literal `true` disables, anything else keeps the
+    // option selectable. The preset option is exempt, so it can always be picked again.
+    option.disable =
+      option.value !== presetValue &&
+      renderString(optionDisabled, context).trim() === 'true';
+  }
+
+  return option;
 }
 
 /**
