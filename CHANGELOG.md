@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.144](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.143...v0.2.144) (2026-10-16)
+
+
+### Features
+
+* **catalog-ui:** add EntityAvatar component ([6806429](https://github.com/linagora/linid-im-front-community-plugins/commit/6806429128fccf2ef119bb24ae30302f3627d1ab))
+* **catalog-ui:** render column zones in GenericTablePage ([d66fb66](https://github.com/linagora/linid-im-front-community-plugins/commit/d66fb6697e6c97a737eb1c1770970cff6e051863))
+
 ### [0.2.143](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.142...v0.2.143) (2026-10-15)
 
 ### [0.2.142](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.141...v0.2.142) (2026-10-14)
