@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.145](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.144...v0.2.145) (2026-10-16)
+
+
+### Features
+
+* **catalog-ui:** make navigation buttons router-aware links ([c7b9c02](https://github.com/linagora/linid-im-front-community-plugins/commit/c7b9c02c200555d7a1a0c44ed1f74a2c0a9e494e))
+
 ### [0.2.144](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.143...v0.2.144) (2026-10-16)
 
 
