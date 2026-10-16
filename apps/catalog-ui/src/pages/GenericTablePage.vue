@@ -93,7 +93,7 @@
             :label="t('ButtonsCard.create')"
             class="buttons-card--create-button"
             data-cy="button_create"
-            @click="goToCreate"
+            :to="options.creationPagePath"
           />
         </template>
       </ButtonsCard>
@@ -150,7 +150,7 @@
                   :label="t('seeButton')"
                   :data-cy="`see-button_${props.row[options.idKey]}`"
                   v-bind="uiProps.seeButton"
-                  @click="goToDetailPage(props.row)"
+                  :to="detailPagePaths.get(props.row[options.idKey])"
                 />
               </div>
             </template>
@@ -287,25 +287,19 @@ const uiProps = computed(() => ({
 }));
 
 /**
- * Navigate to the new item creation page.
- * @returns A Promise that resolves when the navigation is complete.
+ * Detail page path of each loaded item, relative to the parent route and keyed by the item
+ * identifier read from `options.idKey`. Bound to the see button link of each row so that the router
+ * handles a click while the browser keeps its link controls, such as opening the route in a new tab.
  */
-function goToCreate() {
-  return router.push({
-    path: options.value.creationPagePath,
-  });
-}
-
-/**
- * Navigate to the detail page of a given item.
- * @param item - The item object. The property defined by `options.idKey` will be used to build the route.
- * @returns A Promise that resolves when the navigation is complete.
- */
-function goToDetailPage(item: Record<string, unknown>) {
-  return router.push({
-    path: `${parentPath.value}/${item[options.value.idKey] as string}`,
-  });
-}
+const detailPagePaths = computed(
+  () =>
+    new Map(
+      items.value.map((item) => [
+        item[options.value.idKey],
+        `${parentPath.value}/${item[options.value.idKey] as string}`,
+      ])
+    )
+);
 
 /**
  * Updates pagination state when the table page or rows-per-page change

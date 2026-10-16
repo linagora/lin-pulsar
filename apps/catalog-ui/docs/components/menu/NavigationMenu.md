@@ -1,7 +1,7 @@
 # **NavigationMenu 🧭**
 
 The **NavigationMenu** component provides a tab-based navigation system for module pages in LinID.
-It leverages Quasar's `QTabs` and `QRouteTab` to enable seamless navigation between different views.
+It leverages Quasar's `QTabs` and `QTab`, each tab being wrapped in a Vue Router link, to enable seamless navigation between different views.
 
 ---
 
@@ -9,7 +9,7 @@ It leverages Quasar's `QTabs` and `QRouteTab` to enable seamless navigation betw
 
 - Offers a consistent tab navigation interface across modules
 - Allows users to switch between different sections or pages
-- Integrates with Vue Router for dynamic routing
+- Integrates with Vue Router for dynamic routing, each tab being a real link
 - Provides customizable UI styling through the design system
 - Automatically synchronizes with route changes
 
@@ -54,7 +54,7 @@ The component resolves `item.labelKey` through `vue-i18n`'s `t()` to produce the
 The component uses the LinID design system through `useUiDesign()`. You can customize:
 
 - **Tabs container**: `{uiNamespace}.navigation-menu` → applies to `q-tabs`
-- **Individual routes**: `{uiNamespace}.navigation-menu.route-{itemId}` → applies to each `q-route-tab`
+- **Individual routes**: `{uiNamespace}.navigation-menu.route-{itemId}` → applies to each tab (`q-tab`, configured under the `q-route-tab` key)
 
 Example:
 
@@ -73,6 +73,7 @@ Example:
 - **Type-safe:** Full TypeScript support with defined interfaces
 - **Reactive:** Automatically responds to route changes
 - **Route-driven:** Active tab is determined by the current route, following Quasar best practices
+- **Browser-friendly:** Each tab is a link handled by the Vue Router, so `Ctrl`, `Cmd` or middle click opens the page in a new tab and the browser context menu actions keep working
 - **Framework-friendly:** Built for Vue 3 and Quasar, integrates seamlessly with Vue Router
 - **Customizable:** Supports UI design system for consistent styling
 - **Test-friendly:** Includes `data-cy` attributes for E2E testing
@@ -115,6 +116,8 @@ const handleItemChange = (item: NavigationMenuItem) => {
 - **Prefix matching:** The active tab is resolved using path prefix matching via `model-value` on `q-tabs`. This ensures tabs remain active for sub-routes handled by separate modules (e.g. `/users/import` keeps the `/users` tab active)
 - **Longest prefix wins:** When multiple items match the current path, the one with the longest path is selected (e.g. `/users/settings/profile` matches `/users/settings` over `/users`)
 - **Route synchronization:** The active tab automatically updates when the route changes
+- **Link wrapping:** Each `q-tab` is wrapped in a `router-link`, which is the focusable element: a click navigates through the router, while the browser keeps its link controls (open in a new tab, copy the link address). `QRouteTab` is not used because it only matches child routes, and would deselect the tab on sibling routes handled by separate modules
+- **Route-only highlight:** The local selection Quasar applies when a tab is clicked is ignored, so the highlight only moves once the route has changed; a tab opened in a new tab through `Ctrl`, `Cmd` or middle click leaves the current one highlighted
 - **Event emission:** `update:activeItem` is emitted when the route path matches a navigation item (exact or prefix), with the full `NavigationMenuItem` object
 - **No emission for unmatched routes:** If the route doesn't match any item in the list, no event is emitted
 - **Event timing:** The event is emitted immediately on mount (with `immediate: true`) and on every route change
@@ -139,6 +142,6 @@ The component uses Vue Router's `useRoute()` composable and watches `route.path`
 1. Detect route changes automatically
 2. Find the matching navigation item
 3. Emit the `update:activeItem` event with the full item object
-4. Let Quasar's `QRouteTab` handle the active styling based on the route
+4. Drive the active styling through the `model-value` of `QTabs`, each tab being wrapped in a Vue Router link
 
 This architecture ensures the navigation menu stays in sync with the application's routing state.

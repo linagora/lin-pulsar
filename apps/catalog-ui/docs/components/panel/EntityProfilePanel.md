@@ -185,7 +185,7 @@ The actions and their dialogs resolve their translations under the `avatar.MenuB
 
 ## **Back Navigation**
 
-When `parentPath` is set, the back button calls `router.push` with the result of passing the path through Nunjucks with a context containing `entity` (the current entity prop) and `query` (the current query string). This is the same context the generic pages use, so a `parentPath` forwarded by a page resolves identically whether the page or the panel renders it. The path may embed either variable:
+When `parentPath` is set, the back button links to the result of passing the path through Nunjucks with a context containing `entity` (the current entity prop) and `query` (the current query string). The link is handled by the Vue Router, so `Ctrl`, `Cmd` or middle click opens the parent page in a new tab. This is the same context the generic pages use, so a `parentPath` forwarded by a page resolves identically whether the page or the panel renders it. The path may embed either variable:
 
 ```
 /users/{{ query.groupId }}/members

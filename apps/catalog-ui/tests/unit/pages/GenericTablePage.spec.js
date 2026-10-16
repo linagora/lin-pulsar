@@ -38,7 +38,6 @@ const mockRoute = {
 };
 
 const mockNotify = vi.fn();
-const mockRouterPush = vi.fn();
 const mockHasZoneEntries = vi.fn(() => false);
 const baseModuleOptions = {
   idKey: 'id',
@@ -143,7 +142,7 @@ vi.mock('@linagora/linid-im-front-corelib', () => ({
 
 vi.mock('vue-router', () => ({
   useRoute: () => mockRoute,
-  useRouter: () => ({ push: mockRouterPush }),
+  useRouter: () => ({}),
 }));
 
 describe('Test component: GenericTablePage', () => {
@@ -316,15 +315,23 @@ describe('Test component: GenericTablePage', () => {
     });
   });
 
-  describe('Test function: goToDetailPage', () => {
-    it('should redirect to details page', async () => {
-      const item = { id: '42' };
-      wrapper.vm.goToDetailPage(item);
+  describe('Test computed: detailPagePaths', () => {
+    it('should map each loaded item to its details page path under the parent path', async () => {
+      wrapper.vm.items = [{ id: '42' }, { id: '43' }];
+      await wrapper.vm.$nextTick();
 
-      expect(mockRouterPush).toHaveBeenCalledTimes(1);
-      expect(mockRouterPush).toHaveBeenCalledWith({
-        path: '/page/42',
-      });
+      expect(wrapper.vm.detailPagePaths.get('42')).toBe('/page/42');
+      expect(wrapper.vm.detailPagePaths.get('43')).toBe('/page/43');
+      expect(wrapper.vm.detailPagePaths.size).toBe(2);
+    });
+
+    it('should key the paths by the configured idKey', async () => {
+      mockModuleOptions.idKey = 'code';
+      wrapper.vm.items = [{ id: '42', code: 'abc' }];
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.vm.detailPagePaths.get('abc')).toBe('/page/abc');
+      expect(wrapper.vm.detailPagePaths.has('42')).toBe(false);
     });
   });
 
@@ -352,15 +359,6 @@ describe('Test component: GenericTablePage', () => {
         buildEntityPage(),
         paginationEvent.pagination
       );
-    });
-  });
-
-  describe('Test function: goToCreate', () => {
-    it('should redirect to the creation page', async () => {
-      wrapper.vm.goToCreate();
-
-      expect(mockRouterPush).toHaveBeenCalledTimes(1);
-      expect(mockRouterPush).toHaveBeenCalledWith({ path: '/new' });
     });
   });
 

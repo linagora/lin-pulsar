@@ -194,13 +194,34 @@ describe('Test component: GenericDetailsPage', () => {
     });
   });
 
-  describe('Test function: goToEdit', () => {
-    it('should navigate to the rendered edit page path', async () => {
+  describe('Test computed: editRoute', () => {
+    it('should render the edit page path with the loaded entity and the query string', async () => {
       await flushPromises();
 
-      wrapper.vm.goToEdit();
+      expect(wrapper.vm.editRoute).toBe('/page/test-entity-id/edit');
+      expect(mockRenderString).toHaveBeenCalledWith(
+        '/page/{{ entity.id }}/edit',
+        {
+          entity: { id: 'test-entity-id' },
+          query: { groupId: 'group-1' },
+        }
+      );
+    });
 
-      expect(mockRouterPush).toHaveBeenCalledWith('/page/test-entity-id/edit');
+    it('should render the edit page path with an empty entity while the load is pending', () => {
+      vi.mocked(getEntityById).mockReturnValueOnce(
+        new Promise(() => undefined)
+      );
+      wrapper = mountPage();
+
+      expect(wrapper.vm.editRoute).toBe('/page//edit');
+    });
+
+    it('should be undefined when no editPath is configured', () => {
+      delete mockModuleOptions.editPath;
+      wrapper = mountPage();
+
+      expect(wrapper.vm.editRoute).toBeUndefined();
     });
   });
 

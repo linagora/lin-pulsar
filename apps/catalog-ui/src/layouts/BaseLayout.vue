@@ -35,22 +35,25 @@
         v-bind="uiProps.toolbar"
         data-cy="toolbar"
       >
-        <q-avatar
-          class="cursor-pointer"
-          v-bind="uiProps.avatar"
-          data-cy="application_logo"
-          @click="goHome"
+        <router-link
+          to="/"
+          class="base-layout--home-link"
         >
-          <q-img v-bind="uiProps.img"> </q-img>
-        </q-avatar>
+          <q-avatar
+            v-bind="uiProps.avatar"
+            data-cy="application_logo"
+          >
+            <q-img v-bind="uiProps.img"> </q-img>
+          </q-avatar>
+        </router-link>
         <q-toolbar-title v-bind="uiProps.toolbarTitle">
-          <div
+          <router-link
+            to="/"
             data-cy="application_title"
-            class="cursor-pointer row inline"
-            @click="goHome"
+            class="row inline base-layout--home-link"
           >
             {{ t('title') }}
-          </div>
+          </router-link>
         </q-toolbar-title>
         <q-badge
           v-bind="uiProps.badge"
@@ -108,7 +111,7 @@ import {
   useUiDesign,
 } from '@linagora/linid-im-front-corelib';
 import { computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import NavigationMenu from '../components/menu/NavigationMenu.vue';
 import HeaderProfile from '../components/profile/HeaderProfile.vue';
 import type { BaseLayoutRouteMeta } from '../types/baseLayout';
@@ -116,7 +119,6 @@ import type { BaseLayoutRouteMeta } from '../types/baseLayout';
 const { ui } = useUiDesign();
 const { t } = useScopedI18n('application');
 const uiStore = useLinidUiStore();
-const router = useRouter();
 const currentRoute = useRoute();
 
 const routeMeta = computed(() => currentRoute.meta as BaseLayoutRouteMeta);
@@ -136,11 +138,12 @@ const uiProps = {
   badge: ui<LinidQBadgeProps>(headerUiNamespace, 'q-badge'),
   img: ui<LinidQImgProps>(headerUiNamespace, 'q-img'),
 };
-
-/**
- * Navigate to home page.
- */
-function goHome() {
-  router.push('/');
-}
 </script>
+
+<style scoped>
+/* The logo and the title link to the home page without the default link styling of the browser. */
+.base-layout--home-link {
+  color: inherit;
+  text-decoration: none;
+}
+</style>

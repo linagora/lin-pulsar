@@ -60,7 +60,7 @@
             :label="translateOrDefault('', 'navigation.ButtonsCard.backButton')"
             class="entity-profile-panel--back-button"
             data-cy="entity-profile-panel_back-button"
-            @click="goBack"
+            :to="backRoute"
           />
           <LinidZoneRenderer
             :zone="zoneNames.appendNavigation"
@@ -329,7 +329,7 @@ import {
 } from '@linagora/linid-im-front-corelib';
 import type { Subscription } from 'rxjs';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useDiceBearAvatar } from '../../composables/useDiceBearAvatar';
 import type {
   EntityProfilePanelOutputs,
@@ -354,7 +354,6 @@ const props = withDefaults(defineProps<EntityProfilePanelProps>(), {
 
 const emit = defineEmits<EntityProfilePanelOutputs>();
 
-const router = useRouter();
 const route = useRoute();
 
 const localUiNamespace = computed(() => {
@@ -543,20 +542,21 @@ function refreshAvatar(): void {
 }
 
 /**
- * Navigates back to the configured parent path using vue-router.
- * The back button is only rendered when `parentPath` is set, so the path is always defined here.
+ * Route of the configured parent path, bound to the back button link so that the router handles a
+ * click while the browser keeps its link controls, such as opening the route in a new tab. The back
+ * button is only rendered when `parentPath` is set, the route being undefined otherwise.
  *
  * The path is rendered with the same Nunjucks context as the generic pages (`entity` and `query`),
  * so a `parentPath` templated on the query string resolves identically here and in the page.
  */
-function goBack() {
-  router.push(
-    renderString(props.parentPath!, {
-      entity: props.entity,
-      query: route.query,
-    })
-  );
-}
+const backRoute = computed(() =>
+  props.parentPath
+    ? renderString(props.parentPath, {
+        entity: props.entity,
+        query: route.query,
+      })
+    : undefined
+);
 
 /**
  * Handles the `submitted` event from FormDialogButton. Emits `update:entity` only when the response

@@ -23,8 +23,8 @@ The header contains two toolbars:
 
 #### **1. Main Toolbar**
 
-- **QAvatar:** Application logo
-- **QToolbarTitle:** Application title (i18n: `application.title`)
+- **QAvatar:** Application logo, linking to the home page
+- **QToolbarTitle:** Application title (i18n: `application.title`), linking to the home page
 - **QBadge:** Application version (i18n: `application.version`)
 - **HeaderProfile:** Profile menu with the user information, the language switcher and the logout entry (see [HeaderProfile](../components/profile/HeaderProfile.md))
 
@@ -90,7 +90,7 @@ ui('base-layout.header', 'q-avatar'); // Customize logo
 
 1. **UI Store:** `useLinidUiStore()` provides `mainNavigationItems` for navigation
 2. **i18n:** `useScopedI18n('application')` provides translated text for title and version
-3. **Navigation:** `NavigationMenu` receives items and namespace, handles routing
+3. **Navigation:** `NavigationMenu` receives items and namespace, handles routing; the logo and the title are Vue Router links to `/`, so the browser link controls keep working (open in a new tab, copy the link address)
 4. **Zone Renderer:** `LinidZoneRenderer` allows dynamic component injection via the zone system
 
 ---

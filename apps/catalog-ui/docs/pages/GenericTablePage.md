@@ -166,22 +166,24 @@ Each row includes:
 
 ## **Navigation Behavior**
 
+Both buttons are links handled by the Vue Router: a click navigates in the single-page application, while `Ctrl`, `Cmd` or middle click opens the page in a new tab and the browser context menu actions keep working.
+
 ### **Create Navigation**
 
-Triggered by the create button:
+The create button links to the configured path:
 
-```ts
-router.push({ path: creationPagePath });
+```vue
+<q-btn :to="creationPagePath" />
 ```
 
 ---
 
 ### **Detail Navigation**
 
-Triggered by the "See" button:
+The "See" button of each row links to the detail page of its item:
 
-```ts
-router.push({ path: `${parentPath}/${row[idKey]}` });
+```vue
+<q-btn :to="`${parentPath}/${row[idKey]}`" />
 ```
 
 - `idKey` is used to extract the row identifier
