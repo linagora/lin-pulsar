@@ -37,7 +37,6 @@ const mockRoute = {
 };
 
 const {
-  mockPush,
   mockRender,
   mockUi,
   mockUseScopedI18n,
@@ -51,7 +50,6 @@ const {
   const mockRender = vi.fn((template) => template);
 
   return {
-    mockPush: vi.fn(),
     mockRender,
     mockUi: vi.fn(() => ({})),
     mockUseScopedI18n: vi.fn(() => ({ t, te, translateOrDefault })),
@@ -63,7 +61,6 @@ const {
 
 vi.mock('vue-router', () => ({
   useRoute: () => mockRoute,
-  useRouter: () => ({ push: mockPush }),
 }));
 
 vi.mock('@dicebear/core', () => ({
@@ -909,28 +906,20 @@ describe('Test component: EntityProfilePanel', () => {
     });
   });
 
-  describe('Test function: goBack', () => {
+  describe('Test computed: backRoute', () => {
     it('should render parentPath as a Nunjucks template with the entity and query string as context', () => {
-      wrapper.vm.goBack();
-
+      expect(wrapper.vm.backRoute).toBe('/users');
       expect(mockRender).toHaveBeenCalledWith('/users', {
         entity: {},
         query: { groupId: 'group-1' },
       });
     });
 
-    it('should navigate to the rendered parentPath', () => {
-      wrapper.vm.goBack();
-
-      expect(mockPush).toHaveBeenCalledWith('/users');
-    });
-
     it('should pass the current entity to the render context', async () => {
       const entity = { id: '42' };
       await wrapper.setProps({ entity });
 
-      wrapper.vm.goBack();
-
+      expect(wrapper.vm.backRoute).toBe('/users');
       expect(mockRender).toHaveBeenCalledWith('/users', {
         entity,
         query: { groupId: 'group-1' },
@@ -939,26 +928,28 @@ describe('Test component: EntityProfilePanel', () => {
 
     it('should resolve a parentPath templated on the query string without any entity', async () => {
       const parentPath = '/groups/{{ query.groupId }}/members';
-      await wrapper.setProps({ parentPath });
       mockRender.mockImplementationOnce((template, context) =>
         template.replace('{{ query.groupId }}', context.query?.groupId ?? '')
       );
+      await wrapper.setProps({ parentPath });
 
-      wrapper.vm.goBack();
-
+      expect(wrapper.vm.backRoute).toBe('/groups/group-1/members');
       expect(mockRender).toHaveBeenCalledWith(parentPath, {
         entity: {},
         query: { groupId: 'group-1' },
       });
-      expect(mockPush).toHaveBeenCalledWith('/groups/group-1/members');
     });
 
-    it('should navigate to the updated parentPath', async () => {
+    it('should follow the updated parentPath', async () => {
       await wrapper.setProps({ parentPath: '/groups' });
 
-      wrapper.vm.goBack();
+      expect(wrapper.vm.backRoute).toBe('/groups');
+    });
 
-      expect(mockPush).toHaveBeenCalledWith('/groups');
+    it('should be undefined when no parentPath is set', async () => {
+      await wrapper.setProps({ parentPath: undefined });
+
+      expect(wrapper.vm.backRoute).toBeUndefined();
     });
   });
 

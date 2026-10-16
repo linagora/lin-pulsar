@@ -26,22 +26,32 @@
 
 <template>
   <!-- v8 ignore start -->
+  <!--
+    The active tab follows the route only: the local selection Quasar applies on click is ignored,
+    so that a tab opened in a new tab (Ctrl, Cmd or middle click) does not move the highlight.
+  -->
   <q-tabs
     v-bind="uiProps.tabs"
     :model-value="activeTabPath"
     class="navigation-menu"
     data-cy="navigation-menu"
+    @update:model-value="() => undefined"
   >
-    <q-tab
+    <router-link
       v-for="item in props.items"
-      v-bind="uiProps.routes[item.id]"
       :key="item.id"
-      :name="item.path"
-      :label="t(item.labelKey)"
-      :class="`navigation-menu--${item.id}`"
-      :data-cy="`item_${item.id}`"
-      @click="router.push(item.path)"
-    />
+      :to="item.path"
+      class="navigation-menu--link"
+    >
+      <q-tab
+        v-bind="uiProps.routes[item.id]"
+        :name="item.path"
+        :label="t(item.labelKey)"
+        :class="`navigation-menu--${item.id}`"
+        :data-cy="`item_${item.id}`"
+        tabindex="-1"
+      />
+    </router-link>
   </q-tabs>
   <!-- v8 ignore stop -->
 </template>
@@ -54,7 +64,7 @@ import type {
 import { useUiDesign } from '@linagora/linid-im-front-corelib';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import type {
   NavigationMenuOutputs,
   NavigationMenuProps,
@@ -68,7 +78,6 @@ const emit = defineEmits<NavigationMenuOutputs>();
 const { ui } = useUiDesign();
 const { t } = useI18n();
 const route = useRoute();
-const router = useRouter();
 
 const localUiNamespace = `${props.uiNamespace}.navigation-menu`;
 
@@ -113,3 +122,16 @@ watch(
   { immediate: true }
 );
 </script>
+
+<style scoped>
+/*
+ * Each tab is wrapped in a router link so that the browser keeps its link controls (open in a new
+ * tab, copy the link address). The link is the focusable element and takes the tab styling over.
+ */
+.navigation-menu--link {
+  display: flex;
+  align-self: stretch;
+  color: inherit;
+  text-decoration: none;
+}
+</style>

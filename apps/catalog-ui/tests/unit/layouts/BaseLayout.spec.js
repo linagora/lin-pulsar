@@ -28,8 +28,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { reactive } from 'vue';
 import BaseLayout from '../../../src/layouts/BaseLayout.vue';
 
-const { mockPush, mockRoute } = vi.hoisted(() => ({
-  mockPush: vi.fn(),
+const { mockRoute } = vi.hoisted(() => ({
   mockRoute: { meta: {} },
 }));
 
@@ -41,7 +40,6 @@ vi.mock('@linagora/linid-im-front-corelib', () => ({
 }));
 
 vi.mock('vue-router', () => ({
-  useRouter: () => ({ push: mockPush }),
   useRoute: () => mockRoute,
 }));
 
@@ -80,14 +78,6 @@ describe('Test layout: BaseLayout', () => {
       wrapper = shallowMount(BaseLayout);
 
       expect(wrapper.vm.hideLogout).toBe(true);
-    });
-  });
-
-  describe('Test function: goHome', () => {
-    it('should navigate to the home page', () => {
-      wrapper.vm.goHome();
-
-      expect(mockPush).toHaveBeenCalledWith('/');
     });
   });
 });

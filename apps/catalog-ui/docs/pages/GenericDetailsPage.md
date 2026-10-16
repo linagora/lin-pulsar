@@ -108,7 +108,7 @@ The `formatters` array contains `FieldFormatter` objects that specify:
 - The button card displays a cancel button navigating back to the previous page.
 - The navigation uses the browser history when possible, and falls back to `parentPath` otherwise.
 - The fallback path is produced by rendering `parentPath` as a Nunjucks template with the loaded entity (`entity`) and the query string (`query`) as context. A static path (e.g. `"/applications"`) works as-is; a dynamic path can reference the query string (e.g. `"/groups/{{ query.groupId }}/members"`) or entity fields.
-- When `editPath` is set, an edit button redirects to the rendered path, using the same context (e.g. `/applications/{{ entity.id }}/edit`).
+- When `editPath` is set, an edit button links to the rendered path, using the same context (e.g. `/applications/{{ entity.id }}/edit`). The link is handled by the Vue Router, so `Ctrl`, `Cmd` or middle click opens the edit page in a new tab.
 
 > **Note:** the back navigation is also triggered when the entity fails to load, and at that point
 > `entity` is still empty. A `parentPath` referencing `entity` fields therefore renders an empty

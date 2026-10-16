@@ -93,7 +93,7 @@
                 class="buttons-card--edit-button"
                 :label="t('ButtonsCard.edit')"
                 data-cy="button_edit"
-                @click="goToEdit"
+                :to="editRoute"
               />
             </template>
           </ButtonsCard>
@@ -255,18 +255,20 @@ async function loadData() {
 }
 
 /**
- * Navigates to the edit page of the current entity, resolved by rendering the configured `editPath`
+ * Route of the edit page of the current entity, resolved by rendering the configured `editPath`
  * template with the loaded entity (`entity`) and the current query string (`query`) as context
- * (e.g. `"/applications/{{ entity.id }}/edit"`).
+ * (e.g. `"/applications/{{ entity.id }}/edit"`). Bound to the edit button link so that the router
+ * handles a click while the browser keeps its link controls, such as opening the route in a new tab.
+ * Undefined when no `editPath` is configured, the button not being rendered in that case.
  */
-function goToEdit() {
-  router.push(
-    renderString(options.value.editPath!, {
-      entity: entity.value ?? {},
-      query: route.query,
-    })
-  );
-}
+const editRoute = computed(() =>
+  options.value.editPath
+    ? renderString(options.value.editPath, {
+        entity: entity.value ?? {},
+        query: route.query,
+      })
+    : undefined
+);
 
 /**
  * Navigates back to the previous page, using the browser history when possible and falling back to
