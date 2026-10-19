@@ -63,6 +63,7 @@ describe('Test component: NavigationMenu', () => {
     mockRoute.path = '/home';
     wrapper = shallowMount(NavigationMenu, {
       props: defaultProps,
+      global: { stubs: { RouterLink: true } },
     });
   });
 
@@ -129,6 +130,7 @@ describe('Test component: NavigationMenu', () => {
       ];
       wrapper = shallowMount(NavigationMenu, {
         props: { items: overlappingItems, uiNamespace: 'test-namespace' },
+        global: { stubs: { RouterLink: true } },
       });
 
       mockRoute.path = '/users/settings/profile';

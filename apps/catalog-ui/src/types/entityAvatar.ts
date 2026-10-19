@@ -30,7 +30,15 @@ import type { AvatarOptions } from './diceBear';
 /**
  * Props of the `EntityAvatar` component.
  */
-export interface EntityAvatarProps extends CommonComponentProps {
+export interface EntityAvatarProps extends Pick<
+  CommonComponentProps,
+  'i18nScope'
+> {
+  /**
+   * Base UI namespace for the design configuration, falling back to `instanceId` when absent.
+   */
+  uiNamespace?: string;
+
   /**
    * Module instance identifier, used as UI namespace and i18n scope fallback.
    */

@@ -56,6 +56,7 @@ describe('Test component: ImportButton', () => {
 
     wrapper = shallowMount(ImportButton, {
       props: {
+        uiNamespace: 'test-namespace',
         instanceId: 'test-instance',
       },
       global: {

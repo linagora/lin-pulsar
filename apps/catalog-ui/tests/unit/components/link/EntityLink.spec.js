@@ -65,6 +65,7 @@ describe('Test component: EntityLink', () => {
   function mountComponent(props = {}) {
     return shallowMount(EntityLink, {
       props: { ...defaultProps, ...props },
+      global: { stubs: { RouterLink: true } },
     });
   }
 
