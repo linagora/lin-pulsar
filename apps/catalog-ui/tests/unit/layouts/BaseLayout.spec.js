@@ -50,7 +50,9 @@ describe('Test layout: BaseLayout', () => {
     vi.clearAllMocks();
     mockRoute.meta = reactive({});
 
-    wrapper = shallowMount(BaseLayout);
+    wrapper = shallowMount(BaseLayout, {
+      global: { stubs: { RouterLink: true, RouterView: true } },
+    });
   });
 
   describe('Test computed: logoutPath', () => {
@@ -61,7 +63,9 @@ describe('Test layout: BaseLayout', () => {
     it('should use the route meta value', () => {
       mockRoute.meta = reactive({ logoutPath: '/bye' });
 
-      wrapper = shallowMount(BaseLayout);
+      wrapper = shallowMount(BaseLayout, {
+        global: { stubs: { RouterLink: true, RouterView: true } },
+      });
 
       expect(wrapper.vm.logoutPath).toBe('/bye');
     });
@@ -75,7 +79,9 @@ describe('Test layout: BaseLayout', () => {
     it('should hide the logout entry when the route meta asks for it', () => {
       mockRoute.meta = reactive({ hideLogout: true });
 
-      wrapper = shallowMount(BaseLayout);
+      wrapper = shallowMount(BaseLayout, {
+        global: { stubs: { RouterLink: true, RouterView: true } },
+      });
 
       expect(wrapper.vm.hideLogout).toBe(true);
     });
