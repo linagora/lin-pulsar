@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.146](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.145...v0.2.146) (2026-10-20)
+
+
+### Features
+
+* **catalog-ui:** add disabled options support to EntityAttributeDynamicListField ([093ad5a](https://github.com/linagora/linid-im-front-community-plugins/commit/093ad5aea5e8581cb91fad934508a5fc7d34fbc3))
+
 ### [0.2.145](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.144...v0.2.145) (2026-10-16)
 
 
