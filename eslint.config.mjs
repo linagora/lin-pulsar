@@ -1,5 +1,4 @@
 import js from '@eslint/js';
-import nx from '@nx/eslint-plugin';
 import prettierSkipFormatting from '@vue/eslint-config-prettier/skip-formatting';
 import {
   defineConfigWithVueTs,
@@ -11,6 +10,7 @@ import jsdoc from 'eslint-plugin-jsdoc';
 import vue from 'eslint-plugin-vue';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,14 +23,9 @@ export default defineConfigWithVueTs(
       '**/vite.config.*.timestamp*',
       '**/vitest.config.*.timestamp*',
       '**/out-tsc/',
-      '**/*.template',
       '**/.__mf__temp',
-      'tools/module/src/generators/*',
     ],
   },
-  nx.configs['flat/base'],
-  nx.configs['flat/typescript'],
-  nx.configs['flat/javascript'],
   js.configs.recommended,
   vueTsConfigs.recommended,
   vue.configs['flat/recommended'],
@@ -50,21 +45,6 @@ export default defineConfigWithVueTs(
       import: importPlugin,
     },
     rules: {
-      // Nx rules
-      '@nx/enforce-module-boundaries': [
-        'error',
-        {
-          enforceBuildableLibDependency: true,
-          allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$'],
-          depConstraints: [
-            {
-              sourceTag: '*',
-              onlyDependOnLibsWithTags: ['*'],
-            },
-          ],
-        },
-      ],
-
       // Vue rules
       'vue/multi-word-component-names': 'off',
       'vue/require-default-prop': 'error',
@@ -168,6 +148,12 @@ export default defineConfigWithVueTs(
       '**/__tests__/**',
       '**/*.config.*',
     ],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
     rules: {
       'jsdoc/require-jsdoc': 'off',
       'headers/header-format': 'off',
