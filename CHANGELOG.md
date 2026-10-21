@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.147](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.146...v0.2.147) (2026-10-21)
+
+
+### Features
+
+* **catalog-ui:** add default i18n keys for Import page ([01d558c](https://github.com/linagora/linid-im-front-community-plugins/commit/01d558cca97e589d42d2ab1347017c8fc4c9b0cc))
+* **catalog-ui:** add GenericImportPage ([54b330e](https://github.com/linagora/linid-im-front-community-plugins/commit/54b330e915594c084eeee400cce481ee98368a6c))
+* **catalog-ui:** add the LoadFilesField and ImportedDataTable components ([bebec39](https://github.com/linagora/linid-im-front-community-plugins/commit/bebec39f809f0b6b7eca5dc5eddeffe9d6d2bfba))
+* remove module-import ([b0983c9](https://github.com/linagora/linid-im-front-community-plugins/commit/b0983c94416005184910a4f19d3887d317523784))
+
 ### [0.2.146](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.145...v0.2.146) (2026-10-20)
 
 
