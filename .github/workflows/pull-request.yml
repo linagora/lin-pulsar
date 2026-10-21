@@ -65,9 +65,7 @@ jobs:
         run: pnpm add -Dw @commitlint/config-conventional @commitlint/cli
 
       - name: Run commitlint
-        run: |
-          echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > commitlint.config.cjs
-          pnpm exec commitlint --from=origin/main --to=HEAD --verbose
+        run: pnpm exec commitlint --from=origin/main --to=HEAD --verbose
 
   check-dependencies:
     name: Check dependencies
@@ -86,11 +84,7 @@ jobs:
         run: |
           pnpm add -Dw npm-check-updates
           echo "📦 Dependencies Report" > dependencies.txt
-          for pkg in $(find . -name "package.json" -not -path "*/node_modules/*"); do
-            dir=$(dirname "$pkg")
-            echo -e "\n### 🔍 $dir\n" >> dependencies.txt
-            (cd "$dir" && npx ncu || echo "Error scanning $dir") >> dependencies.txt
-          done
+          npx ncu >> dependencies.txt
 
       - name: Comment PR
         uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
@@ -105,20 +99,12 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - name: Fetch main branch
-        run: git fetch origin main:main
 
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm
         with:
           node-version: ${{ env.NODE_VERSION }}
           pnpm-version: ${{ env.PNPM_VERSION }}
-
-      - name: Install all peer deps
-        run: pnpm install --frozen-lockfile --shamefully-hoist
 
       - name: Check style
         run: pnpm validate
