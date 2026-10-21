@@ -7,10 +7,10 @@ These rules ensure components are **consistent, accessible, and compatible** acr
 
 ## **🎯 Purpose**
 
-* Promote **reusable, standardized UI components** for all modules
-* Ensure **design consistency** across the application
-* Facilitate **integration with Catalog UI** and other modules
-* Establish **best practices** for localization and styling
+- Promote **reusable, standardized UI components** for all modules
+- Ensure **design consistency** across the application
+- Facilitate **integration with Catalog UI** and other modules
+- Establish **best practices** for localization and styling
 
 ---
 
@@ -57,11 +57,11 @@ All **design-related attributes** (labels, icons, colors, sizes, spacing, densit
 }
 ```
 
-* `label`: Text to display
-* `icon`: Name of the Quasar icon
-* `color`: Must be **one of the default Quasar colors** (`primary`, `secondary`, `accent`, `positive`, `negative`, `info`, `warning`)
-* `dense`: Boolean value controlling density (true/false)
-* Future attributes can be added, but **all design-related props must stay in translations**
+- `label`: Text to display
+- `icon`: Name of the Quasar icon
+- `color`: Must be **one of the default Quasar colors** (`primary`, `secondary`, `accent`, `positive`, `negative`, `info`, `warning`)
+- `dense`: Boolean value controlling density (true/false)
+- Future attributes can be added, but **all design-related props must stay in translations**
 
 ### **Using translations in components**
 
@@ -80,17 +80,17 @@ All **design-related attributes** (labels, icons, colors, sizes, spacing, densit
 
 **Each component must document which Quasar attributes it uses from the translation files.**
 
-* List all attributes (label, icon, color, dense, etc.) in the component README or dedicated docs file
-* Specify default values and intended usage
-* This ensures **consistency**, **easy localization**, and clarity for developers consuming the component
+- List all attributes (label, icon, color, dense, etc.) in the component README or dedicated docs file
+- Specify default values and intended usage
+- This ensures **consistency**, **easy localization**, and clarity for developers consuming the component
 
 ---
 
 ## **⚙️ Props & Slots**
 
-* **Props:** Expose all dynamic behavior via props
-* **Slots:** Allow content injection where customization is required
-* **Events:** Use descriptive, kebab-case event names
+- **Props:** Expose all dynamic behavior via props
+- **Slots:** Allow content injection where customization is required
+- **Events:** Use descriptive, kebab-case event names
 
 Example:
 
@@ -105,17 +105,17 @@ emits: ['submit', 'cancel']
 
 ## **✅ Best Practices**
 
-* Prefer **composition over inheritance**
-* Avoid side effects (do not modify global state directly)
-* Include **unit tests** for functional behavior
-* Document **all props, events, slots, and used Quasar attributes from translations**
-* Always **use default Quasar colors** for consistency
-* Maintain translation files organized per component
+- Prefer **composition over inheritance**
+- Avoid side effects (do not modify global state directly)
+- Include **unit tests** for functional behavior
+- Document **all props, events, slots, and used Quasar attributes from translations**
+- Always **use default Quasar colors** for consistency
+- Maintain translation files organized per component
 
 ---
 
 ## **📌 Notes**
 
-* All UI components in **Catalog UI** should comply with these guidelines
-* Follow this structure to ensure **consistency, reusability, and scalability**
-* Future updates may include **design tokens, themes, and accessibility rules**
+- All UI components in **Catalog UI** should comply with these guidelines
+- Follow this structure to ensure **consistency, reusability, and scalability**
+- Future updates may include **design tokens, themes, and accessibility rules**

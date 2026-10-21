@@ -1,0 +1,451 @@
+# **GenericEditableTableCard 🗃️**
+
+The **GenericEditableTableCard** component provides a complete UI for managing simple collections:
+a table embedded in a card layout, with a built-in add button opening a form dialog, an optional
+per-row edit action reusing the same form, and a per-row delete action guarded by a confirmation
+dialog.
+
+It standardizes simple list management so features do not need to implement their own table,
+action buttons, dialogs, and confirmation flows.
+
+---
+
+## **🎯 Purpose**
+
+- Displays a collection of items inside a table embedded in a card
+- Provides an add button opening a configuration-driven `FormDialog`
+- Provides a per-row edit button reopening the same `FormDialog` pre-filled with the row values
+- Provides a per-row delete button guarded by a `ConfirmationDialog`
+- Resolves its API endpoints from Nunjucks templates rendered with the entity owning the collection
+- Emits events after successful creation, update and deletion
+
+---
+
+## **⚙️ Props**
+
+| Prop name          | Type                                | Default    | Description                                                                                                                                                                       |
+| ------------------ | ----------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `columns`          | `QTableColumn[]`                    | —          | Columns of the table. Labels are translated through the component i18n scope                                                                                                      |
+| `formFields`       | `LinidAttributeConfiguration[]`     | `[]`       | Form fields rendered in the creation and edition form dialogs (see `FormDialog`). Optional when `readOnly` is `true` or when neither `create` nor `update` endpoint is configured |
+| `editFormFields`   | `LinidAttributeConfiguration[]`     | —          | Form fields rendered in the edition form dialog instead of `formFields` when configured                                                                                           |
+| `updateBody`       | `Record<string, unknown>`           | `formData` | Nunjucks template replacing the update request body, rendered with `entity`, `item` and `formData`                                                                                |
+| `endpoints`        | `GenericEditableTableCardEndpoints` | —          | Nunjucks templates of the `find`, `create`, `update` and `delete` endpoints                                                                                                       |
+| `entity`           | `Record<string, unknown>`           | `{}`       | Entity owning the collection, provided to the Nunjucks context. Injected by the hosting zone                                                                                      |
+| `rowKey`           | `String`                            | `'id'`     | Name of the row property used as unique row key                                                                                                                                   |
+| `readOnly`         | `Boolean`                           | `false`    | When `true`, hides all action buttons (add, edit, delete) and renders the card in read-only mode                                                                                  |
+| `enableActions`    | `Boolean`                           | `true`     | When `false`, hides the `ButtonsCard` in the card header (add button, header slots and zone renderer)                                                                             |
+| `enableRowActions` | `Boolean`                           | `true`     | When `false`, hides the entire row actions column (edit button, delete button, row slots and zone renderer)                                                                       |
+| `reloadOn`         | `String[]`                          | —          | Event keys reloading the items when they are emitted through the UI event subject                                                                                                 |
+| `instanceId`       | `String`                            | —          | Instance identifier passed to the form dialog fields (e.g. API validation rules)                                                                                                  |
+| `uiNamespace`      | `String`                            | —          | Base UI namespace used for design system customization                                                                                                                            |
+| `i18nScope`        | `String`                            | —          | Identifier used to scope translations                                                                                                                                             |
+
+### Endpoints
+
+```typescript
+export interface GenericEditableTableCardEndpoints {
+  find: string; // GET — fetches the items
+  create?: string; // POST — optional; enables the add button when the component is not in read-only mode
+  update?: string; // PUT — optional; enables the per-row edit button when the component is not in read-only mode
+  delete?: string; // DELETE — optional; enables the per-row delete button when the component is not in read-only mode
+}
+```
+
+Each endpoint is a Nunjucks template rendered with a context containing `entity`, the entity owning the
+collection. The `update` and `delete` endpoint contexts additionally contain `item`, the row being
+edited or removed:
+
+```typescript
+{
+  find: '/api/organizations/{{ entity.id }}/members',
+  create: '/api/organizations/{{ entity.id }}/members',
+  update: '/api/organizations/{{ entity.id }}/members/{{ item.id }}',
+  delete: '/api/organizations/{{ entity.id }}/members/{{ item.id }}',
+}
+```
+
+The `create`, `update` and `delete` endpoints are all optional: each action button is only rendered when
+its endpoint is configured. Only `find` is always required.
+
+### Column Formatting
+
+See [Value Formatting](../../value-formatting.md) for details on supported formatters and configuration.
+
+#### **Example Configuration**
+
+```ts
+{
+  columns: [
+    {
+      name: 'name',
+      label: 'columns.name',
+      field: 'name',
+      align: 'left',
+    },
+    {
+      name: 'createdAt',
+      label: 'columns.createdAt',
+      field: 'createdAt',
+      formatter: 'toDate',
+      formatOptions: { formatKey: 'application.dateTimeFormat' },
+    },
+    {
+      name: 'updatedAt',
+      label: 'columns.updatedAt',
+      field: 'updatedAt',
+      formatter: 'toDate',
+      formatOptions: { formatKey: 'application.dateFormat' },
+    },
+  ];
+}
+```
+
+#### **Example i18n Configuration**
+
+```json
+{
+  "application": {
+    "dateTimeFormat": "DD/MM/YYYY HH:mm:ss",
+    "dateFormat": "DD/MM/YYYY"
+  }
+}
+```
+
+---
+
+## **📤 Events**
+
+| Event     | Payload                   | Description                                                      |
+| --------- | ------------------------- | ---------------------------------------------------------------- |
+| `created` | `Record<string, unknown>` | Emitted with the submitted form data after a successful creation |
+| `updated` | `Record<string, unknown>` | Emitted with the submitted form data after a successful update   |
+| `deleted` | `Record<string, unknown>` | Emitted with the removed row after a successful deletion         |
+
+---
+
+## **🧩 Slots**
+
+Extra actions can be added around the built-in buttons, without replacing them:
+
+| Slot                     | Scope           | Description                                                   |
+| ------------------------ | --------------- | ------------------------------------------------------------- |
+| `prepend-header-actions` | —               | Before the add button, in the card header                     |
+| `append-header-actions`  | —               | After the add button, in the card header                      |
+| `prepend-row-actions`    | `row`, `rowKey` | Before the edit and delete buttons, in the row actions column |
+| `append-row-actions`     | `row`, `rowKey` | After the delete button, in the row actions column            |
+
+```vue
+<GenericEditableTableCard :entity="application" :columns="columns" :form-fields="formFields" :endpoints="endpoints" ui-namespace="applications.details" i18n-scope="applications.details">
+  <template #append-row-actions="{ row }">
+    <q-btn label="Edit" @click="edit(row)" />
+  </template>
+</GenericEditableTableCard>
+```
+
+---
+
+## **🧩 Zones**
+
+The same extension points are also exposed as zones, so other modules can inject actions without owning the template.
+Zone names are prefixed by `${uiNamespace}.generic-editable-table-card`:
+
+| Zone                                                        | Props                                                               | Description                                                                                                 |
+| ----------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `${uiNamespace}.generic-editable-table-card.header-actions` | `entity`, `instanceId`, `uiNamespace`, `i18nScope`                  | Before the add button                                                                                       |
+| `${uiNamespace}.generic-editable-table-card.row-actions`    | `entity`, `row`, `rowKey`, `instanceId`, `uiNamespace`, `i18nScope` | Before the per-row edit and delete buttons                                                                  |
+| `${uiNamespace}.generic-editable-table-card.columns.{name}` | `entity`, `uiNamespace`, `i18nScope`                                | Replaces the cell content of the column `{name}` (see [GenericEntityTable](../table/GenericEntityTable.md)) |
+
+The `header-actions` zone receives a `uiNamespace` scoped to `.buttons-card` and an `i18nScope` scoped to
+`.ButtonsCard`, so injected buttons share the design and translations of the card header actions.
+
+In the `columns.{name}` zones, `entity` is the rendered row, not the entity owning the card that
+the other zones receive. For a column configured with `multiItem` and `itemPath` (see
+[GenericEntityTable](../table/GenericEntityTable.md)), `entity` is the current array item instead.
+
+See [Generic Pages](../../generic-pages.md) for how to register a component in a zone.
+
+---
+
+## **🧩 Internal Behavior**
+
+### Data loading
+
+- Items are loaded from the rendered `find` endpoint, and reloaded whenever the rendered endpoint changes.
+  This lets the card be rendered by a zone before the hosting page has resolved its entity
+- No request is sent while the `entity` prop is provided but empty, as the endpoints would render with
+  a missing identifier. A card configured without an `entity` prop loads its static endpoint as usual
+- The table is paginated on the server side through the corelib `usePagination` composable: each
+  request sends the current page and sort converted by `toPagination` (10 rows per page by default,
+  sorted by `updateDate` descending until a sortable column is selected). Query parameters already
+  present in the `find` endpoint are preserved
+- The `find` endpoint must return a paginated response (`content`, `totalElements`, `number`, `size`),
+  which drives the table pagination
+- Changing the page, the rows per page or the sort reloads the items; so does every successful
+  creation, update and deletion
+- Events listed in `reloadOn` reload the items when they are emitted through the UI event subject,
+  typically by a `FormDialogButton` hosted in another zone of the page
+- On failure, the items are cleared and a negative notification is displayed
+
+### Add item
+
+- The add button opens the shared `FormDialog` with the configured `formFields`
+- On submit, the form data is posted to the rendered `create` endpoint
+- On success: positive notification, `created` event, items reload, dialog closes
+- On failure: negative notification, the dialog stays open for correction
+
+### Edit item
+
+- Each row displays an edit button in the `table_actions` column, rendered only when the `update`
+  endpoint is configured
+- The edit button reopens the shared `FormDialog` with the same `formFields` (or `editFormFields`
+  when configured), pre-filled with the row values through `initialFormData`; the row properties are
+  available as named parameters in the dialog title and content translations
+- On submit, the request is sent with `PUT` to the rendered `update` endpoint. By default — when no
+  `updateBody` is configured — the submitted form data is sent as-is as the request body
+- When an `updateBody` template is configured, it **fully replaces** the request body: it is rendered
+  with `entity`, `item` and `formData` in the context, and only the properties declared in the
+  template are sent — anything else from the form data is left out. A string property holding a
+  single dotted lookup resolving to a plain object is replaced by that object
+- On success: positive notification, `updated` event, items reload, dialog closes
+- On failure: negative notification, the dialog stays open for correction
+
+#### `item` vs `formData` in the update templates
+
+Both are available in the Nunjucks context, but they play different roles:
+
+- `item` is the row being edited, as loaded from the `find` endpoint. Use it to **address the
+  resource**, typically in the `update` endpoint template (e.g. `{{ item.id }}`).
+- `formData` is the data submitted by the edition dialog, keyed by the names of `editFormFields`
+  (or `formFields`). It is pre-filled from the row and reflects the user's edits. Use it to **build
+  the request body** in the `updateBody` template.
+
+For example, with the row `{ "id": "42", "email": "a@b.c", "relationExtraParameters": { "role": "member" } }`
+and an `editFormFields` entry named `relationExtraParameters.role` that the user changes to `manager`:
+
+- the endpoint template `/api/units/{{ entity.id }}/accounts/{{ item.id }}` resolves the row through
+  `item.id` → `.../accounts/42`
+- the body template `{ "extraParameters": "{{ formData.relationExtraParameters }}" }` picks the
+  submitted values through `formData` and sends `{ "extraParameters": { "role": "manager" } }`
+
+### Remove item
+
+- Each row displays a delete button in the `table_actions` column
+- The `table_actions` column is automatically appended when not declared in `columns` and hosts both
+  the edit and delete buttons, unless `enableRowActions` is `false`
+- The delete button opens the shared `ConfirmationDialog`; the row properties are available as
+  named parameters in the dialog title and content translations
+- On confirm, the rendered `delete` endpoint is called
+- On success: positive notification, `deleted` event, items reload
+- On failure: negative notification, items unchanged
+
+---
+
+## **🌍 Internationalization**
+
+All keys are resolved under `${i18nScope}.GenericEditableTableCard`:
+
+| Key                                | Description                                                                                   |
+| ---------------------------------- | --------------------------------------------------------------------------------------------- |
+| `title`                            | Card title (optional — the title is hidden when the key is not defined)                       |
+| `ButtonsCard.add`                  | Label of the add button                                                                       |
+| `editButton`                       | Label of the per-row edit button                                                              |
+| `deleteButton`                     | Label of the per-row delete button                                                            |
+| `loadError`                        | Notification shown when loading the items fails                                               |
+| `createSuccess` / `createError`    | Notifications shown after the creation attempt                                                |
+| `updateSuccess` / `updateError`    | Notifications shown after the update attempt                                                  |
+| `deleteSuccess` / `deleteError`    | Notifications shown after the deletion attempt                                                |
+| `CreateFormDialog.title`           | Title of the creation form dialog                                                             |
+| `CreateFormDialog.content`         | Optional content of the creation form dialog                                                  |
+| `CreateFormDialog.*`               | Scope given to the `FormDialog` (buttons, field labels)                                       |
+| `EditFormDialog.title`             | Title of the edition form dialog (row properties interpolable)                                |
+| `EditFormDialog.content`           | Optional content of the edition form dialog (row properties interpolable)                     |
+| `EditFormDialog.*`                 | Scope given to the `FormDialog` (buttons, field labels)                                       |
+| `DeleteConfirmationDialog.title`   | Title of the delete confirmation dialog (row properties interpolable)                         |
+| `DeleteConfirmationDialog.content` | Content of the delete confirmation dialog (row properties interpolable)                       |
+| `DeleteConfirmationDialog.*`       | Scope given to the `ConfirmationDialog` (buttons)                                             |
+| `columns.<label>`                  | Column labels, resolved from each column `label` value                                        |
+| `GenericEntityTable.*`             | Scope given to the embedded `GenericEntityTable` (`noData`, `rowsPerPage`, `paginationLabel`) |
+
+Example of a delete confirmation content using row interpolation:
+
+```json
+{
+  "DeleteConfirmationDialog": {
+    "content": "Do you really want to remove {name}?"
+  }
+}
+```
+
+---
+
+## **🎨 UI Design**
+
+Design keys are resolved under `${uiNamespace}.generic-editable-table-card`:
+
+| Namespace                                                            | Type             | Description                              |
+| -------------------------------------------------------------------- | ---------------- | ---------------------------------------- |
+| `${uiNamespace}.generic-editable-table-card`                         | `q-card`         | Card container                           |
+| `${uiNamespace}.generic-editable-table-card.header-section`          | `q-card-section` | Header section (title and actions)       |
+| `${uiNamespace}.generic-editable-table-card.table-section`           | `q-card-section` | Section wrapping the table               |
+| `${uiNamespace}.generic-editable-table-card.buttons-card`            | `q-card`         | Container of the add button              |
+| `${uiNamespace}.generic-editable-table-card.buttons-card.add-button` | `q-btn`          | Add button (e.g. custom `icon`, `color`) |
+| `${uiNamespace}.generic-editable-table-card.edit-button`             | `q-btn`          | Per-row edit button                      |
+| `${uiNamespace}.generic-editable-table-card.delete-button`           | `q-btn`          | Per-row delete button                    |
+| `${uiNamespace}.generic-editable-table-card.generic-entity-table`    | `q-table`        | Embedded table                           |
+
+The add button is rendered through the shared `ButtonsCard` component, with its default confirm and
+cancel buttons not visible. Its label comes from i18n (`ButtonsCard.add`) while its icon and appearance
+are customized through the design system (`buttons-card.add-button` namespace).
+
+---
+
+## **🧩 Usage Examples**
+
+### Through a zone configuration
+
+The card is declared in the `zones` property of the module host configuration (see
+[Generic Pages](../../generic-pages.md)). The hosting zone injects the page `entity`, which the card uses as the owner of the collection, along
+with `instanceId`, `uiNamespace` and `i18nScope`:
+
+```json
+{
+  "zone": "moduleOrganizationDetailsPage.content.after",
+  "plugin": "catalogUI/GenericEditableTableCard",
+  "props": {
+    "columns": [{ "name": "name", "label": "columns.name", "field": "name", "align": "left" }],
+    "formFields": [
+      {
+        "name": "name",
+        "type": "String",
+        "input": "Text",
+        "required": true,
+        "inputSettings": {}
+      }
+    ],
+    "endpoints": {
+      "find": "/api/organizations/{{ entity.id }}/members",
+      "create": "/api/organizations/{{ entity.id }}/members",
+      "update": "/api/organizations/{{ entity.id }}/members/{{ item.id }}",
+      "delete": "/api/organizations/{{ entity.id }}/members/{{ item.id }}"
+    }
+  }
+}
+```
+
+### Through a zone configuration, with every property
+
+When the edition dialog manages different properties than the creation dialog — such as the
+attributes of the relationship between the entity and the row — `editFormFields` and `updateBody`
+complete the configuration. Here the creation dialog attaches an existing account picked from a
+dynamic list, while the edition dialog only edits the relationship `role` and reshapes it into the
+payload expected by the API:
+
+```json
+{
+  "zone": "moduleOrganizationDetailsPage.content.after",
+  "plugin": "catalogUI/GenericEditableTableCard",
+  "props": {
+    "rowKey": "id",
+    "columns": [
+      { "name": "lastname", "label": "columns.lastname", "field": "lastname", "align": "left" },
+      { "name": "email", "label": "columns.email", "field": "email", "align": "left" }
+    ],
+    "formFields": [
+      {
+        "name": "accountId",
+        "type": "String",
+        "input": "DynamicList",
+        "required": true,
+        "inputSettings": {
+          "route": "/api/accounts",
+          "optionLabel": "{{ lastname }} {{ firstname }}",
+          "optionValue": "{{ id }}"
+        }
+      }
+    ],
+    "editFormFields": [
+      {
+        "name": "relationExtraParameters.role",
+        "type": "String",
+        "input": "Text",
+        "required": false,
+        "inputSettings": {}
+      }
+    ],
+    "updateBody": {
+      "extraParameters": "{{ formData.relationExtraParameters }}"
+    },
+    "endpoints": {
+      "find": "/api/organizations/{{ entity.id }}/accounts",
+      "create": "/api/organizations/{{ entity.id }}/accounts",
+      "update": "/api/organizations/{{ entity.id }}/accounts/{{ item.id }}",
+      "delete": "/api/organizations/{{ entity.id }}/accounts/{{ item.id }}"
+    }
+  }
+}
+```
+
+The creation dialog posts `{ "accountId": "<picked id>" }` as-is; the edition dialog is pre-filled
+from the row and, thanks to `updateBody`, sends `{ "extraParameters": { ... } }` instead of the raw
+form data — since `updateBody` replaces the whole body, `extraParameters` is the only property sent
+in this request.
+
+#### Read-only mode
+
+Set `readOnly: true` to display the collection without any action button. Only the `find` endpoint is
+required — `create`, `update` and `delete` can be omitted entirely:
+
+```json
+{
+  "zone": "moduleOrganizationDetailsPage.content.after",
+  "plugin": "catalogUI/GenericEditableTableCard",
+  "props": {
+    "readOnly": true,
+    "columns": [{ "name": "name", "label": "columns.name", "field": "name", "align": "left" }],
+    "endpoints": {
+      "find": "/api/organizations/{{ entity.id }}/members"
+    }
+  }
+}
+```
+
+#### Hiding header or row actions independently
+
+Use `enableActions` and `enableRowActions` to hide specific parts of the UI without switching the
+entire card to read-only mode. This is useful when custom slots or zone-injected components replace
+the built-in buttons:
+
+```json
+{
+  "zone": "moduleOrganizationDetailsPage.content.after",
+  "plugin": "catalogUI/GenericEditableTableCard",
+  "props": {
+    "enableActions": false,
+    "enableRowActions": false,
+    "columns": [{ "name": "name", "label": "columns.name", "field": "name", "align": "left" }],
+    "endpoints": {
+      "find": "/api/organizations/{{ entity.id }}/members"
+    }
+  }
+}
+```
+
+`enableActions: false` hides the `ButtonsCard` in the card header (add button, header slots and
+zone renderer). `enableRowActions: false` removes the `table_actions` column entirely (edit button,
+delete button, row slots and zone renderer are not rendered).
+
+### Direct usage
+
+```vue
+<GenericEditableTableCard :entity="organization" :columns="columns" :form-fields="formFields" :endpoints="endpoints" ui-namespace="organizations.details" i18n-scope="organizations.details" instance-id="organizations" @created="onMemberCreated" @updated="onMemberUpdated" @deleted="onMemberDeleted" />
+```
+
+---
+
+## **✅ Advantages**
+
+- **Standardized:** One consistent flow for managing simple collections
+- **Progressive:** The edit action is opt-in through the `update` endpoint; the entire card can be switched to read-only via the `readOnly` prop
+- **Composable:** Built on top of `GenericEntityTable`, `FormDialog` and `ConfirmationDialog`
+- **Configurable:** Columns, form fields and endpoints are driven by configuration
+- **Zone-ready:** Designed to be rendered through a zone with the page entity injected

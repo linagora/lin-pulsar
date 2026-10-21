@@ -1,0 +1,440 @@
+# **GenericEntityTable 🧾**
+
+The **GenericEntityTable** component is a minimal wrapper around Quasar's `QTable`.
+It renders a simple table from provided columns and rows, without slots, actions, or events.
+
+---
+
+## **🎯 Purpose**
+
+- Provide a reusable base table for entity lists
+- Keep the first iteration minimal and easy to extend later
+- Stay aligned with the LinID design system
+- Provide internationalized labels for pagination and rows
+
+---
+
+## **⚙️ Props**
+
+| Prop          | Type                        | Required | Default | Description                                                     |
+| ------------- | --------------------------- | -------- | ------- | --------------------------------------------------------------- |
+| `columns`     | `GenericTableColumn[]`      | Yes      | -       | Column definitions (Quasar `QTableColumn` + formatting options) |
+| `rows`        | `Record<string, unknown>[]` | Yes      | -       | Table row data                                                  |
+| `rowKey`      | `QTableProps['rowKey']`     | No       | `id`    | Row key for Quasar QTable                                       |
+| `uiNamespace` | `string`                    | Yes      | -       | UI design namespace for custom styling                          |
+| `i18nScope`   | `string`                    | Yes      | -       | i18n scope for translations                                     |
+
+---
+
+## **🎨 Column Formatting**
+
+Each column definition can be enhanced with optional formatting properties to automatically format cell values when data is displayed.
+
+The component does not implement the formatters itself: it resolves them through corelib's
+`useValueFormatter()`, and injects the result as Quasar's native `format` function on the column.
+Columns without a `formatter` are forwarded to `QTable` untouched, and the `columns` prop is never
+mutated.
+
+Nullish values, unknown formatter names and missing formatter options are handled by corelib, which
+returns the value unchanged rather than throwing.
+
+See [Value Formatting](../../value-formatting.md) for details on supported formatters and configuration.
+
+### **Example Configuration**
+
+```ts
+const columns = [
+  {
+    name: 'id',
+    label: 'ID',
+    field: 'id',
+  },
+  {
+    name: 'createdAt',
+    label: 'Created',
+    field: 'createdAt',
+    formatter: 'toDate',
+    formatOptions: { formatKey: 'application.dateTimeFormat' },
+  },
+  {
+    name: 'updatedAt',
+    label: 'Updated',
+    field: 'updatedAt',
+    formatter: 'toDate',
+    formatOptions: { formatKey: 'application.dateFormat' },
+  },
+];
+```
+
+#### **Example i18n Configuration**
+
+```json
+{
+  "application": {
+    "dateTimeFormat": "DD/MM/YYYY HH:mm:ss",
+    "dateFormat": "DD/MM/YYYY"
+  }
+}
+```
+
+---
+
+## **🧭 Nested Attributes**
+
+The column `field` supports **dot notation** to target values located inside sub-objects of the row (e.g. `extraParameters.login`):
+
+- A string `field` containing a dot is replaced by a getter resolving the nested path (`getNestedValue` from corelib)
+- Unresolvable paths render an empty cell instead of throwing
+- Flat string fields and function fields are forwarded to `QTable` untouched
+
+```ts
+const columns = [
+  {
+    name: 'login',
+    label: 'Login',
+    field: 'extraParameters.login',
+  },
+];
+```
+
+`name` stays a plain column identifier — only `field` is resolved against the row.
+
+---
+
+## **🔗 Slot Forwarding**
+
+The `GenericEntityTable` supports **forwarding slots from the parent component to the underlying Quasar `QTable`**.
+
+- Any slots passed to `GenericEntityTable` will be automatically forwarded to the `QTable`.
+- This allows customizing **cells, headers, or any other part of the table** without modifying the wrapper component.
+
+[Link to q-table documentation](https://quasar.dev/vue-components/table)
+
+### **How it works**
+
+```vue
+<q-table class="generic-entity-table" :columns="columns" :rows="rows" :row-key="props.rowKey" v-bind="uiProps">
+  <template
+    v-for="(_slotFn, name) in $slots"
+    #[name]="slotProps"
+  >
+    <slot
+      :name="name"
+      v-bind="slotProps"
+    />
+  </template>
+</q-table>
+```
+
+- `v-for` iterates over all slots passed to `GenericEntityTable`.
+- `#[name]="slotProps"` dynamically binds each slot to the `QTable` slot with the same name.
+- The `<slot>` element ensures that the content provided by the parent is rendered correctly inside the table.
+
+### **Example Usage**
+
+```vue
+<GenericEntityTable :columns="columns" :rows="rows" ui-namespace="catalogUI">
+  <!-- Custom cell template for the "name" column -->
+  <template #body-cell-name="props">
+    <strong>{{ props.row.name }}</strong>
+  </template>
+</GenericEntityTable>
+```
+
+✅ Advantages:
+
+- Parent components can **customize cell rendering** easily.
+- No need to modify the wrapper for every custom slot.
+- Keeps the `GenericEntityTable` **flexible and reusable** while maintaining its minimal design.
+
+---
+
+## **🧩 Actions Scope**
+
+The component exposes an `actions` scope rendered inside the **actions column** (the column named
+`table_actions`), so consumers can contribute action buttons without overriding the whole `body`
+slot. The scope receives the current `row` and its resolved `rowKey` as slot props.
+
+When the scope is provided (and no `body` slot overrides it), the component renders a built-in
+body: each row gets a `data-cy="entity-row"` attribute, each cell gets
+`data-cy="entity-cell-{column}_{rowKey}"`, and the actions cell wraps the scope in a
+`data-cy="entity-actions_{rowKey}"` container. When the scope is not provided, the behavior is
+unchanged.
+
+### **Example Usage**
+
+```vue
+<GenericEntityTable :columns="columns" :rows="rows" ui-namespace="catalogUI" i18n-scope="myScope">
+  <template #actions="{ row }">
+    <q-btn label="Edit" @click="edit(row)" />
+    <q-btn label="Delete" color="negative" @click="remove(row)" />
+  </template>
+</GenericEntityTable>
+```
+
+---
+
+## **🧩 Column Zones**
+
+Each column exposes a zone named `${uiNamespace}.columns.${columnName}`. When at least one
+component is registered in that zone, the cell content is rendered by the zone instead of the
+default column configuration. Columns without a registered zone keep the standard rendering, so
+existing tables work without modification.
+
+The zone receives the following props, plus any props declared when registering the component:
+
+| Prop          | Description            |
+| ------------- | ---------------------- |
+| `entity`      | The row entity         |
+| `uiNamespace` | The table UI namespace |
+| `i18nScope`   | The table i18n scope   |
+
+Column zones are rendered both by the default table body and by the built-in body used with the
+`actions` scope. Parent rendering always takes precedence over a zone: a `body-cell-{columnName}`
+slot overrides the zone of that column, the `actions` scope overrides a zone registered on the
+`table_actions` column, and a `body` slot overrides the whole table body, including column zones.
+
+See [Generic Pages](../../generic-pages.md) for how to register a component in a zone.
+
+### **Example Configuration**
+
+```json
+{
+  "zones": [
+    {
+      "zone": "moduleUsers.columns.status",
+      "plugin": "myModule/StatusBadge",
+      "props": { "dense": true }
+    }
+  ]
+}
+```
+
+---
+
+## **🧩 Multi-Item Columns**
+
+A column can render its zone once per item of an array contained in the row entity, instead of
+once per row. Each rendered instance receives the current item as its `entity` prop, so existing
+zone components are reused without modification. The other zone props (`uiNamespace`, `i18nScope`)
+are unchanged.
+
+| Key         | Description                                                                             |
+| ----------- | --------------------------------------------------------------------------------------- |
+| `multiItem` | Whether the column zone is rendered once per item of the array resolved from `itemPath` |
+| `itemPath`  | Dotted path to the array, resolved against `{ entity: row }` (e.g. `entity.data.items`) |
+
+The resolved value must be an array: when the path does not resolve or resolves to a non-array
+value, the column renders nothing. Multi-item columns require a registered column zone; without
+one, the standard cell rendering applies. Items are passed as-is and may be primitives (e.g. an
+array of labels), so zone components must not assume `entity` is an object.
+
+### **Example**
+
+Given the following row entity:
+
+```json
+{
+  "id": "123",
+  "data": {
+    "items": [{ "name": "Item A" }, { "name": "Item B" }]
+  }
+}
+```
+
+The column and zone configuration:
+
+```json
+{
+  "columns": [
+    {
+      "name": "items",
+      "label": "Items",
+      "field": "id",
+      "multiItem": true,
+      "itemPath": "entity.data.items"
+    }
+  ],
+  "zones": [
+    {
+      "zone": "moduleUsers.columns.items",
+      "plugin": "myModule/ItemChip"
+    }
+  ]
+}
+```
+
+The `myModule/ItemChip` component is rendered twice in the cell: first with
+`entity = { "name": "Item A" }`, then with `entity = { "name": "Item B" }`.
+
+---
+
+## **🎨 UI Customization**
+
+The component uses the LinID design system through `useUiDesign()` and applies
+props to Quasar's `QTable`:
+
+- **Table props**: `{uiNamespace}.generic-entity-table` → applies to `q-table`
+
+Example:
+
+```typescript
+// For uiNamespace = 'catalogUI'
+// Table: ui('catalogUI.generic-entity-table', 'q-table')
+```
+
+---
+
+## **✅ Advantages**
+
+- **Simple:** No slots, actions, or event handling in this iteration
+- **Type-safe:** Columns and rows are typed with Quasar definitions
+- **Consistent:** UI props come from the LinID design system
+- **Reusable:** Designed as a base for future enhancements
+
+---
+
+## **💡 Usage Example**
+
+```vue
+<script setup lang="ts">
+import { loadAsyncComponent } from '@linagora/linid-im-front-corelib';
+import { ref, type Component } from 'vue';
+import type { QTableColumn } from 'quasar';
+
+const remoteComponent = ref<Component | null>(null);
+
+const columns: QTableColumn[] = [
+  { name: 'id', label: 'ID', field: 'id', align: 'left' },
+  { name: 'name', label: 'Name', field: 'name', align: 'left' },
+];
+
+const rows = [{ id: 1, name: 'John Doe' }];
+
+remoteComponent.value = loadAsyncComponent('catalogUI/GenericEntityTable');
+</script>
+
+<template>
+  <component
+    :is="remoteComponent"
+    v-if="remoteComponent"
+    ui-namespace="catalogUI"
+    i18n-scope="i18nScope"
+    :columns="columns"
+    :rows="rows"
+  />
+</template>
+```
+
+---
+
+## **📄 Pagination & Server-Side Data Handling**
+
+`GenericEntityTable` fully supports **Quasar pagination** by transparently forwarding pagination-related props and events to the underlying `QTable`.
+
+This allows the component to be used in **controlled pagination mode**, including server-side pagination, sorting, and filtering.
+
+---
+
+### **🔁 Controlled Pagination**
+
+Pagination is managed externally using Quasar’s `pagination` object and the `@request` event.
+
+Example:
+
+```vue
+<component v-model:pagination="pagination" v-if="table" :is="table" :columns="columns" :rows="rows" @request="onRequest" />
+```
+
+---
+
+### **🧠 Pagination State**
+
+```ts
+const pagination = ref<QuasarPagination>({
+  page: 1,
+  rowsPerPage: 1,
+  sortBy: 'id',
+  descending: false,
+  rowsNumber: 2,
+});
+```
+
+Key fields:
+
+- `page`: current page (1-based)
+- `rowsPerPage`: number of rows per page
+- `rowsNumber`: **total number of rows** (required for server-side pagination)
+- `sortBy` / `descending`: current sorting state
+
+---
+
+## **🌍 Internationalization**
+
+The component uses scoped i18n with the following translation keys:
+
+| Key                                              | Description                          | Usage                              | Parameters             |
+| ------------------------------------------------ | ------------------------------------ | ---------------------------------- | ---------------------- |
+| `{i18nScope}.GenericEntityTable.rowsPerPage`     | Label for the rows per page selector | Bottom of table pagination control | -                      |
+| `{i18nScope}.GenericEntityTable.paginationLabel` | Label for the pagination display     | Bottom of table pagination info    | {start}, {end},{total} |
+| `{i18nScope}.GenericEntityTable.noData`          | Label for no data                    | Body of table without data         | -                      |
+
+Example:
+
+```json
+{
+  "${instanceId}.GenericEntityTable": {
+    "noData": "No data available",
+    "rowsPerPage": "Lignes par page",
+    "paginationLabel": "{start}-{end} sur {total}"
+  }
+}
+```
+
+---
+
+### **📡 Handling Data Requests**
+
+When pagination, sorting, or filtering changes, `QTable` emits a `request` event.
+This event is forwarded unchanged by `GenericEntityTable`.
+
+```ts
+function onRequest(props: QTableRequestEvent) {
+  console.log(props);
+}
+```
+
+`props` contains:
+
+- `pagination`: updated pagination state
+- `filter`: active filter (if any)
+- `getCellValue`: helper function from Quasar
+
+This is typically where you:
+
+1. Fetch new data from the backend
+2. Update `rows`
+3. Update `pagination.rowsNumber` with the total count from the API
+
+---
+
+### **📌 Important Notes**
+
+- `GenericEntityTable` does **not** manage pagination internally
+- All pagination logic (state, API calls, synchronization) is owned by the parent
+- This design keeps the component:
+  - predictable
+  - easy to test
+  - compatible with server-side data sources
+
+---
+
+### **✅ Recommended Use Cases**
+
+- Large datasets
+- Backend-driven pagination
+- Consistent pagination behavior across multiple entity tables
+
+## **📌 Notes**
+
+- Uses `row-key="id"` by default (override with `rowKey`)

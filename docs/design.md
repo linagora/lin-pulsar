@@ -1,0 +1,2507 @@
+# **CatalogUI Design Configuration 🎨**
+
+This document describes the design configuration keys available for CatalogUI components. These keys are used in the `design.json` file to customize the visual appearance of components.
+
+> For detailed Quasar component props, see the [corelib design documentation](https://github.com/linagora/linid-im-front-corelib/blob/main/docs/ui-design.md).
+
+---
+
+## **📋 Overview**
+
+CatalogUI components use a namespace-based design system. Each component appends its own identifier to the parent `uiNamespace` prop, creating a hierarchical configuration structure.
+
+**Pattern:** `{parentNamespace}.{component-name}.{q-component}`
+
+---
+
+## **🔤 Placeholder Reference**
+
+The examples in this document use placeholders that should be replaced with actual values:
+
+| Placeholder                       | Description                                               | Example                                                 |
+| --------------------------------- | --------------------------------------------------------- | ------------------------------------------------------- |
+| `[INSTANCE_ID]`                   | The module instance identifier (same level as `default`)  | `moduleUsers`                                           |
+| `[PAGE_NAME]`                     | The page or view name within the module                   | `homepage`, `details-page`                              |
+| `[ROUTE_ID]`                      | The route identifier for navigation menu tabs             | `moduleUsers`, `moduleGroups`                           |
+| `[FIELD_NAME]`                    | The entity attribute field name                           | `uid`, `mail`, `displayName`                            |
+| `[ITEM_KEY]`                      | The root dropdown action key                              | `edit`, `export`, `archive`                             |
+| `[CHILD_KEY]`                     | The nested dropdown action key                            | `csv`, `pdf`, `json`                                    |
+| `[PARENT_NAMESPACE]`              | The full namespace path passed by the parent component    | `moduleUsers.homepage`                                  |
+| `[TYPE]`                          | The node type for tree components                         | `structure`, `establishment`                            |
+| `[ACTION]`                        | The node action name for menu in tree nodes               | `edit`, `create`                                        |
+| `[CONFIRMATION_DIALOG_NAMESPACE]` | The namespace for a specific confirmation dialog instance | `delete-user-confirmation`, `archive-user-confirmation` |
+| `[FORM_DIALOG_NAMESPACE]`         | The namespace for a specific form dialog instance         | `create-user-dialog`, `edit-user-dialog`                |
+| `[FILTER]`                        | The filter name for LinidSmartFilter instance             | `insertDate`, `email`                                   |
+| `[FILTER_TYPE]`                   | The filter type for LinidFilterPanel icon configuration   | `text`, `date`, `number`, `list`, `tree`                |
+| `[SECTION_KEY]`                   | The section key of a generic details page                 | `identity`, `audit`                                     |
+| `[STATUS]`                        | The row import status of a generic import page            | `READY`, `ERROR`                                        |
+
+---
+
+## **🧩 Components**
+
+### BaseLayout
+
+The main application layout with header, toolbar, and navigation.
+
+**Namespace:** `base-layout.header`
+
+```json
+{
+  "base-layout": {
+    "header": {
+      "q-header": { "elevated": true },
+      "q-toolbar": { "inset": false },
+      "q-avatar": { "size": "md", "color": "primary" },
+      "q-img": { "src": "/toolbarApplicationLogo.svg" },
+      "q-toolbar-title": { "shrink": false },
+      "q-badge": { "color": "primary", "floating": false }
+    }
+  }
+}
+```
+
+---
+
+### HeaderProfile
+
+User profile button displayed in the application header, including a language switcher. This component is a child of BaseLayout.
+
+**Namespace:** `{uiNamespace}.header-profile`
+
+```json
+{
+  "base-layout": {
+    "header": {
+      "header-profile": {
+        "q-btn": { "flat": true, "round": false, "color": "white", "noCaps": true },
+        "q-item-section": { "avatar": true },
+        "q-item-label": { "caption": true },
+        "q-img": {},
+        "q-select": {},
+        "q-item": {}
+      }
+    }
+  }
+}
+```
+
+> **Note:** Flags are static SVG files served by the host at `/icons/{locale}.svg`; language names come from i18n (`application.languages.{locale}`).
+
+---
+
+### LogoutMenuItem
+
+Logout entry rendered by default at the end of the HeaderProfile menu. Opens a confirmation dialog before navigating to the host logout route. Its namespace is nested in the one of HeaderProfile, i.e. `base-layout.header.header-profile` in `BaseLayout`.
+
+**Namespace:** `{uiNamespace}.logout-menu-item`
+
+```json
+{
+  "base-layout": {
+    "header": {
+      "header-profile": {
+        "logout-menu-item": {
+          "q-separator": {},
+          "q-item": { "dense": true },
+          "icon": {
+            "q-item-section": { "avatar": true },
+            "q-icon": { "name": "logout" }
+          },
+          "label": {
+            "q-item-section": {},
+            "q-item-label": {}
+          },
+          "confirmation-dialog": {
+            "q-dialog": { "persistent": false },
+            "buttons-card": {
+              "confirm-button": {
+                "q-btn": { "color": "primary", "unelevated": true, "outline": false }
+              },
+              "cancel-button": {
+                "q-btn": { "color": "primary", "outline": true }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+> **Note:** `icon.q-item-section.avatar` defaults to `true` and `icon.q-icon.name` to `logout` when not configured.
+
+---
+
+### NavigationMenu
+
+Tab-based navigation menu for routing between modules. This component is a child of BaseLayout.
+
+**Namespace:** `{uiNamespace}.navigation-menu`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "navigation-menu": {
+      "q-tabs": { "dense": false, "align": "left", "noCaps": true },
+      "route-[ROUTE_ID]": {
+        "q-route-tab": { "icon": "person", "noCaps": true }
+      }
+    }
+  }
+}
+```
+
+---
+
+### GenericEntityTable
+
+Data table for displaying entity lists.
+
+**Namespace:** `{uiNamespace}.generic-entity-table`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "generic-entity-table": {
+      "q-table": { "dense": true, "bordered": true, "flat": true }
+    }
+  }
+}
+```
+
+### GenericTree
+
+Hierarchical tree for displaying entity structures.
+
+**Namespace:** `{uiNamespace}.GenericTree`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "GenericTree": {
+      "q-tree": {},
+      "q-checkbox": {},
+      "selected-icon": {
+        "q-icon": { "name": "check", "color": "positive" }
+      },
+      "ButtonActions": {
+        "q-btn": {
+          "flat": true,
+          "round": true,
+          "dense": true,
+          "icon": "more_vert"
+        }
+      },
+      "types": {
+        "[TYPE]": {
+          "q-icon": {
+            "name": "folder"
+          },
+          "actions": {
+            "[ACTION]": {
+              "q-icon": {
+                "name": "edit"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### InformationCard
+
+Card component for displaying information with an optional icon.
+
+**Namespace:** `{uiNamespace}.information-card`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "information-card": {
+      "q-card": { "flat": true, "bordered": true },
+      "q-icon": { "name": "info", "color": "primary", "size": "sm" },
+      "title-section": {
+        "q-card-section": {}
+      },
+      "content-section": {
+        "q-card-section": {}
+      }
+    }
+  }
+}
+```
+
+---
+
+### ButtonsCard
+
+Card with confirm/cancel action buttons.
+
+**Namespace:** `{uiNamespace}.buttons-card`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "buttons-card": {
+      "q-card": { "flat": true },
+      "q-icon": { "name": "save", "color": "primary" },
+      "q-card-actions": { "align": "right" },
+      "title-section": {
+        "q-card-section": {}
+      },
+      "confirm-button": {
+        "q-btn": { "color": "primary", "unelevated": true }
+      },
+      "cancel-button": {
+        "q-btn": { "color": "negative", "outline": true }
+      }
+    }
+  }
+}
+```
+
+---
+
+### StatusBadge
+
+Badge component for displaying entity status with i18n support.
+
+**Namespace:** `status-badge`
+
+The status badge renders different styles based on the entity's status value.
+
+```json
+{
+  "status-badge": {
+    "[STATUS]": {
+      "q-badge": { "color": "primary", "floating": false }
+    }
+  }
+}
+```
+
+---
+
+### EntityAvatar
+
+Deterministic DiceBear avatar generated from the provided entity.
+
+**Namespace:** `{uiNamespace}.entity-avatar`
+
+```json
+{
+  "[NAMESPACE]": {
+    "entity-avatar": {
+      "q-avatar": { "size": "42px" },
+      "q-icon": { "name": "question_mark", "color": "grey-6" }
+    }
+  }
+}
+```
+
+The avatar size is configured through the `q-avatar` `size` key. The `q-icon` key styles the
+fallback icon displayed when no avatar is generated, for example when no `avatarOptions` is
+provided or the style is unknown.
+
+---
+
+### DropdownButton
+
+Dropdown action button supporting flat actions and one submenu level.
+
+**Namespace:** `{uiNamespace}.dropdown-button`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "dropdown-button": {
+      "q-btn-dropdown": { "color": "primary", "outline": true, "icon": "more_vert" },
+      "q-list": { "dense": true },
+      "q-menu": { "autoClose": false },
+      "menu-trigger": {
+        "q-item-section": { "side": true },
+        "q-icon": { "name": "keyboard_arrow_right", "size": "16px" }
+      },
+      "items": {
+        "[ITEM_KEY]": {
+          "q-item": { "clickable": true },
+          "icon": {
+            "q-item-section": { "avatar": true },
+            "q-icon": { "name": "edit" }
+          },
+          "label": {
+            "q-item-label": { "lines": 1 }
+          },
+          "children": {
+            "[CHILD_KEY]": {
+              "q-item": { "clickable": true },
+              "icon": {
+                "q-item-section": { "avatar": true },
+                "q-icon": { "name": "description" }
+              },
+              "label": {
+                "q-item-label": { "lines": 1 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### FormDialogButton
+
+Action button opening the shared `FormDialog` to collect user input before sending a configurable request.
+The dialog inherits this namespace.
+
+**Namespace:** `{uiNamespace}.form-dialog-button`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "form-dialog-button": {
+      "q-btn": { "color": "primary", "unelevated": true, "icon": "send" },
+      "form-dialog": {
+        "q-dialog": { "persistent": false },
+        "q-card": { "flat": true, "bordered": true }
+      }
+    }
+  }
+}
+```
+
+---
+
+### ConfirmDialogButton
+
+Action button opening the shared `ConfirmationDialog` before sending a configurable request.
+The dialog inherits this namespace.
+
+**Namespace:** `{uiNamespace}.confirm-dialog-button`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "confirm-dialog-button": {
+      "q-btn": { "color": "negative", "outline": true, "icon": "delete" },
+      "confirmation-dialog": {
+        "q-dialog": { "persistent": false }
+      }
+    }
+  }
+}
+```
+
+---
+
+### RedirectButton
+
+Action button navigating to a route rendered from a Nunjucks template.
+
+**Namespace:** `{uiNamespace}.redirect-button`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "redirect-button": {
+      "q-btn": { "color": "primary", "outline": true, "icon": "upload" }
+    }
+  }
+}
+```
+
+---
+
+### MenuButton
+
+Button opening a menu of actions. The button, the menu, the list and its rows (`q-item`) are styled under the
+same namespace; each row hosted from a zone gets its own namespace `menu-button.<item>`, under which the action appends its
+own segment and fills the row.
+
+**Namespace:** `{uiNamespace}.menu-button`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "menu-button": {
+      "q-btn": { "round": true, "icon": "edit", "color": "primary", "outline": false },
+      "q-menu": { "anchor": "bottom right", "self": "top left" },
+      "q-item": { "dense": true },
+      "editImage": {
+        "form-dialog-button": {
+          "q-btn": { "flat": true, "align": "left", "icon": "photo_camera", "outline": false }
+        }
+      },
+      "deleteImage": {
+        "confirm-dialog-button": {
+          "q-btn": { "flat": true, "align": "left", "icon": "delete", "color": "negative", "outline": false }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### EntityDetailsCard
+
+Card for displaying entity attribute details. Fields inside the card can be configured individually.
+
+**Namespace:** `{uiNamespace}.entity-details-card`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "entity-details-card": {
+      "q-card": { "flat": true, "bordered": true },
+      "title-section": {
+        "q-card-section": {}
+      },
+      "content-section": {
+        "q-card-section": {}
+      },
+      "[FIELD_NAME]": {
+        "information-card": {
+          "q-card": { "flat": true },
+          "q-icon": { "name": "info", "color": "primary" }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### SupersetWidgetCard
+
+Widget for displaying superset dashboard.
+
+**Namespace:** `{uiNamespace}.superset-widget-card`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "superset-widget-card": {
+      "q-card": { "flat": true, "bordered": true },
+      "title-section": {
+        "q-card-section": {}
+      },
+      "content-section": {
+        "q-card-section": {}
+      }
+    }
+  }
+}
+```
+
+---
+
+### EntityProfilePanel
+
+Panel that displays an entity profile in a vertical layout: navigation bar with a back button, circular profile image with status badge, title and subtitle, an actions bar, and entity details.
+
+**Namespace:** `{uiNamespace}.entity-profile-panel`
+
+```json
+{
+  "[NAMESPACE]": {
+    "entity-profile-panel": {
+      "q-card": { "flat": true, "bordered": true },
+      "q-img": { "draggable": false },
+      "q-icon": { "name": "question_mark", "color": "grey-6" },
+      "navigation-section": {
+        "q-card-section": {}
+      },
+      "avatar-section": {
+        "q-card-section": {}
+      },
+      "titles-section": {
+        "q-card-section": {}
+      },
+      "actions-section": {
+        "q-card-section": {}
+      },
+      "details-section": {
+        "q-card-section": {}
+      },
+      "navigation": {
+        "buttons-card": {
+          "q-card": { "flat": true },
+          "q-card-actions": { "align": "left" },
+          "back-button": {
+            "q-btn": { "color": "primary", "outline": true, "icon": "arrow_back" }
+          }
+        }
+      },
+      "avatar": {
+        "menu-button": {
+          "q-btn": { "round": true, "icon": "edit", "color": "primary", "outline": false },
+          "q-menu": { "anchor": "bottom right", "self": "top left" },
+          "edit-image-button": {
+            "form-dialog-button": {
+              "q-btn": { "flat": true, "align": "left", "noCaps": true, "icon": "photo_camera", "color": "primary", "outline": false }
+            }
+          },
+          "delete-image-button": {
+            "confirm-dialog-button": {
+              "q-btn": { "flat": true, "align": "left", "noCaps": true, "icon": "delete", "color": "negative", "outline": false }
+            }
+          }
+        }
+      },
+      "actions": {
+        "buttons-card": {
+          "q-card": { "flat": true },
+          "q-card-actions": { "align": "right" },
+          "edit-button": {
+            "form-dialog-button": {
+              "q-btn": { "color": "primary", "unelevated": true, "icon": "edit" }
+            }
+          }
+        }
+      },
+      "entity-details-card": {
+        "q-card": { "flat": true, "bordered": true },
+        "[FIELD_NAME]": {
+          "information-card": {
+            "q-card": { "flat": true },
+            "q-icon": { "name": "info", "color": "primary" }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+The `q-icon` key at `entity-profile-panel` level styles the fallback icon displayed inside the avatar circle when `avatarSrc` is undefined or the image fails to load. Its `font-size` is forced to `100cqmin` by a scoped style so the icon always fills the circle — only `name` and `color` are useful overrides.
+
+The back button is rendered by the panel itself, nested in the navigation bar under
+`navigation.buttons-card.back-button`; the actions bar uses `actions.buttons-card`. Both cards have their built-in buttons hidden, making their
+`confirm-button` and `cancel-button` sub-namespaces inoperative. The edit button (`FormDialogButton`), rendered only when the panel receives an
+`updateEndpoint`, is nested under `actions.buttons-card.edit-button` and appends `form-dialog-button` as usual. The plugin zones they host receive their
+card's namespace; the five other zones of the panel receive `${uiNamespace}.entity-profile-panel` directly.
+
+When the avatar import is enabled (`importOptions.enabled`), the image actions are listed by a
+[MenuButton](#menubutton) under `avatar.menu-button`: its button, menu and list are styled there, the edit image action under `avatar.menu-button.edit-image-button` (a
+`FormDialogButton`, appending `form-dialog-button`) and the delete image action under
+`avatar.menu-button.delete-image-button` (a `ConfirmDialogButton`, appending `confirm-dialog-button`).
+
+The details card inherits `entity-details-card` and forwards the per-field `information-card` namespaces of the
+[EntityDetailsCard section](#entitydetailscard). The status badge uses the global `status-badge` namespace. The full
+zone list is in the [EntityProfilePanel documentation](./components/panel/EntityProfilePanel.md).
+
+---
+
+### GenericEditableTableCard
+
+Card managing a simple collection: a table, an add button opening a `FormDialog`, an optional per-row edit button
+reopening the same `FormDialog`, and a per-row delete button guarded by a `ConfirmationDialog`. The add button is
+rendered through a nested `ButtonsCard`, and both dialogs inherit this namespace. The edit button is only rendered
+when the `update` endpoint is configured.
+
+**Namespace:** `{uiNamespace}.generic-editable-table-card`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "generic-editable-table-card": {
+      "q-card": { "flat": true, "bordered": true },
+      "header-section": {
+        "q-card-section": {}
+      },
+      "table-section": {
+        "q-card-section": {}
+      },
+      "buttons-card": {
+        "q-card": { "flat": true },
+        "add-button": {
+          "q-btn": { "color": "primary", "icon": "add", "dense": true }
+        }
+      },
+      "edit-button": {
+        "q-btn": { "color": "primary", "icon": "edit", "flat": true }
+      },
+      "delete-button": {
+        "q-btn": { "color": "negative", "icon": "delete", "flat": true }
+      },
+      "generic-entity-table": {
+        "q-table": { "flat": true }
+      },
+      "form-dialog": {
+        "q-dialog": { "persistent": false },
+        "q-card": { "flat": true, "bordered": true }
+      },
+      "confirmation-dialog": {
+        "q-dialog": { "persistent": false }
+      }
+    }
+  }
+}
+```
+
+---
+
+### GenericSortableListCard
+
+Card managing a drag-and-drop sortable collection: a scrollable list with a drag handle per item, a header row
+above the list, one section per configured field, an add button opening a `FormDialog`, per-item edit and delete
+buttons — delete removes the item locally with no confirmation dialog — and a save button persisting every pending
+change (edits, reordering and deletions) in a single batch. Only the add and edit dialogs inherit this namespace.
+
+**Namespace:** `{uiNamespace}.generic-sortable-list-card`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "generic-sortable-list-card": {
+      "q-card": { "flat": true, "bordered": true },
+      "q-scroll-area": { "style": "height: 400px" },
+      "q-list": { "bordered": false, "separator": true },
+      "q-item": { "dense": false },
+      "draggable": { "handle": ".drag-handle", "animation": 150 },
+      "header-section": {
+        "q-card-section": {}
+      },
+      "unsaved-changes-section": {
+        "q-card-section": {}
+      },
+      "list-section": {
+        "q-card-section": {}
+      },
+      "header-item": {
+        "q-item": { "dense": true }
+      },
+      "icon-section": {
+        "q-item-section": { "avatar": true },
+        "q-icon": { "name": "drag_indicator", "color": "grey-6", "size": "sm" }
+      },
+      "field-label-section": {
+        "q-item-section": {}
+      },
+      "field-label": {
+        "q-item-label": { "caption": true }
+      },
+      "field-value-section": {
+        "q-item-section": {}
+      },
+      "field-value": {
+        "q-item-label": {}
+      },
+      "no-data-icon-section": {
+        "q-item-section": { "avatar": true },
+        "q-icon": { "name": "inbox", "color": "grey-5", "size": "md" }
+      },
+      "no-data-label-section": {
+        "q-item-section": {}
+      },
+      "item-actions-section": {
+        "q-item-section": { "side": true },
+        "edit-button": {
+          "q-btn": { "icon": "edit", "flat": true, "round": true, "dense": true, "color": "primary" }
+        },
+        "delete-button": {
+          "q-btn": { "icon": "delete", "flat": true, "round": true, "dense": true, "color": "negative" }
+        }
+      },
+      "add-button": {
+        "q-btn": { "color": "primary", "icon": "add", "dense": true, "unelevated": true }
+      },
+      "save-button": {
+        "q-btn": { "color": "positive", "icon": "save", "dense": true, "unelevated": true }
+      }
+    }
+  }
+}
+```
+
+Notes:
+
+- `header-item` styles the header row only; `q-item` styles the item rows. Both are rendered as `q-item`, so the
+  header stays aligned with the rows.
+- `field-label` and `field-value` are applied to the `TruncatedItemLabel` rendering each cell, which forwards them
+  to a `q-item-label`. The `lines` property is forced to `1` by the component and cannot be overridden here: the
+  overflow tooltip only works on single-line truncation.
+- `item-actions-section` styles both the actions cell of each row and its empty counterpart in the header. The
+  header cell width is measured from the first rendered row, so the two stay aligned whatever the buttons contain.
+
+---
+
+### GenericTreeCard
+
+Card displaying an endpoint-driven tree: the rendering is delegated to a nested `GenericTree`, which inherits this
+namespace, the header actions area is rendered through a nested `ButtonsCard`, and the components hosted by the
+`node-actions` zones inherit the `node-actions` namespace.
+
+**Namespace:** `{uiNamespace}.generic-tree-card`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "generic-tree-card": {
+      "q-card": { "flat": true, "bordered": true },
+      "header-section": {
+        "q-card-section": {}
+      },
+      "tree-section": {
+        "q-card-section": {}
+      },
+      "buttons-card": {
+        "q-card": { "flat": true }
+      },
+      "GenericTree": {
+        "q-tree": { "defaultExpandAll": true },
+        "types": {
+          "STRUCTURE": { "q-icon": { "name": "domain" } },
+          "HIERARCHY": {
+            "q-icon": { "name": "account_tree" }
+          }
+        }
+      },
+      "node-actions": {
+        "form-dialog-button": {
+          "q-btn": { "icon": "edit", "flat": true, "round": true }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### AdvancedSearchCard
+
+Expandable search card with default and advanced filters.
+
+**Namespace:** `{uiNamespace}.advanced-search-card`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "advanced-search-card": {
+      "q-card": { "flat": true, "bordered": true },
+      "q-icon": { "name": "search", "color": "primary" },
+      "title-section": {
+        "q-card-section": {}
+      },
+      "default-filters-section": {
+        "q-card-section": {}
+      },
+      "advanced-filters-section": {
+        "q-card-section": {}
+      },
+      "toggle-button": {
+        "q-btn": { "flat": true, "dense": true }
+      },
+      "default-filters": {
+        "fields": {
+          "[FIELD_NAME]": {
+            "EntityAttributeField": {
+              "[FIELD_NAME]": {
+                "q-input": { "outlined": true, "dense": true }
+              }
+            }
+          }
+        }
+      },
+      "advanced-filters": {
+        "fields": {
+          "[FIELD_NAME]": {
+            "EntityAttributeField": {
+              "[FIELD_NAME]": {
+                "q-input": { "outlined": true, "dense": true }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### LinidSmartFilter
+
+Smart filtering component with toggle-able menu for managing active filters and saved filter configurations.
+
+**Namespace:** `{uiNamespace}.linid-smart-filter`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "linid-smart-filter": {
+      "q-field": {
+        "outlined": true,
+        "dense": true
+      },
+      "q-menu": {
+        "autoClose": true
+      },
+      "q-separator": {},
+      "iconSearch": {
+        "q-icon": {
+          "name": "search"
+        }
+      },
+      "iconMenuClose": {
+        "q-icon": {
+          "name": "arrow_drop_up"
+        }
+      },
+      "iconMenuOpen": {
+        "q-icon": {
+          "name": "arrow_drop_down"
+        }
+      },
+      "linid-filter-chip": {
+        "[FILTER]": {
+          "q-chip": {
+            "square": true
+          },
+          "q-avatar": {
+            "color": "primary",
+            "textColor": "white"
+          },
+          "q-spinner": {
+            "color": "primary"
+          }
+        }
+      },
+      "linid-filter-panel": {
+        "header": {
+          "q-icon": { "name": "filter_alt" },
+          "q-separator": { "inset": false }
+        },
+        "content": {
+          "q-list": { "bordered": false, "separator": true },
+          "q-item": { "dense": true },
+          "q-separator": { "inset": false },
+          "icon-section": {
+            "q-item-section": {}
+          },
+          "label-section": {
+            "q-item-section": {}
+          },
+          "types": {
+            "[FILTER_TYPE]": {
+              "q-icon": { "name": "filter_alt", "size": "sm" }
+            }
+          }
+        }
+      },
+      "text-search-filter-panel": {
+        "q-input": { "outlined": true, "dense": true },
+        "q-checkbox": { "dense": true },
+        "q-option-group": { "color": "primary", "dense": true },
+        "q-btn": { "color": "primary", "unelevated": true }
+      },
+      "number-search-filter-panel": {
+        "q-input": { "outlined": true, "dense": true },
+        "q-checkbox": { "color": "primary", "dense": true },
+        "q-option-group": { "color": "primary", "dense": true },
+        "q-btn": { "color": "primary", "unelevated": true }
+      },
+      "list-search-filter-panel": {
+        "q-list": { "bordered": true },
+        "q-item": { "dense": true },
+        "checkboxSection": {
+          "q-item-section": { "side": true },
+          "q-checkbox": { "dense": true }
+        },
+        "labelSection": {
+          "q-item-section": {}
+        },
+        "q-btn": { "color": "primary", "unelevated": true }
+      },
+      "linid-favorite-panel": {
+        "header": {
+          "q-icon": { "name": "filter_alt" },
+          "q-separator": { "inset": false }
+        },
+        "content": {
+          "q-list": { "bordered": false, "separator": true },
+          "q-item": { "dense": true },
+          "icon-section": {
+            "q-item-section": {},
+            "q-icon": { "name": "filter_alt", "size": "sm" }
+          },
+          "label-section": {
+            "q-item-section": {}
+          },
+          "override-section": {
+            "q-item-section": {},
+            "q-btn": { "icon": "swap_horiz", "flat": true, "round": true }
+          },
+          "rename-section": {
+            "q-item-section": {},
+            "q-btn": { "icon": "edit", "flat": true, "round": true }
+          },
+          "delete-section": {
+            "q-item-section": {},
+            "q-btn": { "icon": "delete", "flat": true, "round": true }
+          },
+          "no-data-icon-section": {
+            "q-item-section": {},
+            "q-icon": { "name": "filter_alt", "size": "sm" }
+          },
+          "no-data-label-section": {
+            "q-item-section": {}
+          },
+          "create-button": {
+            "q-btn": {}
+          }
+        }
+      },
+      "tree-search-filter-panel": {
+        "q-btn": {},
+        "GenericTree": {
+          "q-tree": {}
+        }
+      },
+      "date-search-filter-panel": {
+        "q-input": { "outlined": true, "dense": true },
+        "q-icon": { "name": "event" },
+        "q-date": { "today-btn": true },
+        "q-checkbox": { "color": "primary", "dense": true },
+        "q-option-group": { "color": "primary", "dense": true },
+        "q-btn": { "color": "primary", "unelevated": true },
+        "close": {
+          "q-btn": { "flat": true }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### GenericCreationPage
+
+Generic page to create entity.
+
+**Namespace:** `{uiNamespace}` (direct, no suffix)
+
+```json
+{
+  "[INSTANCE_ID]": {
+    "form-section-[FIELD_SECTION]": {
+      // q-card
+      "header-section": {
+        "q-card-section": {}
+      },
+      "fields-section": {
+        "q-card-section": {}
+      },
+      "EntityAttributeField": {
+        "[FIELD_NAME]": {
+          "q-input": {
+            "outlined": true,
+            "dense": true
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### GenericEditionPage
+
+Generic page to edit an existing entity.
+
+**Namespace:** `{uiNamespace}` (direct, no suffix)
+
+```json
+{
+  "[INSTANCE_ID]": {
+    "form-section-[FIELD_SECTION]": {
+      // q-card
+      "header-section": {
+        "q-card-section": {}
+      },
+      "fields-section": {
+        "q-card-section": {}
+      },
+      "EntityAttributeField": {
+        "[FIELD_NAME]": {
+          "q-input": {
+            "outlined": true,
+            "dense": true
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### GenericImportPage
+
+Generic page to import entities from CSV files.
+
+**Namespace:** `{uiNamespace}` (direct, no suffix)
+
+```json
+{
+  "[INSTANCE_ID]": {
+    "import-card": {
+      "q-card": {},
+      "files-section": {
+        "q-card-section": {}
+      },
+      "table-section": {
+        "q-card-section": {}
+      }
+    },
+    "load-files-field": {
+      "q-file": { "outlined": true }
+    },
+    "imported-data-table": {
+      "q-table": { "flat": true },
+      "q-spinner": {},
+      "expand-button-open": {
+        "q-btn": { "flat": true }
+      },
+      "expand-button-close": {
+        "q-btn": { "flat": true }
+      },
+      "delete-button": {
+        "q-btn": { "flat": true, "color": "negative" }
+      },
+      "[STATUS]": {
+        "q-badge": { "color": "primary" }
+      }
+    },
+    "buttons-card": {},
+    "dropdown-button": {}
+  }
+}
+```
+
+`[STATUS]` is one of `READY`, `IMPORTING`, `IMPORTED`, `ERROR`. See [ButtonsCard](#buttonscard) and [DropdownButton](#dropdownbutton) for their keys.
+
+---
+
+### GenericTablePage
+
+Generic page to display entity inside table.
+
+**Namespace:** `{uiNamespace}` (direct, no suffix)
+
+```json
+{
+  "[INSTANCE_ID]": {
+    "ButtonActions": {
+      "q-btn": {
+        "flat": true,
+        "round": true,
+        "dense": true,
+        "icon": "more_vert"
+      }
+    },
+    "generic-entity-table": {
+      "q-table": { "dense": true, "bordered": true, "flat": true }
+    }
+  }
+}
+```
+
+---
+
+### EntityAttributeTextField / EntityAttributeTextAreaField / EntityAttributeNumberField
+
+Number, text, textarea input fields for entity attributes.
+
+**Namespace:** `{uiNamespace}` (direct, no suffix)
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "[FIELD_NAME]": {
+      "q-input": { "outlined": true, "dense": true, "clearable": true }
+    }
+  }
+}
+```
+
+---
+
+### EntityAttributeBooleanField
+
+Toggle switch for boolean attributes.
+
+**Namespace:** `{uiNamespace}` (direct, no suffix)
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "[FIELD_NAME]": {
+      "q-toggle": { "color": "primary", "dense": true }
+    }
+  }
+}
+```
+
+---
+
+### EntityAttributeDateField
+
+Date picker field for date attributes.
+
+**Namespace:** `{uiNamespace}` (direct, no suffix)
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "[FIELD_NAME]": {
+      "q-input": { "outlined": true, "dense": true },
+      "q-icon": { "name": "event", "color": "primary" },
+      "q-btn": { "flat": true, "round": true },
+      "q-date": { "minimal": true, "color": "primary" }
+    }
+  }
+}
+```
+
+---
+
+### EntityAttributeListField
+
+Dropdown select field for list attributes.
+
+**Namespace:** `{uiNamespace}` (direct, no suffix)
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "[FIELD_NAME]": {
+      "q-select": { "outlined": true, "dense": true }
+    }
+  }
+}
+```
+
+---
+
+### EntityAttributeDynamicListField
+
+Dropdown select field for dynamic list attributes with lazy loading from a backend endpoint. When the field has a
+`disabledText` translation, each option is rendered as a `q-item` so the caption can be displayed under the options
+disabled through `inputSettings.optionDisabled`; the caption itself is styled by `disabled-caption`.
+
+**Namespace:** `{uiNamespace}` (direct, no suffix)
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "[FIELD_NAME]": {
+      "q-select": { "outlined": true, "dense": true },
+      "q-item": {},
+      "q-item-section": {},
+      "q-item-label": {},
+      "disabled-caption": {
+        "q-item-label": { "caption": true, "class": "text-negative" }
+      }
+    }
+  }
+}
+```
+
+Notes:
+
+- `q-item`, `q-item-section` and `q-item-label` only apply when the field has a `disabledText` translation: without
+  it, Quasar renders the options itself. The props Quasar computes for an option (`clickable`, `active`, `disable`,
+  `focused`...) win over the `q-item` entry.
+- `disabled-caption` is a caption by default: `caption` is only read from the configuration when it is set there.
+
+---
+
+### EntityAttributeTreeField
+
+Tree node picker field: the tree is wrapped in a `q-field` and rendered by a nested `GenericTree`, which inherits
+the field namespace.
+
+**Namespace:** `{uiNamespace}.{FIELD_NAME}`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "[FIELD_NAME]": {
+      "q-field": { "borderless": true },
+      "retry-button": {
+        "q-btn": { "flat": true, "color": "primary" }
+      },
+      "GenericTree": {
+        "q-tree": {},
+        "selected-icon": {
+          "q-icon": { "name": "check", "color": "positive" }
+        },
+        "types": {
+          "[TYPE]": {
+            "q-icon": { "name": "folder" }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### ConfirmationDialog
+
+Generic confirmation dialog for user actions (e.g., delete, confirm, etc.).
+
+**Namespace:** `{uiNamespace}.confirmation-dialog`
+
+for all confirmation dialogs opened from the same parent:
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "confirmation-dialog": {
+      "q-dialog": { "persistent": false },
+      "q-card": { "flat": true, "bordered": true },
+      "title-section": {
+        "q-card-section": {}
+      },
+      "content-section": {
+        "q-card-section": {}
+      },
+      "buttons-card": {
+        "q-card": { "flat": true },
+        "confirm-button": {
+          "q-btn": { "color": "primary", "icon": "check" }
+        },
+        "cancel-button": {
+          "q-btn": { "color": "negative", "outline": true }
+        }
+      }
+    }
+  }
+}
+```
+
+or for a specific confirmation dialog instance:
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "[CONFIRMATION_DIALOG_NAMESPACE]": {
+      "confirmation-dialog": {
+        "q-dialog": { "persistent": false },
+        "q-card": { "flat": true, "bordered": true },
+        "title-section": {
+          "q-card-section": {}
+        },
+        "content-section": {
+          "q-card-section": {}
+        },
+        "buttons-card": {
+          "q-card": { "flat": true },
+          "confirm-button": {
+            "q-btn": { "color": "primary", "icon": "check" }
+          },
+          "cancel-button": {
+            "q-btn": { "color": "negative", "outline": true }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### FormDialog
+
+Dialog containing a form.
+
+**Namespace:** `{uiNamespace}.form-dialog`
+
+for all form dialogs opened from the same parent:
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "form-dialog": {
+      "q-dialog": { "persistent": false },
+      "q-card": { "flat": true, "bordered": true },
+      "title-section": {
+        "q-card-section": {}
+      },
+      "content-section": {
+        "q-card-section": {}
+      },
+      "field-section": {
+        "q-card-section": {}
+      },
+      "EntityAttributeField": {
+        "[FIELD_NAME]": {
+          "q-input": { "outlined": true, "dense": true }
+        }
+      },
+      "buttons-card": {
+        "q-card": { "flat": true },
+        "confirm-button": {
+          "q-btn": { "color": "primary", "icon": "save" }
+        },
+        "cancel-button": {
+          "q-btn": { "color": "negative", "outline": true }
+        }
+      }
+    }
+  }
+}
+```
+
+or for a specific form dialog instance:
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "[FORM_DIALOG_NAMESPACE]": {
+      "form-dialog": {
+        "q-dialog": { "persistent": false },
+        "q-card": { "flat": true, "bordered": true },
+        "title-section": {
+          "q-card-section": {}
+        },
+        "content-section": {
+          "q-card-section": {}
+        },
+        "field-section": {
+          "q-card-section": {}
+        },
+        "EntityAttributeField": {
+          "[FIELD_NAME]": {
+            "q-input": { "outlined": true, "dense": true }
+          }
+        },
+        "buttons-card": {
+          "q-card": { "flat": true },
+          "confirm-button": {
+            "q-btn": { "color": "primary", "icon": "save" }
+          },
+          "cancel-button": {
+            "q-btn": { "color": "negative", "outline": true }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### Generic table page
+
+Page that contain table with search and filtering capabilities.
+
+**Namespace:** `{uiNamespace}`
+
+```json
+{
+  "[NAMESPACE]": {
+    "linid-smart-filter": {
+      "q-field": {
+        "outlined": true,
+        "dense": true
+      },
+      "q-menu": {
+        "autoClose": true
+      },
+      "q-separator": {},
+      "iconSearch": {
+        "q-icon": {
+          "name": "search"
+        }
+      },
+      "iconMenuClose": {
+        "q-icon": {
+          "name": "arrow_drop_up"
+        }
+      },
+      "iconMenuOpen": {
+        "q-icon": {
+          "name": "arrow_drop_down"
+        }
+      },
+      "linid-filter-chip": {
+        "[FILTER]": {
+          "q-chip": {
+            "square": true
+          },
+          "q-avatar": {
+            "color": "primary",
+            "textColor": "white"
+          },
+          "q-spinner": {
+            "color": "primary"
+          }
+        }
+      },
+      "linid-filter-panel": {
+        "header": {
+          "q-icon": {
+            "name": "filter_alt"
+          },
+          "q-separator": {
+            "inset": false
+          }
+        },
+        "content": {
+          "q-list": {
+            "bordered": false,
+            "separator": true
+          },
+          "q-item": {
+            "dense": true
+          },
+          "q-separator": {
+            "inset": false
+          },
+          "icon-section": {
+            "q-item-section": {}
+          },
+          "label-section": {
+            "q-item-section": {}
+          },
+          "types": {
+            "[FILTER_TYPE]": {
+              "q-icon": {
+                "name": "filter_alt",
+                "size": "sm"
+              }
+            }
+          }
+        }
+      },
+      "text-search-filter-panel": {
+        "q-input": {
+          "outlined": true,
+          "dense": true
+        },
+        "q-checkbox": {
+          "dense": true
+        },
+        "q-option-group": {
+          "color": "primary",
+          "dense": true
+        },
+        "q-btn": {
+          "color": "primary",
+          "unelevated": true
+        }
+      },
+      "number-search-filter-panel": {
+        "q-input": {
+          "outlined": true,
+          "dense": true
+        },
+        "q-checkbox": {
+          "color": "primary",
+          "dense": true
+        },
+        "q-option-group": {
+          "color": "primary",
+          "dense": true
+        },
+        "q-btn": {
+          "color": "primary",
+          "unelevated": true
+        }
+      },
+      "list-search-filter-panel": {
+        "q-list": {
+          "bordered": true
+        },
+        "q-item": {
+          "dense": true
+        },
+        "checkboxSection": {
+          "q-item-section": {
+            "side": true
+          },
+          "q-checkbox": {
+            "dense": true
+          }
+        },
+        "labelSection": {
+          "q-item-section": {}
+        },
+        "q-btn": {
+          "color": "primary",
+          "unelevated": true
+        }
+      },
+      "linid-favorite-panel": {
+        "header": {
+          "q-icon": {
+            "name": "filter_alt"
+          },
+          "q-separator": {
+            "inset": false
+          }
+        },
+        "content": {
+          "q-list": {
+            "bordered": false,
+            "separator": true
+          },
+          "q-item": {
+            "dense": true
+          },
+          "icon-section": {
+            "q-item-section": {},
+            "q-icon": {
+              "name": "filter_alt",
+              "size": "sm"
+            }
+          },
+          "label-section": {
+            "q-item-section": {}
+          },
+          "override-section": {
+            "q-item-section": {},
+            "q-btn": {
+              "icon": "swap_horiz",
+              "flat": true,
+              "round": true
+            }
+          },
+          "rename-section": {
+            "q-item-section": {},
+            "q-btn": {
+              "icon": "edit",
+              "flat": true,
+              "round": true
+            }
+          },
+          "delete-section": {
+            "q-item-section": {},
+            "q-btn": {
+              "icon": "delete",
+              "flat": true,
+              "round": true
+            }
+          },
+          "no-data-icon-section": {
+            "q-item-section": {},
+            "q-icon": {
+              "name": "filter_alt",
+              "size": "sm"
+            }
+          },
+          "no-data-label-section": {
+            "q-item-section": {}
+          },
+          "create-button": {
+            "q-btn": {}
+          }
+        }
+      },
+      "tree-search-filter-panel": {
+        "q-btn": {},
+        "GenericTree": {
+          "q-tree": {}
+        }
+      }
+    },
+    "generic-entity-table": {
+      "q-table": {
+        "dense": true,
+        "bordered": true,
+        "flat": true
+      }
+    },
+    "see-button": {
+      "q-btn": {
+        "color": "negative",
+        "outline": true
+      }
+    },
+    "buttons-card": {
+      "q-card": {
+        "flat": true
+      },
+      "create-button": {
+        "q-btn": {
+          "color": "primary",
+          "icon": "save"
+        }
+      }
+    },
+    "delete-favorite-dialog": {
+      "confirmation-dialog": {
+        "q-dialog": { "persistent": false },
+        "q-card": { "flat": true, "bordered": true },
+        "buttons-card": {
+          "q-card": { "flat": true },
+          "confirm-button": {
+            "q-btn": { "color": "negative", "icon": "delete" }
+          },
+          "cancel-button": {
+            "q-btn": { "color": "primary", "outline": true }
+          }
+        }
+      }
+    },
+    "create-favorite-dialog": {
+      "form-dialog": {
+        "q-dialog": { "persistent": false },
+        "q-card": { "flat": true, "bordered": true },
+        "EntityAttributeField": {
+          "favoriteName": {
+            "q-input": { "outlined": true, "dense": true }
+          }
+        },
+        "buttons-card": {
+          "q-card": { "flat": true },
+          "confirm-button": {
+            "q-btn": { "color": "primary", "icon": "add" }
+          },
+          "cancel-button": {
+            "q-btn": { "color": "negative", "outline": true }
+          }
+        }
+      }
+    },
+    "override-favorite-dialog": {
+      "form-dialog": {
+        "q-dialog": { "persistent": false },
+        "q-card": { "flat": true, "bordered": true },
+        "EntityAttributeField": {
+          "favorite": {
+            "q-select": { "outlined": true, "dense": true }
+          }
+        },
+        "buttons-card": {
+          "q-card": { "flat": true },
+          "confirm-button": {
+            "q-btn": { "color": "primary", "icon": "save" }
+          },
+          "cancel-button": {
+            "q-btn": { "color": "negative", "outline": true }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### Generic details page
+
+Page displaying the details of a single entity, grouped in configurable sections.
+
+**Namespace:** `{uiNamespace}`
+
+The section keys come from the `options.sections` module configuration: each `key` becomes a design sub-namespace
+under `sections`, applied to the `EntityDetailsCard` rendering that section.
+
+```json
+{
+  "[NAMESPACE]": {
+    "buttons-card": {
+      "q-card": { "flat": true },
+      "cancel-button": {
+        "q-btn": { "color": "negative", "outline": true }
+      },
+      "edit-button": {
+        "q-btn": { "color": "primary", "icon": "edit" }
+      }
+    },
+    "sections": {
+      "[SECTION_KEY]": {
+        "entity-details-card": {
+          "q-card": { "flat": true, "bordered": true },
+          "[FIELD_NAME]": {
+            "information-card": {
+              "q-card": { "flat": true },
+              "q-icon": { "name": "info", "color": "primary" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+The `edit-button` namespace only applies when `editPath` is configured on the module.
+
+---
+
+## **💡 Complete Configuration Example**
+
+A full example showing all CatalogUI components configured together:
+
+```json
+{
+  "default": {
+    "q-btn": { "dense": true, "noCaps": true },
+    "q-card": { "flat": false },
+    "q-input": { "outlined": true, "dense": true },
+    "q-table": { "dense": true }
+  },
+  "status-badge": {
+    "[STATUS]": {
+      "q-badge": { "color": "primary", "floating": false }
+    }
+  },
+  "base-layout": {
+    "header": {
+      "q-header": { "elevated": true },
+      "q-toolbar": { "inset": false },
+      "q-avatar": { "size": "md", "color": "primary" },
+      "q-toolbar-title": { "shrink": false },
+      "q-badge": { "color": "secondary" },
+      "header-profile": {
+        "q-btn": { "flat": true, "color": "white", "noCaps": true },
+        "q-item-section": { "avatar": true },
+        "q-item-label": { "caption": true },
+        "q-img": {},
+        "q-select": {},
+        "q-item": {},
+        "logout-menu-item": {
+          "q-item": { "dense": true },
+          "icon": { "q-icon": { "name": "logout" } },
+          "confirmation-dialog": {
+            "buttons-card": {
+              "confirm-button": { "q-btn": { "color": "primary", "unelevated": true } }
+            }
+          }
+        }
+      },
+      "navigation-menu": {
+        "q-tabs": { "dense": false, "align": "left", "noCaps": true },
+        "route-[ROUTE_ID]": {
+          "q-route-tab": { "icon": "person", "noCaps": true }
+        }
+      }
+    }
+  },
+  "[GENERIC_CREATION_PAGE_ID]": {
+    "form-section-[FIELD_SECTION]": {
+      // q-card
+      "header-section": {
+        "q-card-section": {}
+      },
+      "fields-section": {
+        "q-card-section": {}
+      },
+      "EntityAttributeField": {
+        "[FIELD_NAME]": {
+          "q-input": {
+            "outlined": true,
+            "dense": true
+          }
+        },
+        "[DYNAMIC_LIST_FIELD_NAME]": {
+          "q-select": { "outlined": true, "dense": true },
+          "q-item": {},
+          "q-item-section": {},
+          "q-item-label": {},
+          "disabled-caption": {
+            "q-item-label": { "caption": true, "class": "text-negative" }
+          }
+        },
+        "[TREE_FIELD_NAME]": {
+          "q-field": { "borderless": true },
+          "retry-button": {
+            "q-btn": { "flat": true, "color": "primary" }
+          },
+          "GenericTree": {
+            "q-tree": {},
+            "selected-icon": {
+              "q-icon": { "name": "check", "color": "positive" }
+            },
+            "types": {
+              "[TYPE]": {
+                "q-icon": { "name": "folder" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "[GENERIC_EDITION_PAGE_ID]": {
+    "form-section-[FIELD_SECTION]": {
+      // q-card
+      "header-section": {
+        "q-card-section": {}
+      },
+      "fields-section": {
+        "q-card-section": {}
+      },
+      "EntityAttributeField": {
+        "[FIELD_NAME]": {
+          "q-input": {
+            "outlined": true,
+            "dense": true
+          }
+        }
+      }
+    }
+  },
+  "[GENERIC_TABLE_PAGE_ID]": {
+    "ButtonActions": {
+      "q-btn": {
+        "flat": true,
+        "round": true,
+        "dense": true,
+        "icon": "more_vert"
+      }
+    },
+    "generic-entity-table": {
+      "q-table": { "dense": true, "bordered": true, "flat": true }
+    }
+  },
+  "[GENERIC_IMPORT_PAGE_ID]": {
+    "import-card": {
+      "q-card": {},
+      "files-section": {
+        "q-card-section": {}
+      },
+      "table-section": {
+        "q-card-section": {}
+      }
+    },
+    "load-files-field": {
+      "q-file": { "outlined": true }
+    },
+    "imported-data-table": {
+      "q-table": { "flat": true },
+      "q-spinner": {},
+      "expand-button-open": {
+        "q-btn": { "flat": true }
+      },
+      "expand-button-close": {
+        "q-btn": { "flat": true }
+      },
+      "delete-button": {
+        "q-btn": { "flat": true, "color": "negative" }
+      },
+      "[STATUS]": {
+        "q-badge": { "color": "primary" }
+      }
+    },
+    "buttons-card": {},
+    "dropdown-button": {}
+  },
+  "[INSTANCE_ID]": {
+    "[PAGE_NAME]": {
+      "advanced-search-card": {
+        "q-card": { "flat": true, "bordered": true },
+        "q-icon": { "name": "search", "color": "primary" },
+        "title-section": {
+          "q-card-section": {}
+        },
+        "default-filters-section": {
+          "q-card-section": {}
+        },
+        "advanced-filters-section": {
+          "q-card-section": {}
+        },
+        "toggle-button": {
+          "q-btn": { "flat": true, "icon": "tune" }
+        },
+        "default-filters": {
+          "fields": {
+            "[FIELD_NAME]": {
+              "EntityAttributeField": {
+                "[FIELD_NAME]": {
+                  "q-input": { "outlined": true, "dense": true }
+                }
+              }
+            }
+          }
+        },
+        "advanced-filters": {
+          "fields": {
+            "[FIELD_NAME]": {
+              "EntityAttributeField": {
+                "[FIELD_NAME]": {
+                  "q-input": { "outlined": true, "dense": true }
+                }
+              }
+            }
+          }
+        }
+      },
+      "linid-smart-filter": {
+        "q-field": { "outlined": true, "dense": true },
+        "q-menu": { "autoClose": true },
+        "q-separator": {},
+        "iconSearch": {
+          "q-icon": { "name": "search" }
+        },
+        "iconMenuClose": {
+          "q-icon": { "name": "arrow_drop_up" }
+        },
+        "iconMenuOpen": {
+          "q-icon": { "name": "arrow_drop_down" }
+        },
+        "linid-filter-chip": {
+          "[FILTER]": {
+            "q-chip": {
+              "square": true
+            },
+            "q-avatar": {
+              "color": "primary",
+              "textColor": "white"
+            },
+            "q-spinner": {
+              "color": "primary"
+            }
+          }
+        },
+        "delete-favorite-dialog": {
+          "confirmation-dialog": {
+            "q-dialog": { "persistent": false },
+            "q-card": { "flat": true, "bordered": true },
+            "buttons-card": {
+              "q-card": { "flat": true },
+              "confirm-button": {
+                "q-btn": { "color": "negative", "icon": "delete" }
+              },
+              "cancel-button": {
+                "q-btn": { "color": "primary", "outline": true }
+              }
+            }
+          }
+        },
+        "create-favorite-dialog": {
+          "form-dialog": {
+            "q-dialog": { "persistent": false },
+            "q-card": { "flat": true, "bordered": true },
+            "EntityAttributeField": {
+              "favoriteName": {
+                "q-input": { "outlined": true, "dense": true }
+              }
+            },
+            "buttons-card": {
+              "q-card": { "flat": true },
+              "confirm-button": {
+                "q-btn": { "color": "primary", "icon": "add" }
+              },
+              "cancel-button": {
+                "q-btn": { "color": "negative", "outline": true }
+              }
+            }
+          }
+        },
+        "override-favorite-dialog": {
+          "form-dialog": {
+            "q-dialog": { "persistent": false },
+            "q-card": { "flat": true, "bordered": true },
+            "EntityAttributeField": {
+              "favorite": {
+                "q-select": { "outlined": true, "dense": true }
+              }
+            },
+            "buttons-card": {
+              "q-card": { "flat": true },
+              "confirm-button": {
+                "q-btn": { "color": "primary", "icon": "save" }
+              },
+              "cancel-button": {
+                "q-btn": { "color": "negative", "outline": true }
+              }
+            }
+          }
+        },
+        "linid-filter-panel": {
+          "header": {
+            "q-icon": { "name": "filter_alt" },
+            "q-separator": { "inset": false }
+          },
+          "content": {
+            "q-list": { "bordered": false, "separator": true },
+            "q-item": { "dense": true },
+            "q-separator": { "inset": false },
+            "icon-section": {
+              "q-item-section": {}
+            },
+            "label-section": {
+              "q-item-section": {}
+            },
+            "types": {
+              "[FILTER_TYPE]": {
+                "q-icon": { "name": "filter_alt", "size": "sm" }
+              }
+            }
+          }
+        },
+        "text-search-filter-panel": {
+          "q-input": { "outlined": true, "dense": true },
+          "q-checkbox": { "dense": true },
+          "q-option-group": { "color": "primary", "dense": true },
+          "q-btn": { "color": "primary", "unelevated": true }
+        },
+        "number-search-filter-panel": {
+          "q-input": { "outlined": true, "dense": true },
+          "q-checkbox": { "color": "primary", "dense": true },
+          "q-option-group": { "color": "primary", "dense": true },
+          "q-btn": { "color": "primary", "unelevated": true }
+        },
+        "list-search-filter-panel": {
+          "q-list": { "bordered": true },
+          "q-item": { "dense": true },
+          "checkboxSection": {
+            "q-item-section": { "side": true },
+            "q-checkbox": { "dense": true }
+          },
+          "labelSection": {
+            "q-item-section": {}
+          },
+          "q-btn": { "color": "primary", "unelevated": true }
+        },
+        "linid-favorite-panel": {
+          "header": {
+            "q-icon": { "name": "filter_alt" },
+            "q-separator": { "inset": false }
+          },
+          "content": {
+            "q-list": { "bordered": false, "separator": true },
+            "q-item": { "dense": true },
+            "icon-section": {
+              "q-item-section": {},
+              "q-icon": { "name": "filter_alt", "size": "sm" }
+            },
+            "label-section": {
+              "q-item-section": {}
+            },
+            "override-section": {
+              "q-item-section": {},
+              "q-btn": {
+                "icon": "swap_horiz",
+                "flat": true,
+                "round": true
+              }
+            },
+            "rename-section": {
+              "q-item-section": {},
+              "q-btn": {
+                "icon": "edit",
+                "flat": true,
+                "round": true
+              }
+            },
+            "delete-section": {
+              "q-item-section": {},
+              "q-btn": {
+                "icon": "delete",
+                "flat": true,
+                "round": true
+              }
+            },
+            "no-data-icon-section": {
+              "q-item-section": {},
+              "q-icon": { "name": "filter_alt", "size": "sm" }
+            },
+            "no-data-label-section": {
+              "q-item-section": {}
+            },
+            "create-button": {
+              "q-btn": {}
+            }
+          }
+        },
+        "tree-search-filter-panel": {
+          "q-btn": {},
+          "GenericTree": {
+            "q-tree": {}
+          }
+        }
+      },
+      "generic-sortable-list-card": {
+        "q-card": { "flat": true, "bordered": true },
+        "q-scroll-area": { "style": "height: 400px" },
+        "q-list": { "bordered": false, "separator": true },
+        "q-item": { "dense": false },
+        "draggable": { "handle": ".drag-handle", "animation": 150 },
+        "header-section": {
+          "q-card-section": {}
+        },
+        "unsaved-changes-section": {
+          "q-card-section": {}
+        },
+        "list-section": {
+          "q-card-section": {}
+        },
+        "header-item": {
+          "q-item": { "dense": true }
+        },
+        "icon-section": {
+          "q-item-section": { "avatar": true },
+          "q-icon": { "name": "drag_indicator", "color": "grey-6", "size": "sm" }
+        },
+        "field-label-section": {
+          "q-item-section": {}
+        },
+        "field-label": {
+          "q-item-label": { "caption": true }
+        },
+        "field-value-section": {
+          "q-item-section": {}
+        },
+        "field-value": {
+          "q-item-label": {}
+        },
+        "no-data-icon-section": {
+          "q-item-section": { "avatar": true },
+          "q-icon": { "name": "inbox", "color": "grey-5", "size": "md" }
+        },
+        "no-data-label-section": {
+          "q-item-section": {}
+        },
+        "item-actions-section": {
+          "q-item-section": { "side": true },
+          "edit-button": {
+            "q-btn": { "icon": "edit", "flat": true, "round": true, "dense": true, "color": "primary" }
+          },
+          "delete-button": {
+            "q-btn": { "icon": "delete", "flat": true, "round": true, "dense": true, "color": "negative" }
+          }
+        },
+        "add-button": {
+          "q-btn": { "color": "primary", "icon": "add", "dense": true, "unelevated": true }
+        },
+        "save-button": {
+          "q-btn": { "color": "positive", "icon": "save", "dense": true, "unelevated": true }
+        }
+      },
+      "generic-entity-table": {
+        "q-table": { "dense": true, "bordered": true, "flat": true }
+      },
+      "GenericTree": {
+        "q-tree": {},
+        "q-checkbox": {},
+        "ButtonActions": {
+          "q-btn": {
+            "flat": true,
+            "round": true,
+            "dense": true,
+            "icon": "more_vert"
+          }
+        },
+        "types": {
+          "[TYPE]": {
+            "q-icon": {
+              "name": "folder"
+            },
+            "actions": {
+              "[ACTION]": {
+                "q-icon": {
+                  "name": "edit"
+                }
+              }
+            }
+          }
+        }
+      },
+      "superset-widget-card": {
+        "q-card": { "flat": true, "bordered": true },
+        "title-section": {
+          "q-card-section": {}
+        },
+        "content-section": {
+          "q-card-section": {}
+        }
+      },
+      "entity-details-card": {
+        "q-card": { "flat": true, "bordered": true },
+        "title-section": {
+          "q-card-section": {}
+        },
+        "content-section": {
+          "q-card-section": {}
+        },
+        "[FIELD_NAME]": {
+          "information-card": {
+            "q-card": { "flat": true },
+            "q-icon": { "name": "info", "color": "info" },
+            "title-section": {
+              "q-card-section": {}
+            },
+            "content-section": {
+              "q-card-section": {}
+            }
+          }
+        }
+      },
+      "entity-avatar": {
+        "q-avatar": { "size": "42px" },
+        "q-icon": { "name": "question_mark", "color": "grey-6" }
+      },
+      "entity-profile-panel": {
+        "q-card": { "flat": true, "bordered": true },
+        "q-img": { "draggable": false },
+        "q-icon": { "name": "question_mark", "color": "grey-6" },
+        "navigation-section": {
+          "q-card-section": {}
+        },
+        "avatar-section": {
+          "q-card-section": {}
+        },
+        "titles-section": {
+          "q-card-section": {}
+        },
+        "actions-section": {
+          "q-card-section": {}
+        },
+        "details-section": {
+          "q-card-section": {}
+        },
+        "navigation": {
+          "buttons-card": {
+            "q-card": { "flat": true },
+            "q-card-actions": { "align": "left" },
+            "back-button": {
+              "q-btn": { "color": "primary", "outline": true, "icon": "arrow_back" }
+            }
+          }
+        },
+        "actions": {
+          "buttons-card": {
+            "q-card": { "flat": true },
+            "q-card-actions": { "align": "right" },
+            "edit-button": {
+              "form-dialog-button": {
+                "q-btn": { "color": "primary", "unelevated": true, "icon": "edit" }
+              }
+            }
+          }
+        },
+        "entity-details-card": {
+          "q-card": { "flat": true, "bordered": true },
+          "[FIELD_NAME]": {
+            "information-card": {
+              "q-card": { "flat": true },
+              "q-icon": { "name": "info", "color": "primary" }
+            }
+          }
+        }
+      },
+      "generic-tree-card": {
+        "q-card": { "flat": true, "bordered": true },
+        "header-section": {
+          "q-card-section": {}
+        },
+        "tree-section": {
+          "q-card-section": {}
+        },
+        "buttons-card": {
+          "q-card": { "flat": true }
+        },
+        "GenericTree": {
+          "q-tree": { "defaultExpandAll": true },
+          "types": {
+            "STRUCTURE": { "q-icon": { "name": "domain" } },
+            "HIERARCHY": {
+              "q-icon": { "name": "account_tree" }
+            }
+          }
+        },
+        "node-actions": {
+          "form-dialog-button": {
+            "q-btn": { "icon": "edit", "flat": true, "round": true }
+          }
+        }
+      },
+      "generic-editable-table-card": {
+        "q-card": { "flat": true, "bordered": true },
+        "header-section": {
+          "q-card-section": {}
+        },
+        "table-section": {
+          "q-card-section": {}
+        },
+        "buttons-card": {
+          "q-card": { "flat": true },
+          "add-button": {
+            "q-btn": { "color": "primary", "icon": "add", "dense": true }
+          }
+        },
+        "edit-button": {
+          "q-btn": { "color": "primary", "icon": "edit", "flat": true }
+        },
+        "delete-button": {
+          "q-btn": { "color": "negative", "icon": "delete", "flat": true }
+        },
+        "generic-entity-table": {
+          "q-table": { "flat": true }
+        },
+        "form-dialog": {
+          "q-dialog": { "persistent": false },
+          "q-card": { "flat": true, "bordered": true }
+        },
+        "confirmation-dialog": {
+          "q-dialog": { "persistent": false }
+        }
+      },
+      "buttons-card": {
+        "q-card": { "flat": true },
+        "title-section": {
+          "q-card-section": {}
+        },
+        "confirm-button": {
+          "q-btn": { "color": "primary", "icon": "save" }
+        },
+        "cancel-button": {
+          "q-btn": { "color": "negative", "outline": true }
+        }
+      },
+      "dropdown-button": {
+        "q-btn-dropdown": { "color": "primary", "outline": true, "icon": "more_vert" },
+        "q-list": { "dense": true },
+        "q-menu": { "autoClose": false },
+        "menu-trigger": {
+          "q-item-section": { "side": true },
+          "q-icon": { "name": "keyboard_arrow_right" }
+        },
+        "items": {
+          "edit": {
+            "q-item": { "clickable": true },
+            "label": {
+              "q-item-label": { "lines": 1 }
+            }
+          },
+          "export": {
+            "children": {
+              "csv": {
+                "q-item": { "clickable": true }
+              }
+            }
+          }
+        }
+      },
+      "form-dialog-button": {
+        "q-btn": { "color": "primary", "unelevated": true, "icon": "send" },
+        "form-dialog": {
+          "q-dialog": { "persistent": false },
+          "q-card": { "flat": true, "bordered": true }
+        }
+      },
+      "confirm-dialog-button": {
+        "q-btn": { "color": "negative", "outline": true, "icon": "delete" },
+        "confirmation-dialog": {
+          "q-dialog": { "persistent": false }
+        }
+      },
+      "redirect-button": {
+        "q-btn": { "color": "primary", "outline": true, "icon": "upload" }
+      },
+      "menu-button": {
+        "q-btn": { "round": true, "icon": "edit", "outline": false },
+        "q-menu": { "anchor": "bottom right" },
+        "editImage": {
+          "form-dialog-button": {
+            "q-btn": { "flat": true, "align": "left", "icon": "photo_camera", "outline": false }
+          }
+        },
+        "deleteImage": {
+          "confirm-dialog-button": {
+            "q-btn": { "flat": true, "align": "left", "icon": "delete", "color": "negative", "outline": false }
+          }
+        }
+      },
+      "confirmation-dialog": {
+        "q-dialog": { "persistent": false },
+        "q-card": { "flat": true, "bordered": true },
+        "title-section": {
+          "q-card-section": {}
+        },
+        "content-section": {
+          "q-card-section": {}
+        },
+        "buttons-card": {
+          "q-card": { "flat": true },
+          "confirm-button": {
+            "q-btn": { "color": "primary", "icon": "check" }
+          },
+          "cancel-button": {
+            "q-btn": { "color": "negative", "outline": true }
+          }
+        }
+      },
+      "form-dialog": {
+        "q-dialog": { "persistent": false },
+        "q-card": { "flat": true, "bordered": true },
+        "title-section": {
+          "q-card-section": {}
+        },
+        "content-section": {
+          "q-card-section": {}
+        },
+        "field-section": {
+          "q-card-section": {}
+        },
+        "EntityAttributeField": {
+          "[FIELD_NAME]": {
+            "q-input": { "outlined": true, "dense": true }
+          }
+        },
+        "buttons-card": {
+          "q-card": { "flat": true },
+          "confirm-button": {
+            "q-btn": { "color": "primary", "icon": "save" }
+          },
+          "cancel-button": {
+            "q-btn": { "color": "negative", "outline": true }
+          }
+        }
+      }
+    },
+    "sections": {
+      "[SECTION_KEY]": {
+        "entity-details-card": {
+          "q-card": { "flat": true, "bordered": true },
+          "[FIELD_NAME]": {
+            "information-card": {
+              "q-card": { "flat": true },
+              "q-icon": { "name": "info", "color": "primary" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+## **📚 Related Documentation**
+
+- **Quasar Component Props:** See corelib documentation for detailed props of each Quasar component (q-btn, q-card, q-input, etc.)
+- **useUiDesign Composable:** Available from `@linagora/linid-im-front-corelib`
