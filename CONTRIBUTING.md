@@ -1,8 +1,10 @@
 # **CONTRIBUTING 🤝**
 
-Thank you for contributing to **linid-im-front-community-plugins**, the monorepo containing all community modules and component catalogs for the LinID Identity Manager platform.
+Thank you for contributing to **linid-im-front-community-plugins**, the repository hosting `catalogUI` (`linid-catalog-ui`), the shared UI component library for the LinID Identity Manager front-end.
 
-This document explains the conventions, workflows, and best practices to follow when contributing to this Nx-powered monorepo.
+This is a **single-package repository**: the library is consumed by the platform applications through **Module Federation**, under the `catalogUI` remote name.
+
+This document explains the conventions, workflows, and best practices to follow when contributing to this project.
 
 ---
 
@@ -12,14 +14,14 @@ This document explains the conventions, workflows, and best practices to follow 
 
 All branches must follow one of the following naming patterns:
 
-| Type            | Pattern                           | Example                               |
-| --------------- | --------------------------------- | ------------------------------------- |
-| **Main**        | `main` or `dev`                   | `main`                                |
-| **Feature**     | `feature/<short-description>`     | `feature/catalog-ui-add-icons`        |
-| **Bugfix**      | `bugfix/<short-description>`      | `bugfix/fix-catalog-render-error`     |
-| **Improvement** | `improvement/<short-description>` | `improvement/refactor-module-builder` |
-| **Release**     | `release/<version>`               | `release/1.3.0`                       |
-| **Hotfix**      | `hotfix/<short-description>`      | `hotfix/catalog-missing-export`       |
+| Type            | Pattern                           | Example                             |
+| --------------- | --------------------------------- | ----------------------------------- |
+| **Main**        | `main` or `dev`                   | `main`                              |
+| **Feature**     | `feature/<short-description>`     | `feature/catalog-ui-add-icons`      |
+| **Bugfix**      | `bugfix/<short-description>`      | `bugfix/fix-catalog-render-error`   |
+| **Improvement** | `improvement/<short-description>` | `improvement/refactor-smart-filter` |
+| **Release**     | `release/<version>`               | `release/1.3.0`                     |
+| **Hotfix**      | `hotfix/<short-description>`      | `hotfix/catalog-missing-export`     |
 
 ### **Rules**
 
@@ -27,6 +29,8 @@ All branches must follow one of the following naming patterns:
 ✔ dashes (`-`), underscores (`_`) and dots (`.`) allowed
 ✔ branch names must be short and descriptive
 ✔ use English for descriptions
+
+Branch naming is enforced by CI on every pull request.
 
 ---
 
@@ -38,6 +42,8 @@ This project follows the **Conventional Commits** format:
 <type>(<scope>): <short summary>
 ```
 
+The scope is **optional** and commit messages are validated in CI by **commitlint** on every pull request.
+
 ### **Accepted types**
 
 - `feat` – A new feature
@@ -48,54 +54,34 @@ This project follows the **Conventional Commits** format:
 - `perf` – Performance improvements
 - `test` – Test-related changes
 - `security` – Security-related changes
-- `deprecated` – Deprecation of APIs or modules
+- `deprecated` – Deprecation of APIs or components
 - `chore` – Internal tooling, CI, dependency bumps…
 - `build` – Build pipeline or configuration updates
 
 ---
 
-## **📦 Commit Scope & Versioning Rules (Important)**
+## **📦 Versioning Rules**
 
-In this monorepo, **your commit scope determines which module receives a version bump**.
-
-### 📌 **1. Scoped commits → bump the matching module**
-
-Example:
-
-```
-feat(catalog-ui): add bulk import feature
-```
-
-➡ The **catalog-ui** package will receive a **minor** version bump.
-➡ Only this module is impacted.
-
-Another example:
-
-```
-fix(catalog-ui): fix missing props validation
-```
-
-➡ `catalog-ui` will bump **patch** version only.
-
-### 📌 **2. Unscoped commit → global change**
-
-Example:
-
-```
-feat: introduce new shared plugin utils
-```
-
-➡ This means the change applies to the **whole monorepo**.
-➡ All affected modules will be bumped accordingly (usually minor).
+This repository hosts a **single package** (`linid-catalog-ui`): versioning is **global to the repository** and driven by **commit types** (see the Releases section below).
 
 ### 📌 Summary table
 
-| Commit                | Meaning              | Version impact                    |
-| --------------------- | -------------------- | --------------------------------- |
-| `feat(module-x): ...` | Feature for module X | bump X (minor)                    |
-| `fix(module-x): ...`  | Fix for module X     | bump X (patch)                    |
-| `feat: ...`           | Global feature       | bump all affected modules (minor) |
-| `fix: ...`            | Global fix           | bump all affected modules (patch) |
+| Commit                       | Meaning               | Version impact |
+| ---------------------------- | --------------------- | -------------- |
+| `feat: ...`                  | New feature           | minor bump     |
+| `fix: ...`                   | Bug fix               | patch bump     |
+| `feat!:` / `BREAKING CHANGE` | Breaking change       | major bump     |
+| `docs:`, `chore:`, …         | No user-facing change | no bump        |
+
+### 📌 About scopes
+
+The scope no longer determines which package receives a version bump (there is only one). It remains useful to indicate the impacted area of the library:
+
+```
+feat(smart-filter): add saved favorite filters
+```
+
+Examples of useful scopes: a component family (`field`, `card`, `smart-filter`), a concern (`i18n`, `federation`, `docs`)…
 
 ---
 
@@ -116,30 +102,30 @@ All documentation must be placed under:
 /docs
 ```
 
-Each plugin, module, generator or architectural concept must have its own Markdown file.
+Each component, page, layout, federation module or architectural concept has its own Markdown file, organized as follows:
 
----
-
-## **📊 Diagrams with Mermaid**
-
-Mermaid is used for flowcharts and architecture diagrams.
-
-- Files must be `.md` or `.mmd`
-- Output PNG must be committed with the source
-
-### Generate diagrams
-
-```sh
-mmdc -i docs/diagram.mmd -o docs/diagram.png
 ```
-
-Any diagram change **must regenerate the PNG**.
+docs/
+├── components/            # One file per component, grouped by family
+│                          # (avatar, badge, button, card, dialog, field,
+│                          #  link, loader, menu, panel, profile,
+│                          #  smart-filter, table, tree…)
+├── layouts/               # Layout components (e.g. BaseLayout)
+├── modules/               # Federation page modules (e.g. GenericPageModule)
+├── pages/                 # Generic pages (table, details, creation, edition, import)
+├── design.md              # Design configuration
+├── generic-pages.md       # Generic pages guide
+├── i18n.md                # Translation keys
+├── shared-ui-guidelines.md
+├── shared-zones-guidelines.md
+└── value-formatting.md    # Formatter / formatOptions configuration
+```
 
 ---
 
 # **🚀 Development**
 
-This project is an **Nx monorepo** using **pnpm** as the package manager.
+This project uses **pnpm** as the package manager.
 
 ## **📦 Installation**
 
@@ -160,15 +146,15 @@ pnpm install
 
 ## **🛠️ Local Development**
 
-### Start a module or catalog in dev mode
+### Start the dev server
 
 ```sh
 pnpm dev
 ```
 
-This will start the `catalog-ui` module (or any default development target defined later).
+This starts the Vite dev server on port `5001`, serving the `catalogUI` Module Federation remote and its exposed components.
 
-### Build all projects
+### Build the library
 
 ```sh
 pnpm build
@@ -188,6 +174,8 @@ pnpm typecheck
 
 ### Testing
 
+Unit tests live in the `tests/` folder and mirror the `src/` structure (components, composables, federation, layouts, pages, services).
+
 ```sh
 pnpm test          # Runs the full test suite once
 pnpm test:watch    # Runs tests in watch mode
@@ -206,53 +194,6 @@ pnpm format:check
 
 ---
 
-# **📦 Nx Commands**
-
-### View project graph
-
-```sh
-pnpm graph
-```
-
-### Reset Nx cache
-
-```sh
-pnpm reset
-```
-
-### Only run tasks affected by git changes
-
-```sh
-pnpm exec nx affected -t lint test typecheck build
-```
-
----
-
-# **⚙️ Module Generator**
-
-The monorepo includes a generator to scaffold a new module.
-
-### Run generator
-
-```sh
-pnpm nx generate @linid-im-front-community-plugins/module:create
-```
-
-or
-
-```sh
-pnpm exec nx generate @linid-im-front-community-plugins/module:create
-```
-
-This will:
-
-- create a new remote module
-- configure module federation
-- setup tests, linting, tsconfig
-- generate base pages & components
-
----
-
 # **🧼 Code Quality**
 
 We enforce strict quality standards via:
@@ -260,7 +201,6 @@ We enforce strict quality standards via:
 - **ESLint**
 - **Prettier**
 - **TypeScript**
-- **Nx task orchestration**
 
 Use:
 
@@ -272,7 +212,7 @@ to run **all checks** at once.
 
 ## Copyright Headers
 
-All source files located in the `src` folder must contain a copyright header at the beginning of the file. This header is based on the content of the `COPYRIGHT` file at the project root.
+All TypeScript, JavaScript and Vue files must contain a copyright header at the beginning of the file (test and configuration files are exempt). This header is based on the content of the `COPYRIGHT` file at the project root.
 
 ### Affected Files
 
@@ -294,7 +234,7 @@ If a file does not contain the required copyright header, you can add it automat
 pnpm lint:fix
 ```
 
-This command will analyze all files in the `src` folder and add missing headers according to the `COPYRIGHT` file.
+This command will analyze all linted files and add missing headers according to the `COPYRIGHT` file.
 
 ### Manual Verification
 
@@ -316,16 +256,16 @@ Dedicated E2E suite will come later.
 
 ---
 
-# **🚀 Releases (Semantic Release for Monorepos)**
+# **🚀 Releases (standard-version)**
 
-Releases are automated using **Semantic Release** with Nx awareness.
+Releases are automated with **standard-version**: when changes are merged into `main`, the CI (`.github/workflows/release.yml`) takes over.
 
 When merging into `main`:
 
-- Version bumps are determined **per module**, based on commit scopes
-- `package.json` versions are updated
-- Changelogs are generated for each module
-- Git tags are created automatically
+- The `package.json` version is bumped based on **commit types** (`feat` → minor, `fix` → patch, breaking change → major)
+- The `CHANGELOG.md` file is generated
+- A git tag `vX.Y.Z` is created and pushed
+- The Docker image is built from the new tag and published to Docker Hub as `linagora/linid-catalog-ui:latest` and `linagora/linid-catalog-ui:<version>`
 
 ⚠ **No manual versioning is allowed.**
 
@@ -336,4 +276,4 @@ When merging into `main`:
 This project is distributed under the
 **GNU Affero General Public License v3**.
 
-See: [`LICENSE.md`](LICENSE.md)
+See: [`LICENSE.md`](LICENSE.md) for details.
