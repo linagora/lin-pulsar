@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.148](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.147...v0.2.148) (2026-10-22)
+
+
+### Features
+
+* remove nx and migrate to mono-repository ([9d333b9](https://github.com/linagora/linid-im-front-community-plugins/commit/9d333b9f0afdbdaa20d3717c7a092b4fd9784a88))
+
 ### [0.2.147](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.146...v0.2.147) (2026-10-21)
 
 
