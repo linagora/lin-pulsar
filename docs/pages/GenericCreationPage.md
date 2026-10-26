@@ -41,12 +41,12 @@ Example module configuration:
 ```json
 {
   "instanceId": "moduleApplicationCreationPage",
-  "remoteName": "catalogUI",
+  "remoteName": "LinPulsar",
   "apiEndpoint": "applications",
   "basePath": "/applications",
   "options": {
-    "layout": "catalogUI/BaseLayout",
-    "page": "catalogUI/GenericCreationPage",
+    "layout": "LinPulsar/BaseLayout",
+    "page": "LinPulsar/GenericCreationPage",
     "pagePath": "create",
     "parentPath": "/applications",
     "idKey": "id",
@@ -253,7 +253,7 @@ Field-specific translations (labels, hints, validation messages, placeholders) a
 
 ## **UI Customization**
 
-The page uses the LinPulsar design system through `useUiDesign()`.
+The page uses the `lin-pulsar-core` design system through `useUiDesign()`.
 
 ### Form Sections
 

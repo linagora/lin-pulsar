@@ -51,7 +51,7 @@ The component resolves `item.labelKey` through `vue-i18n`'s `t()` to produce the
 
 ## **🎨 UI Customization**
 
-The component uses the LinPulsar design system through `useUiDesign()`. You can customize:
+The component uses the `lin-pulsar-core` design system through `useUiDesign()`. You can customize:
 
 - **Tabs container**: `{uiNamespace}.navigation-menu` → applies to `q-tabs`
 - **Individual routes**: `{uiNamespace}.navigation-menu.route-{itemId}` → applies to each tab (`q-tab`, configured under the `q-route-tab` key)

@@ -1,7 +1,7 @@
 # **HeaderProfile**
 
 The **HeaderProfile** component displays the authenticated user's profile information in the application header.
-It renders a button showing the user's name and, on click, opens a dropdown menu with the full name and email address retrieved from the LinPulsar user store, a language switcher that lets the user change the application language, and a logout entry that asks for a confirmation before sending the user to the host logout route.
+It renders a button showing the user's name and, on click, opens a dropdown menu with the full name and email address retrieved from the `lin-pulsar-core` user store, a language switcher that lets the user change the application language, and a logout entry that asks for a confirmation before sending the user to the host logout route.
 
 ---
 
@@ -11,9 +11,9 @@ It renders a button showing the user's name and, on click, opens a dropdown menu
 - Provides quick access to profile information (name and email) via a dropdown menu
 - Allows the user to switch the application language via a dropdown selector
 - Lets the user log out, after a confirmation, through the host logout route (see [LogoutMenuItem](./LogoutMenuItem.md))
-- Integrates with the LinPulsar user store to reactively reflect the current user state
+- Integrates with the `lin-pulsar-core` user store to reactively reflect the current user state
 - Integrates with the UI store and the lin-pulsar-core i18n helpers to read and update the active locale
-- Integrates with the LinPulsar design system for consistent styling
+- Integrates with the `lin-pulsar-core` design system for consistent styling
 - Extensible via `LinPulsarZoneRenderer`: plugins can inject additional menu items into the profile dropdown
 
 ---
@@ -92,7 +92,7 @@ The last entry of the profile menu is the [LogoutMenuItem](./LogoutMenuItem.md) 
 ```typescript
 {
   path: '/',
-  component: 'catalogUI/BaseLayout',
+  component: 'LinPulsar/BaseLayout',
   meta: { hideLogout: true }, // or { logoutPath: '/auth/logout' }
   children: [...]
 }
@@ -102,7 +102,7 @@ The last entry of the profile menu is the [LogoutMenuItem](./LogoutMenuItem.md) 
 
 ## **UI Customization**
 
-The component uses the LinPulsar design system through `useUiDesign()`. The local namespace is built as `{uiNamespace}.header-profile`. You can customize:
+The component uses the `lin-pulsar-core` design system through `useUiDesign()`. The local namespace is built as `{uiNamespace}.header-profile`. You can customize:
 
 - **Button**: `{uiNamespace}.header-profile` → applies to `q-btn`
 - **Avatar section**: `{uiNamespace}.header-profile` → applies to `q-item-section` (icon side)
@@ -161,7 +161,7 @@ Here is a sample JSON configuration for the design system:
 ## **Advantages**
 
 - **Reactive:** Automatically reflects user state changes via Pinia store and the shared i18n instance
-- **Consistent:** Integrates with the LinPulsar design system for uniform header styling
+- **Consistent:** Integrates with the `lin-pulsar-core` design system for uniform header styling
 - **Configuration-driven:** The language list is derived from the host i18n configuration, not hard-coded
 - **Type-safe:** Full TypeScript support via `CommonComponentProps`
 - **Test-friendly:** Includes `data-cy` attributes for E2E testing
@@ -189,7 +189,7 @@ import HeaderProfile from '@/components/profile/HeaderProfile.vue';
 <script setup lang="ts">
 import { loadAsyncComponent } from '@linagora/lin-pulsar-core';
 
-const HeaderProfile = loadAsyncComponent('catalogUI/HeaderProfile');
+const HeaderProfile = loadAsyncComponent('LinPulsar/HeaderProfile');
 </script>
 
 <template>
@@ -205,11 +205,11 @@ This component is exposed as a Module Federation remote entry:
 
 | Key          | Value                                      |
 | ------------ | ------------------------------------------ |
-| Remote name  | `catalogUI`                                |
+| Remote name  | `LinPulsar`                                |
 | Exposed path | `./HeaderProfile`                          |
 | Source file  | `src/components/profile/HeaderProfile.vue` |
 
-The host application must declare `catalogUI` as a remote in its Module Federation configuration and share the following singletons: `vue`, `quasar`, `pinia`, `@linagora/lin-pulsar-core`.
+The host application must declare `LinPulsar` as a remote in its Module Federation configuration and share the following singletons: `vue`, `quasar`, `pinia`, `@linagora/lin-pulsar-core`.
 
 ---
 

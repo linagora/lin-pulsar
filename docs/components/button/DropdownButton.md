@@ -7,9 +7,9 @@ It dynamically builds UI design props for each menu entry, integrates with scope
 
 ## **Purpose**
 
-- Offers a consistent dropdown action menu across catalog UI screens
+- Offers a consistent dropdown action menu across LinPulsar screens
 - Supports both direct actions and grouped actions with one nested submenu level
-- Integrates with the LinPulsar design system for consistent styling
+- Integrates with the `lin-pulsar-core` design system for consistent styling
 - Uses scoped i18n keys for the button label, parent labels, and child labels
 - Emits a normalized action key so parent components can handle all actions in one place
 - Provides `data-cy` attributes for straightforward E2E targeting
@@ -26,7 +26,7 @@ It dynamically builds UI design props for each menu entry, integrates with scope
 
 ### MenuItem Interface
 
-`MenuItem` is provided by `@linagora/lin-pulsar-core` so any plugin or host application can build typed menus without depending on `catalog-ui` internals. It is generic over the key type, defaulting to `string` for open-ended menus.
+`MenuItem` is provided by `@linagora/lin-pulsar-core` so any plugin or host application can build typed menus without depending on `LinPulsar` internals. It is generic over the key type, defaulting to `string` for open-ended menus.
 
 ```typescript
 import type { MenuItem } from '@linagora/lin-pulsar-core';
@@ -102,7 +102,7 @@ export interface DropdownButtonOutputs {
 
 ## **UI Customization**
 
-The component uses the LinPulsar design system through `useUiDesign()`. You can customize:
+The component uses the `lin-pulsar-core` design system through `useUiDesign()`. You can customize:
 
 - **Dropdown button**: `{uiNamespace}.dropdown-button` → applies to `q-btn-dropdown`
 - **Root list**: `{uiNamespace}.dropdown-button` → applies to `q-list`
@@ -231,7 +231,7 @@ Example:
 import { loadAsyncComponent } from '@linagora/lin-pulsar-core';
 import type { MenuItem } from '@linagora/lin-pulsar-core';
 
-const dropdownButton = loadAsyncComponent('catalogUI/DropdownButton');
+const dropdownButton = loadAsyncComponent('LinPulsar/DropdownButton');
 
 const items: MenuItem[] = [
   {
@@ -283,7 +283,7 @@ function onItemClick({ key }: { key: string }) {
 import { loadAsyncComponent } from '@linagora/lin-pulsar-core';
 import type { MenuItem } from '@linagora/lin-pulsar-core';
 
-const dropdownButton = loadAsyncComponent('catalogUI/DropdownButton');
+const dropdownButton = loadAsyncComponent('LinPulsar/DropdownButton');
 
 const items: MenuItem[] = [
   { key: 'open', clickable: true },

@@ -150,8 +150,8 @@ const uiProps = computed(() => ({
   ),
 }));
 
-const fieldComponent = loadAsyncComponent('catalogUI/EntityAttributeField');
-const buttonsCard = loadAsyncComponent('catalogUI/ButtonsCard');
+const fieldComponent = loadAsyncComponent('LinPulsar/EntityAttributeField');
+const buttonsCard = loadAsyncComponent('LinPulsar/ButtonsCard');
 
 /**
  * Handles the submit action.

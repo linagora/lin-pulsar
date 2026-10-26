@@ -104,7 +104,7 @@ Static route, in the actions of a table page:
 ```json
 {
   "zone": "moduleAccountsPage.header.actions",
-  "plugin": "catalogUI/RedirectButton",
+  "plugin": "LinPulsar/RedirectButton",
   "props": {
     "to": "/accounts/import"
   }
@@ -120,7 +120,7 @@ Route derived from the row entity, in the row actions of a table:
 ```json
 {
   "zone": "moduleAccountsPage.row-actions",
-  "plugin": "catalogUI/RedirectButton",
+  "plugin": "LinPulsar/RedirectButton",
   "props": {
     "to": "/accounts/{{ entity.id }}/history",
     "disable": "{{ entity.status != 'ACTIVE' }}"

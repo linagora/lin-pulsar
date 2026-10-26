@@ -128,7 +128,7 @@ The `disable` property in `inputSettings` is **not handled by EntityAttributeFie
 
 ## **🎨 UI Customization**
 
-The component integrates with the LinPulsar design system via `uiNamespace`.
+The component integrates with the `lin-pulsar-core` design system via `uiNamespace`.
 
 ### Namespace Resolution
 

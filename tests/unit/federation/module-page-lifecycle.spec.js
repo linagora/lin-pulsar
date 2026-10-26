@@ -84,14 +84,14 @@ describe('Test module lifecycle: ModulePage', () => {
       expect(result).toEqual({ success: true });
     });
 
-    it('should register the catalog dialog components in the layout dialog zone', async () => {
+    it('should register the LinPulsar dialog components in the layout dialog zone', async () => {
       await modulePage.postInit({ instanceId: 'page-instance-2' });
 
       const entries =
         useLinPulsarZoneStore().zones['base-layout.dialogComponent'] ?? [];
       expect(entries.map((entry) => entry.plugin)).toEqual([
-        'catalogUI/ConfirmationDialog',
-        'catalogUI/FormDialog',
+        'LinPulsar/ConfirmationDialog',
+        'LinPulsar/FormDialog',
       ]);
     });
   });

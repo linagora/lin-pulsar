@@ -313,7 +313,7 @@ export type LinPulsarSmartFilterOutputs = {
 
 ## **UI Customization**
 
-The component uses the LinPulsar design system through `useUiDesign()` and applies props to Quasar components:
+The component uses the `lin-pulsar-core` design system through `useUiDesign()` and applies props to Quasar components:
 
 | Namespace Path                                                                                  | Target           | Description                                                                                                 |
 | ----------------------------------------------------------------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------- |

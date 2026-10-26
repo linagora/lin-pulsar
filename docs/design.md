@@ -1,6 +1,6 @@
-# **CatalogUI Design Configuration 🎨**
+# **LinPulsar Design Configuration 🎨**
 
-This document describes the design configuration keys available for CatalogUI components. These keys are used in the `design.json` file to customize the visual appearance of components.
+This document describes the design configuration keys available for LinPulsar components. These keys are used in the `design.json` file to customize the visual appearance of components.
 
 > For detailed Quasar component props, see the [lin-pulsar-core design documentation](https://github.com/linagora/lin-pulsar-core/blob/main/docs/ui-design.md).
 
@@ -8,7 +8,7 @@ This document describes the design configuration keys available for CatalogUI co
 
 ## **📋 Overview**
 
-CatalogUI components use a namespace-based design system. Each component appends its own identifier to the parent `uiNamespace` prop, creating a hierarchical configuration structure.
+LinPulsar components use a namespace-based design system. Each component appends its own identifier to the parent `uiNamespace` prop, creating a hierarchical configuration structure.
 
 **Pattern:** `{parentNamespace}.{component-name}.{q-component}`
 
@@ -1761,7 +1761,7 @@ The `edit-button` namespace only applies when `editPath` is configured on the mo
 
 ## **💡 Complete Configuration Example**
 
-A full example showing all CatalogUI components configured together:
+A full example showing all LinPulsar components configured together:
 
 ```json
 {

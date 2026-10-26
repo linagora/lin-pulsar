@@ -120,7 +120,7 @@ Rendered only when `enableActions = true`.
 
 Includes:
 
-- `ButtonsCard` (local `catalog-ui` component, directly imported)
+- `ButtonsCard` (local `LinPulsar` component, directly imported)
 - Extension zone for additional buttons, rendered via `LinPulsarZoneRenderer` (Module Federation)
 - A default **Create button**
 
@@ -150,7 +150,7 @@ See [LinPulsarSmartFilter](../components/smart-filter/LinPulsarSmartFilter.md) f
 
 Renders a table component:
 
-- `GenericEntityTable` (local `catalog-ui` component, directly imported)
+- `GenericEntityTable` (local `LinPulsar` component, directly imported)
 - Supports pagination
 - Supports dynamic column labels (i18n scoped)
 - Uses `idKey` to identify rows
@@ -286,13 +286,13 @@ The `row-actions` zone receives the row through its `entity` prop, so a
 ```json
 {
   "instanceId": "moduleApplicationTablePage",
-  "remoteName": "catalogUI",
+  "remoteName": "LinPulsar",
   "apiEndpoint": "applications",
   "basePath": "/applications",
   "zones": [
     {
       "zone": "moduleApplicationTablePage.row-actions",
-      "plugin": "catalogUI/FormDialogButton",
+      "plugin": "LinPulsar/FormDialogButton",
       "props": {
         "url": "/applications/{{ entity.id }}",
         "method": "PUT",
@@ -311,8 +311,8 @@ The `row-actions` zone receives the row through its `entity` prop, so a
     }
   ],
   "options": {
-    "layout": "catalogUI/BaseLayout",
-    "page": "catalogUI/GenericTablePage",
+    "layout": "LinPulsar/BaseLayout",
+    "page": "LinPulsar/GenericTablePage",
     "pagePath": "",
     "idKey": "id",
     "enableActions": true,
@@ -351,7 +351,7 @@ The `row-actions` zone receives the row through its `entity` prop, so a
 
 ## **UI Customization**
 
-Uses LinPulsar design system via:
+Uses the `lin-pulsar-core` design system via:
 
 - `useUiDesign()`
 - Namespaced UI keys:
@@ -373,10 +373,10 @@ Instead, it relies on:
 
 ## **Dependencies**
 
-- `GenericEntityTable` (local `catalog-ui` component)
-- `ButtonsCard` (local `catalog-ui` component, optional)
+- `GenericEntityTable` (local `LinPulsar` component)
+- `ButtonsCard` (local `LinPulsar` component, optional)
 - `LinPulsarZoneRenderer` from `@linagora/lin-pulsar-core` (renders the zones)
-- `catalogUI/LinPulsarSmartFilter` (optional)
+- `LinPulsar/LinPulsarSmartFilter` (optional)
 - `uiEventSubject` from `@linagora/lin-pulsar-core` (used when `reloadTableOn` is configured)
 - `@linagora/lin-pulsar-core`
 - Quasar Framework

@@ -19,7 +19,7 @@ export default defineConfig({
     vue(),
     quasar(),
     federation({
-      name: 'catalogUI',
+      name: 'LinPulsar',
       filename: 'remoteEntry.js',
       manifest: true,
       exposes: {

@@ -1,6 +1,6 @@
 # **FormDialog 📋**
 
-Generic, event-driven form dialog for LinPulsar applications.
+Generic, event-driven form dialog for LinOpenFactory applications.
 
 ---
 
@@ -138,7 +138,7 @@ successful submit or cancel, `formData` is reset to `{}`.
 ### Field Rendering
 
 Form fields are rendered by iterating over `formFields` and mounting an `EntityAttributeField` (loaded via
-`loadAsyncComponent('catalogUI/EntityAttributeField')`) for each entry:
+`loadAsyncComponent('LinPulsar/EntityAttributeField')`) for each entry:
 
 ```html
 <q-card-section

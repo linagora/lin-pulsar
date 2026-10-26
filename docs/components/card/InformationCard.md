@@ -120,7 +120,7 @@ Uses the default slot to render complex or formatted content.
 
 ## **🎨 UI Customization**
 
-The component uses the LinPulsar design system through `useUiDesign()`, under the `uiNamespace` inherited from
+The component uses the `lin-pulsar-core` design system through `useUiDesign()`, under the `uiNamespace` inherited from
 `CommonComponentProps`. You can customize:
 
 - **Card container**: `{uiNamespace}.information-card` → applies to `q-card`

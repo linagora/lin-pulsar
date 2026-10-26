@@ -138,7 +138,7 @@ Displays loading placeholders for all attributes.
 
 ## **🎨 UI Customization**
 
-The component uses the LinPulsar design system through `useUiDesign()`. You can customize:
+The component uses the `lin-pulsar-core` design system through `useUiDesign()`. You can customize:
 
 - **Card container**: `{uiNamespace}.entity-details-card` → applies to `q-card`
 - **Title section**: `{uiNamespace}.entity-details-card.title-section` → applies to the title `q-card-section`

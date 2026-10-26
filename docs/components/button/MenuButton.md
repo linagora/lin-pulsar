@@ -2,7 +2,7 @@
 
 The **MenuButton** component groups a few actions behind a single button opening a menu, typically
 a round icon button standing on the edge of an image or in a card corner. Each row of the menu is a
-`q-item` hosting a regular Catalog UI action button — `FormDialogButton`, `ConfirmDialogButton`,
+`q-item` hosting a regular LinPulsar action button — `FormDialogButton`, `ConfirmDialogButton`,
 `RedirectButton`… — so each action keeps its own behavior, dialogs and notifications. The rows are
 named by the `items` prop and provided either through a named slot per item, or through a plugin
 zone per item declared in the host configuration.
@@ -12,7 +12,7 @@ zone per item declared in the host configuration.
 ## **🎯 Purpose**
 
 - Groups several actions behind one button, revealed in a menu
-- Hosts any Catalog UI action button as a menu row, without re-implementing their behavior
+- Hosts any LinPulsar action button as a menu row, without re-implementing their behavior
 - Lets the host configuration declare the rows through one plugin zone per item
 - Lets the design system style the button, the menu, the list, the rows and each action independently
 - Leaves its positioning to the hosting component or page
@@ -129,12 +129,12 @@ item zones of a `MenuButton` placed in `moduleAccountDetailsPage.header.actions`
 [
   {
     "zone": "moduleAccountDetailsPage.header.actions",
-    "plugin": "catalogUI/MenuButton",
+    "plugin": "LinPulsar/MenuButton",
     "props": { "items": ["editImage", "deleteImage"], "zone": true }
   },
   {
     "zone": "moduleAccountDetailsPage.menu-button.editImage",
-    "plugin": "catalogUI/FormDialogButton",
+    "plugin": "LinPulsar/FormDialogButton",
     "props": {
       "url": "/avatars/accounts/{{ entity.id }}",
       "multipart": true,
@@ -144,7 +144,7 @@ item zones of a `MenuButton` placed in `moduleAccountDetailsPage.header.actions`
   },
   {
     "zone": "moduleAccountDetailsPage.menu-button.deleteImage",
-    "plugin": "catalogUI/ConfirmDialogButton",
+    "plugin": "LinPulsar/ConfirmDialogButton",
     "props": { "url": "/avatars/accounts/{{ entity.id }}", "method": "DELETE", "emitOnSubmit": "account-avatar-updated" }
   }
 ]

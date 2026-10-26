@@ -127,7 +127,7 @@ The button is declared in the `zones` property of the module host configuration 
 ```json
 {
   "zone": "moduleRolesPage.row-actions",
-  "plugin": "catalogUI/ConfirmDialogButton",
+  "plugin": "LinPulsar/ConfirmDialogButton",
   "props": {
     "url": "/roles/{{ entity.id }}",
     "method": "DELETE",

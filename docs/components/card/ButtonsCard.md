@@ -243,7 +243,7 @@ Using visibility props with extra buttons:
 
 ## **🎨 UI Customization**
 
-The component uses the LinPulsar design system through `useUiDesign()`. You can customize:
+The component uses the `lin-pulsar-core` design system through `useUiDesign()`. You can customize:
 
 - **Card container**: `{uiNamespace}.buttons-card` → applies to `q-card`
 - **Icon**: `{uiNamespace}.buttons-card` → applies to `q-icon`

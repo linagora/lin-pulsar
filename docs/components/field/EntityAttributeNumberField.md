@@ -3,7 +3,7 @@
 The **EntityAttributeNumberField** component is a specialized attribute field dedicated to handling **numeric attributes**
 within an entity.
 
-It is built on Quasar’s `QInput` component configured for numeric input and integrates with the LinPulsar design system and
+It is built on Quasar’s `QInput` component configured for numeric input and integrates with the `lin-pulsar-core` design system and
 scoped i18n to provide a consistent, localized, and customizable number field.
 
 ---
@@ -122,7 +122,7 @@ translateOrDefault('', 'label');
 
 ## **🎨 UI Customization**
 
-UI customization is handled through the LinPulsar design system via `useUiDesign()`.
+UI customization is handled through the `lin-pulsar-core` design system via `useUiDesign()`.
 
 ### Namespace Resolution
 

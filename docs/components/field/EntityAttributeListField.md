@@ -3,7 +3,7 @@
 The **EntityAttributeListField** component is a specialized attribute field designed to handle **list-based attributes**
 within an entity.
 
-It relies on Quasar's `QSelect` component and integrates with the LinPulsar design system and scoped i18n to provide a fully
+It relies on Quasar's `QSelect` component and integrates with the `lin-pulsar-core` design system and scoped i18n to provide a fully
 customizable, localized, and reactive select input for predefined value lists.
 
 ---
@@ -147,7 +147,7 @@ translateOrDefault('', 'label');
 
 ## **🎨 UI Customization**
 
-UI customization is handled via the LinPulsar design system using `useUiDesign()`.
+UI customization is handled via the `lin-pulsar-core` design system using `useUiDesign()`.
 
 ### Namespace Resolution
 

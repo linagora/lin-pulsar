@@ -40,7 +40,7 @@ The component accepts the following props:
 <script setup lang="ts">
 import { loadAsyncComponent } from '@linagora/lin-pulsar-core';
 
-const StatusBadge = loadAsyncComponent('catalogUI/StatusBadge');
+const StatusBadge = loadAsyncComponent('LinPulsar/StatusBadge');
 const user = {
   id: '123',
   name: 'John Doe',

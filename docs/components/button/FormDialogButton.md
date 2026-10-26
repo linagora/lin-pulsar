@@ -143,7 +143,7 @@ The button is declared in the `zones` property of the module host configuration 
 ```json
 {
   "zone": "moduleApplicationDetailsPage.buttons-card.append",
-  "plugin": "catalogUI/FormDialogButton",
+  "plugin": "LinPulsar/FormDialogButton",
   "props": {
     "url": "/applications/{{ entity.id }}/export",
     "method": "POST",

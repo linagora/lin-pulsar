@@ -111,7 +111,7 @@ const uiProps = computed(() => ({
   ),
 }));
 
-const buttonsCard = loadAsyncComponent('catalogUI/ButtonsCard');
+const buttonsCard = loadAsyncComponent('LinPulsar/ButtonsCard');
 
 /**
  * Handles the confirm action.
