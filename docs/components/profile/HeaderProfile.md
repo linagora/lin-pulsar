@@ -1,7 +1,7 @@
 # **HeaderProfile**
 
 The **HeaderProfile** component displays the authenticated user's profile information in the application header.
-It renders a button showing the user's name and, on click, opens a dropdown menu with the full name and email address retrieved from the LinID user store, a language switcher that lets the user change the application language, and a logout entry that asks for a confirmation before sending the user to the host logout route.
+It renders a button showing the user's name and, on click, opens a dropdown menu with the full name and email address retrieved from the LinPulsar user store, a language switcher that lets the user change the application language, and a logout entry that asks for a confirmation before sending the user to the host logout route.
 
 ---
 
@@ -11,10 +11,10 @@ It renders a button showing the user's name and, on click, opens a dropdown menu
 - Provides quick access to profile information (name and email) via a dropdown menu
 - Allows the user to switch the application language via a dropdown selector
 - Lets the user log out, after a confirmation, through the host logout route (see [LogoutMenuItem](./LogoutMenuItem.md))
-- Integrates with the LinID user store to reactively reflect the current user state
-- Integrates with the UI store and the corelib i18n helpers to read and update the active locale
-- Integrates with the LinID design system for consistent styling
-- Extensible via `LinidZoneRenderer`: plugins can inject additional menu items into the profile dropdown
+- Integrates with the LinPulsar user store to reactively reflect the current user state
+- Integrates with the UI store and the lin-pulsar-core i18n helpers to read and update the active locale
+- Integrates with the LinPulsar design system for consistent styling
+- Extensible via `LinPulsarZoneRenderer`: plugins can inject additional menu items into the profile dropdown
 
 ---
 
@@ -50,8 +50,8 @@ The profile menu includes a language selector. Its data comes from several disti
 
 ### How it works
 
-1. **Available languages** — read from the UI store (`useLinidUiStore().i18n.languages`), which reflects the locales declared in the host configuration (`config.json` → `i18n.languages`). The dropdown list is built by iterating over this array, so adding a language to the host configuration automatically adds it to the switcher.
-2. **Active language** — read from the UI store (`useLinidUiStore().i18n.locale`) and kept in sync with it: if the locale changes outside the component (e.g. the user preference is resolved after mount), the selector updates automatically. On selection, the component calls the corelib `changeLocale` helper, which updates the whole UI reactively.
+1. **Available languages** — read from the UI store (`useLinPulsarUiStore().i18n.languages`), which reflects the locales declared in the host configuration (`config.json` → `i18n.languages`). The dropdown list is built by iterating over this array, so adding a language to the host configuration automatically adds it to the switcher.
+2. **Active language** — read from the UI store (`useLinPulsarUiStore().i18n.locale`) and kept in sync with it: if the locale changes outside the component (e.g. the user preference is resolved after mount), the selector updates automatically. On selection, the component calls the lin-pulsar-core `changeLocale` helper, which updates the whole UI reactively.
 3. **Language display names (endonyms)** — resolved through the `application` i18n scope: `t('languages.' + locale)`. Values are each language written in its own language (e.g. "Français", "English (US)"), so they must be **identical across all locale files** (see the i18n documentation).
 4. **Flags** — served by the host as static SVG files at `/icons/{locale}.svg` (e.g. `/icons/fr-FR.svg`). The component references them by an absolute URL built from the locale code; it does **not** import or bundle them. This keeps the flags out of the Module Federation bundle but couples the component to a host that serves these files.
 
@@ -70,7 +70,7 @@ If any of these is missing for a given locale, that language will render with a 
 
 - The currently active language stays visible in the list but is **disabled** (not selectable), per specification.
 - Selecting a language closes the entire profile menu. This is both the expected behaviour for a selector and a deliberate fix: the select re-measures its width on the next open, which avoids a layout overlap that occurred when the label changed while the menu stayed open.
-- Selecting a language calls the corelib `changeLocale` helper, which applies the locale to vue-i18n, reflects it in the UI store, and persists the choice (localStorage and, when it differs, the server-side user preference).
+- Selecting a language calls the lin-pulsar-core `changeLocale` helper, which applies the locale to vue-i18n, reflects it in the UI store, and persists the choice (localStorage and, when it differs, the server-side user preference).
 - If `changeLocale` fails, the error is logged and the selection reverts to the locale from the UI store.
 
 ---
@@ -87,7 +87,7 @@ The last entry of the profile menu is the [LogoutMenuItem](./LogoutMenuItem.md) 
 
 ### Disabling or relocating the entry
 
-`BaseLayout` reads both values from the `meta` of the current route (Vue Router merges the `meta` of the layout route into its children) and forwards them as props, so a host declares them on the route mounting the layout, whether through Vue Router directly or through a `LinidRoute` exposed by a module:
+`BaseLayout` reads both values from the `meta` of the current route (Vue Router merges the `meta` of the layout route into its children) and forwards them as props, so a host declares them on the route mounting the layout, whether through Vue Router directly or through a `LinPulsarRoute` exposed by a module:
 
 ```typescript
 {
@@ -102,7 +102,7 @@ The last entry of the profile menu is the [LogoutMenuItem](./LogoutMenuItem.md) 
 
 ## **UI Customization**
 
-The component uses the LinID design system through `useUiDesign()`. The local namespace is built as `{uiNamespace}.header-profile`. You can customize:
+The component uses the LinPulsar design system through `useUiDesign()`. The local namespace is built as `{uiNamespace}.header-profile`. You can customize:
 
 - **Button**: `{uiNamespace}.header-profile` → applies to `q-btn`
 - **Avatar section**: `{uiNamespace}.header-profile` → applies to `q-item-section` (icon side)
@@ -161,7 +161,7 @@ Here is a sample JSON configuration for the design system:
 ## **Advantages**
 
 - **Reactive:** Automatically reflects user state changes via Pinia store and the shared i18n instance
-- **Consistent:** Integrates with the LinID design system for uniform header styling
+- **Consistent:** Integrates with the LinPulsar design system for uniform header styling
 - **Configuration-driven:** The language list is derived from the host i18n configuration, not hard-coded
 - **Type-safe:** Full TypeScript support via `CommonComponentProps`
 - **Test-friendly:** Includes `data-cy` attributes for E2E testing
@@ -187,7 +187,7 @@ import HeaderProfile from '@/components/profile/HeaderProfile.vue';
 
 ```vue
 <script setup lang="ts">
-import { loadAsyncComponent } from '@linagora/linid-im-front-corelib';
+import { loadAsyncComponent } from '@linagora/lin-pulsar-core';
 
 const HeaderProfile = loadAsyncComponent('catalogUI/HeaderProfile');
 </script>
@@ -209,7 +209,7 @@ This component is exposed as a Module Federation remote entry:
 | Exposed path | `./HeaderProfile`                          |
 | Source file  | `src/components/profile/HeaderProfile.vue` |
 
-The host application must declare `catalogUI` as a remote in its Module Federation configuration and share the following singletons: `vue`, `quasar`, `pinia`, `@linagora/linid-im-front-corelib`.
+The host application must declare `catalogUI` as a remote in its Module Federation configuration and share the following singletons: `vue`, `quasar`, `pinia`, `@linagora/lin-pulsar-core`.
 
 ---
 
@@ -242,7 +242,7 @@ cy.get('[data-cy="header_profile_language_option_en-US"]').click();
 
 ## **Notes**
 
-- The component reads `fullName` and `email` from the `useLinidUserStore()` Pinia store — these values must be populated before the component is rendered (typically after OIDC authentication)
+- The component reads `fullName` and `email` from the `useLinPulsarUserStore()` Pinia store — these values must be populated before the component is rendered (typically after OIDC authentication)
 - The component has no fallback display when the user is not authenticated; the parent layout is responsible for rendering it only when a user session exists
 - The template is excluded from v8 coverage (`<!-- v8 ignore start/stop -->`) as it contains only presentation logic
 - **UI namespacing:** The local namespace `{uiNamespace}.header-profile` is derived from the prop, allowing each host application to style the component independently
@@ -255,16 +255,16 @@ cy.get('[data-cy="header_profile_language_option_en-US"]').click();
 The component follows a simple reactive read pattern:
 
 1. **Props in:** Receives `uiNamespace` to build its design system namespace
-2. **Store read:** Reads `fullName` and `email` from `useLinidUserStore()` as computed properties
+2. **Store read:** Reads `fullName` and `email` from `useLinPulsarUserStore()` as computed properties
 3. **UI props:** Resolves Quasar component props via `useUiDesign()` for `q-btn`, `q-item-section`, and `q-item-label`
-4. **i18n read:** Reads the active locale and the list of available locales from the UI store (`useLinidUiStore().i18n`); resolves the switcher title and the language names via the `application` scope
+4. **i18n read:** Reads the active locale and the list of available locales from the UI store (`useLinPulsarUiStore().i18n`); resolves the switcher title and the language names via the `application` scope
 5. **Render:** Displays a `q-btn` with the user's name; on click, a `q-menu` shows the full profile info
-6. **Language switch:** On selecting a language, calls the corelib `changeLocale` helper — which applies the locale to vue-i18n (updating the whole UI reactively), reflects it in the store, and persists it — then closes the profile menu. The currently active language is shown but disabled in the list.
-7. **Extension point:** A `LinidZoneRenderer` with zone `{uiNamespace}.header-profile.menu-items` allows plugins to inject additional menu items (e.g. settings)
+6. **Language switch:** On selecting a language, calls the lin-pulsar-core `changeLocale` helper — which applies the locale to vue-i18n (updating the whole UI reactively), reflects it in the store, and persists it — then closes the profile menu. The currently active language is shown but disabled in the list.
+7. **Extension point:** A `LinPulsarZoneRenderer` with zone `{uiNamespace}.header-profile.menu-items` allows plugins to inject additional menu items (e.g. settings)
 8. **Logout:** The [LogoutMenuItem](./LogoutMenuItem.md) component closes the menu, asks for a confirmation and navigates to `logoutPath`, unless `hideLogout` is set
 
 This architecture ensures:
 
-- **Separation of concerns:** User data is handled by the user store, locale state by the UI store and the corelib i18n helpers, not the component
+- **Separation of concerns:** User data is handled by the user store, locale state by the UI store and the lin-pulsar-core i18n helpers, not the component
 - **Reusability:** The component can be dropped into any layout that provides the correct `uiNamespace` and the required host resources
 - **Reactivity:** Any update to the user store is automatically reflected without additional wiring

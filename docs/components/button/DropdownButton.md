@@ -9,7 +9,7 @@ It dynamically builds UI design props for each menu entry, integrates with scope
 
 - Offers a consistent dropdown action menu across catalog UI screens
 - Supports both direct actions and grouped actions with one nested submenu level
-- Integrates with the LinID design system for consistent styling
+- Integrates with the LinPulsar design system for consistent styling
 - Uses scoped i18n keys for the button label, parent labels, and child labels
 - Emits a normalized action key so parent components can handle all actions in one place
 - Provides `data-cy` attributes for straightforward E2E targeting
@@ -26,10 +26,10 @@ It dynamically builds UI design props for each menu entry, integrates with scope
 
 ### MenuItem Interface
 
-`MenuItem` is provided by `@linagora/linid-im-front-corelib` so any plugin or host application can build typed menus without depending on `catalog-ui` internals. It is generic over the key type, defaulting to `string` for open-ended menus.
+`MenuItem` is provided by `@linagora/lin-pulsar-core` so any plugin or host application can build typed menus without depending on `catalog-ui` internals. It is generic over the key type, defaulting to `string` for open-ended menus.
 
 ```typescript
-import type { MenuItem } from '@linagora/linid-im-front-corelib';
+import type { MenuItem } from '@linagora/lin-pulsar-core';
 
 /**
  * Generic shape of a dropdown button menu item.
@@ -82,10 +82,10 @@ export interface DropdownButtonProps extends CommonComponentProps {
 
 ### DropdownButtonOutputs Interface
 
-The click payload is `DropdownClickPayload` from `@linagora/linid-im-front-corelib`, which is generic over the emitted key type and defaults to `string`.
+The click payload is `DropdownClickPayload` from `@linagora/lin-pulsar-core`, which is generic over the emitted key type and defaults to `string`.
 
 ```typescript
-import type { DropdownClickPayload } from '@linagora/linid-im-front-corelib';
+import type { DropdownClickPayload } from '@linagora/lin-pulsar-core';
 
 /**
  * Outputs (events) emitted by the DropdownButton component.
@@ -102,7 +102,7 @@ export interface DropdownButtonOutputs {
 
 ## **UI Customization**
 
-The component uses the LinID design system through `useUiDesign()`. You can customize:
+The component uses the LinPulsar design system through `useUiDesign()`. You can customize:
 
 - **Dropdown button**: `{uiNamespace}.dropdown-button` → applies to `q-btn-dropdown`
 - **Root list**: `{uiNamespace}.dropdown-button` → applies to `q-list`
@@ -228,8 +228,8 @@ Example:
 
 ```vue
 <script setup lang="ts">
-import { loadAsyncComponent } from '@linagora/linid-im-front-corelib';
-import type { MenuItem } from '@linagora/linid-im-front-corelib';
+import { loadAsyncComponent } from '@linagora/lin-pulsar-core';
+import type { MenuItem } from '@linagora/lin-pulsar-core';
 
 const dropdownButton = loadAsyncComponent('catalogUI/DropdownButton');
 
@@ -280,8 +280,8 @@ function onItemClick({ key }: { key: string }) {
 
 ```vue
 <script setup lang="ts">
-import { loadAsyncComponent } from '@linagora/linid-im-front-corelib';
-import type { MenuItem } from '@linagora/linid-im-front-corelib';
+import { loadAsyncComponent } from '@linagora/lin-pulsar-core';
+import type { MenuItem } from '@linagora/lin-pulsar-core';
 
 const dropdownButton = loadAsyncComponent('catalogUI/DropdownButton');
 

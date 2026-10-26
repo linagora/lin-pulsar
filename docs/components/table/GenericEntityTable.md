@@ -9,7 +9,7 @@ It renders a simple table from provided columns and rows, without slots, actions
 
 - Provide a reusable base table for entity lists
 - Keep the first iteration minimal and easy to extend later
-- Stay aligned with the LinID design system
+- Stay aligned with the LinPulsar design system
 - Provide internationalized labels for pagination and rows
 
 ---
@@ -30,12 +30,12 @@ It renders a simple table from provided columns and rows, without slots, actions
 
 Each column definition can be enhanced with optional formatting properties to automatically format cell values when data is displayed.
 
-The component does not implement the formatters itself: it resolves them through corelib's
+The component does not implement the formatters itself: it resolves them through lin-pulsar-core's
 `useValueFormatter()`, and injects the result as Quasar's native `format` function on the column.
 Columns without a `formatter` are forwarded to `QTable` untouched, and the `columns` prop is never
 mutated.
 
-Nullish values, unknown formatter names and missing formatter options are handled by corelib, which
+Nullish values, unknown formatter names and missing formatter options are handled by lin-pulsar-core, which
 returns the value unchanged rather than throwing.
 
 See [Value Formatting](../../value-formatting.md) for details on supported formatters and configuration.
@@ -83,7 +83,7 @@ const columns = [
 
 The column `field` supports **dot notation** to target values located inside sub-objects of the row (e.g. `extraParameters.login`):
 
-- A string `field` containing a dot is replaced by a getter resolving the nested path (`getNestedValue` from corelib)
+- A string `field` containing a dot is replaced by a getter resolving the nested path (`getNestedValue` from lin-pulsar-core)
 - Unresolvable paths render an empty cell instead of throwing
 - Flat string fields and function fields are forwarded to `QTable` untouched
 
@@ -271,7 +271,7 @@ The `myModule/ItemChip` component is rendered twice in the cell: first with
 
 ## **🎨 UI Customization**
 
-The component uses the LinID design system through `useUiDesign()` and applies
+The component uses the LinPulsar design system through `useUiDesign()` and applies
 props to Quasar's `QTable`:
 
 - **Table props**: `{uiNamespace}.generic-entity-table` → applies to `q-table`
@@ -289,7 +289,7 @@ Example:
 
 - **Simple:** No slots, actions, or event handling in this iteration
 - **Type-safe:** Columns and rows are typed with Quasar definitions
-- **Consistent:** UI props come from the LinID design system
+- **Consistent:** UI props come from the LinPulsar design system
 - **Reusable:** Designed as a base for future enhancements
 
 ---
@@ -298,7 +298,7 @@ Example:
 
 ```vue
 <script setup lang="ts">
-import { loadAsyncComponent } from '@linagora/linid-im-front-corelib';
+import { loadAsyncComponent } from '@linagora/lin-pulsar-core';
 import { ref, type Component } from 'vue';
 import type { QTableColumn } from 'quasar';
 

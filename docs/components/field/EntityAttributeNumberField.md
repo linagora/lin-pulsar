@@ -3,7 +3,7 @@
 The **EntityAttributeNumberField** component is a specialized attribute field dedicated to handling **numeric attributes**
 within an entity.
 
-It is built on Quasar’s `QInput` component configured for numeric input and integrates with the LinID design system and
+It is built on Quasar’s `QInput` component configured for numeric input and integrates with the LinPulsar design system and
 scoped i18n to provide a consistent, localized, and customizable number field.
 
 ---
@@ -24,14 +24,14 @@ scoped i18n to provide a consistent, localized, and customizable number field.
 
 The component uses the shared `AttributeFieldProps` interface with `FieldNumberSettings`.
 
-| Prop          | Type                                               | Required | Description                                                                  |
-| ------------- | -------------------------------------------------- | -------- | ---------------------------------------------------------------------------- |
-| `instanceId`  | `string`                                           | Yes      | Identifier used for contextual data                                          |
-| `i18nScope`   | `string`                                           | Yes      | I18n scope for localizing the component                                      |
-| `uiNamespace` | `string`                                           | Yes      | Base UI design namespace for styling                                         |
-| `definition`  | `LinidAttributeConfiguration<FieldNumberSettings>` | Yes      | Attribute definition (name, type, input configuration)                       |
-| `entity`      | `Record<string, unknown>`                          | Yes      | Entity object containing the numeric attribute value                         |
-| `ignoreRules` | `boolean`                                          | No       | Indicates whether to bypass validation rules for this field (default: false) |
+| Prop          | Type                                                   | Required | Description                                                                  |
+| ------------- | ------------------------------------------------------ | -------- | ---------------------------------------------------------------------------- |
+| `instanceId`  | `string`                                               | Yes      | Identifier used for contextual data                                          |
+| `i18nScope`   | `string`                                               | Yes      | I18n scope for localizing the component                                      |
+| `uiNamespace` | `string`                                               | Yes      | Base UI design namespace for styling                                         |
+| `definition`  | `LinPulsarAttributeConfiguration<FieldNumberSettings>` | Yes      | Attribute definition (name, type, input configuration)                       |
+| `entity`      | `Record<string, unknown>`                              | Yes      | Entity object containing the numeric attribute value                         |
+| `ignoreRules` | `boolean`                                              | No       | Indicates whether to bypass validation rules for this field (default: false) |
 
 ### AttributeFieldProps Interface
 
@@ -41,7 +41,7 @@ export interface AttributeFieldProps<T = Record<string, unknown>> extends Common
   instanceId: string;
 
   /** Attribute configuration describing how the field should be rendered. */
-  definition: LinidAttributeConfiguration<T>;
+  definition: LinPulsarAttributeConfiguration<T>;
 
   /** Entity object holding the attribute value. */
   entity: Record<string, unknown>;
@@ -122,7 +122,7 @@ translateOrDefault('', 'label');
 
 ## **🎨 UI Customization**
 
-UI customization is handled through the LinID design system via `useUiDesign()`.
+UI customization is handled through the LinPulsar design system via `useUiDesign()`.
 
 ### Namespace Resolution
 
@@ -134,7 +134,7 @@ UI customization is handled through the LinID design system via `useUiDesign()`.
 
 - Quasar component: `q-input`
 - Input type: `number`
-- Props type: `LinidQInputProps`
+- Props type: `LinPulsarQInputProps`
 
 Example:
 
@@ -202,8 +202,8 @@ The validation rules are executed in a specific order to ensure proper validatio
 
 The attribute `name` supports **dot notation** to target values located inside sub-objects of the entity (e.g. `extraParameters.login`):
 
-- The initial value is read from the nested path (`getNestedValue` from corelib)
-- Updates rewrite only the targeted nested property, preserving the rest of the entity structure (`setNestedValue` from corelib)
+- The initial value is read from the nested path (`getNestedValue` from lin-pulsar-core)
+- Updates rewrite only the targeted nested property, preserving the rest of the entity structure (`setNestedValue` from lin-pulsar-core)
 - Missing intermediate objects are created when updating; intermediate values that are not objects are replaced by objects
 - The `update:entity` event still emits the **complete** updated entity object
 

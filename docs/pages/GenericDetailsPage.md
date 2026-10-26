@@ -162,7 +162,7 @@ Every zone additionally receives the loaded `entity` and the configured `parentP
 
 ## **UI Customization**
 
-The page uses the LinID design system through `useUiDesign()`:
+The page uses the LinPulsar design system through `useUiDesign()`:
 
 - **Edit button**: `{instanceId}.buttons-card.edit-button` → applies to `q-btn`
 - **Section cards**: `{instanceId}.sections.{key}.entity-details-card` namespaces (see `EntityDetailsCard`)
@@ -171,10 +171,10 @@ The page uses the LinID design system through `useUiDesign()`:
 
 ## **Dependencies**
 
-- `LinidZoneRenderer` (zone injection points)
+- `LinPulsarZoneRenderer` (zone injection points)
 - `EntityDetailsCard` (attribute rendering)
 - `ButtonsCard` (navigation actions)
-- `getEntityById` / `getModuleHostConfiguration` / `uiEventSubject` from `@linagora/linid-im-front-corelib`
+- `getEntityById` / `getModuleHostConfiguration` / `uiEventSubject` from `@linagora/lin-pulsar-core`
 - `useScopedI18n` (translations)
 - `useNunjucks` (Nunjucks template rendering for `parentPath` and `editPath`)
 - `useUiDesign` (UI customization)

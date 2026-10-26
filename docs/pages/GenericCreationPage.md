@@ -31,10 +31,10 @@ The page resolves its options from the module host configuration (`getModuleHost
 
 Each `FormSection` defines a group of fields rendered in the form.
 
-| Field    | Type                            | Required | Description                                                              |
-| -------- | ------------------------------- | -------- | ------------------------------------------------------------------------ |
-| `id`     | `string`                        | Yes      | Unique section identifier used for translations and UI design namespaces |
-| `fields` | `LinidAttributeConfiguration[]` | Yes      | Ordered list of entity attributes rendered inside the section            |
+| Field    | Type                                | Required | Description                                                              |
+| -------- | ----------------------------------- | -------- | ------------------------------------------------------------------------ |
+| `id`     | `string`                            | Yes      | Unique section identifier used for translations and UI design namespaces |
+| `fields` | `LinPulsarAttributeConfiguration[]` | Yes      | Ordered list of entity attributes rendered inside the section            |
 
 Example module configuration:
 
@@ -253,7 +253,7 @@ Field-specific translations (labels, hints, validation messages, placeholders) a
 
 ## **UI Customization**
 
-The page uses the LinID design system through `useUiDesign()`.
+The page uses the LinPulsar design system through `useUiDesign()`.
 
 ### Form Sections
 
@@ -295,10 +295,10 @@ The same namespace is also passed to the fields of the section and to its `prepe
 
 ## **Dependencies**
 
-- `LinidZoneRenderer` (zone injection points)
+- `LinPulsarZoneRenderer` (zone injection points)
 - `EntityAttributeField` (dynamic entity attribute rendering)
 - `ButtonsCard` (navigation and form actions)
-- `saveEntity` / `getModuleHostConfiguration` / `uiEventSubject` from `@linagora/linid-im-front-corelib`
+- `saveEntity` / `getModuleHostConfiguration` / `uiEventSubject` from `@linagora/lin-pulsar-core`
 - `useScopedI18n` (translations)
 - `useNunjucks` (Nunjucks template rendering for `parentPath` and `successPath`)
 - `useUiDesign` (UI customization)

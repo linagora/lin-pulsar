@@ -9,7 +9,7 @@ It renders a hierarchical tree from provided nodes, with per-type icon support, 
 
 - Provide a reusable base tree for hierarchical entity structures
 - Keep the first iteration minimal and easy to extend later
-- Stay aligned with the LinID design system
+- Stay aligned with the LinPulsar design system
 - Support per-node-type styling (icons, labels) via the UI namespace
 - Support per-node-type contextual actions with dynamic icon support
 - Provide internationalized labels for empty states and actions
@@ -88,7 +88,7 @@ v-model:ticked = "tickedNodeKeys"
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { TreeNode, TreeNodeType } from '@linagora/linid-im-front-corelib';
+import type { TreeNode, TreeNodeType } from '@linagora/lin-pulsar-core';
 
 const tickedNodes = ref<string[]>([]);
 
@@ -196,7 +196,7 @@ function customFilter(node: QTreeNode, filter: string): boolean {
 
 ### `TreeNode<T>`
 
-Exported from `@linagora/linid-im-front-corelib`:
+Exported from `@linagora/lin-pulsar-core`:
 
 ```typescript
 type TreeNode<T> = {
@@ -210,7 +210,7 @@ type TreeNode<T> = {
 
 ### `TreeNodeType`
 
-Exported from `@linagora/linid-im-front-corelib`:
+Exported from `@linagora/lin-pulsar-core`:
 
 ```typescript
 type TreeNodeType = {
@@ -231,7 +231,7 @@ export type UiPropsAction = Record<
     /**
      * The UI properties for the displayed icon.
      */
-    icon: LinidQIconProps;
+    icon: LinPulsarQIconProps;
   }
 >;
 
@@ -240,23 +240,23 @@ export type UiPropsTypes = Record<
   string,
   {
     /** The UI properties for the displayed icon. */
-    icon: LinidQIconProps;
+    icon: LinPulsarQIconProps;
     /** The UI properties for the action icon. */
     actions: UiPropsAction;
   }
 >;
 ```
 
-This type is imported from `@linagora/linid-im-front-corelib`.
+This type is imported from `@linagora/lin-pulsar-core`.
 
 ---
 
 ## **useTree Composable**
 
-The `useTree` composable (from corelib) exposes a `toQTreeNodes` mapper that converts `TreeNode<T>[]` into the format expected by Quasar's `QTree`:
+The `useTree` composable (from lin-pulsar-core) exposes a `toQTreeNodes` mapper that converts `TreeNode<T>[]` into the format expected by Quasar's `QTree`:
 
 ```typescript
-import { useTree } from '@linagora/linid-im-front-corelib';
+import { useTree } from '@linagora/lin-pulsar-core';
 
 const { toQTreeNodes } = useTree();
 const quasarNodes = computed(() => toQTreeNodes(props.nodes));
@@ -276,7 +276,7 @@ This conversion is handled internally by `GenericTree` — consumers simply pass
 
 ## **UI Customization**
 
-The component uses the LinID design system through `useUiDesign()` and applies props to several Quasar components:
+The component uses the LinPulsar design system through `useUiDesign()` and applies props to several Quasar components:
 
 | Namespace                                                 | Target       | Description                            |
 | --------------------------------------------------------- | ------------ | -------------------------------------- |
@@ -305,8 +305,8 @@ Example:
 ## **Advantages**
 
 - **Simple:** Minimal wrapper with sensible defaults
-- **Type-safe:** Node structure typed via corelib `TreeNode<T>` and `TreeNodeType`
-- **Consistent:** UI props and icons come from the LinID design system
+- **Type-safe:** Node structure typed via lin-pulsar-core `TreeNode<T>` and `TreeNodeType`
+- **Consistent:** UI props and icons come from the LinPulsar design system
 - **Extensible:** Per-node `extraActions` allow customization without changing node types
 - **Reusable:** Designed as a base for future enhancements (lazy loading, drag-and-drop, etc.)
 
@@ -318,9 +318,9 @@ Example:
 
 ```vue
 <script setup lang="ts">
-import { loadAsyncComponent } from '@linagora/linid-im-front-corelib';
+import { loadAsyncComponent } from '@linagora/lin-pulsar-core';
 import { ref, type Component } from 'vue';
-import type { TreeNode, TreeNodeType } from '@linagora/linid-im-front-corelib';
+import type { TreeNode, TreeNodeType } from '@linagora/lin-pulsar-core';
 import type { QTreeNode } from 'quasar';
 
 const remoteComponent = ref<Component | null>(null);
@@ -388,9 +388,9 @@ remoteComponent.value = loadAsyncComponent('catalogUI/GenericTree');
 
 ```vue
 <script setup lang="ts">
-import { loadAsyncComponent } from '@linagora/linid-im-front-corelib';
+import { loadAsyncComponent } from '@linagora/lin-pulsar-core';
 import { ref, type Component } from 'vue';
-import type { TreeNode, TreeNodeType } from '@linagora/linid-im-front-corelib';
+import type { TreeNode, TreeNodeType } from '@linagora/lin-pulsar-core';
 
 const remoteComponent = ref<Component | null>(null);
 

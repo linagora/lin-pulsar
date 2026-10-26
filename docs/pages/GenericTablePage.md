@@ -36,7 +36,7 @@ interface ModuleGenericTablePageOptions {
   enableSeeButton?: boolean;
   creationPagePath: string;
   keepQueryParams?: string[];
-  filters?: LinidFilter[];
+  filters?: LinPulsarFilter[];
   reloadTableOn?: string[];
 }
 ```
@@ -51,7 +51,7 @@ interface ModuleGenericTablePageOptions {
 | `enableSeeButton`  | `boolean`              | Optional. Shows the per-row "see" button unless explicitly set to `false`                                                         |
 | `creationPagePath` | `string`               | Route path used for the "create" button navigation                                                                                |
 | `keepQueryParams`  | `string[]`             | Optional. URL query parameter keys to preserve as-is when the active filters are synced to the URL                                |
-| `filters`          | `LinidFilter[]`        | Optional. Filter definitions rendered by `LinidSmartFilter`. Omitted or empty disables the smart filter                           |
+| `filters`          | `LinPulsarFilter[]`    | Optional. Filter definitions rendered by `LinPulsarSmartFilter`. Omitted or empty disables the smart filter                       |
 | `reloadTableOn`    | `string[]`             | Optional. UI event keys (from the `uiEventSubject` bus) triggering a reload of the table data (see [Data Loading](#data-loading)) |
 
 ---
@@ -121,7 +121,7 @@ Rendered only when `enableActions = true`.
 Includes:
 
 - `ButtonsCard` (local `catalog-ui` component, directly imported)
-- Extension zone for additional buttons, rendered via `LinidZoneRenderer` (Module Federation)
+- Extension zone for additional buttons, rendered via `LinPulsarZoneRenderer` (Module Federation)
 - A default **Create button**
 
 #### **Create button behavior**
@@ -138,11 +138,11 @@ Rendered only when `options.filters` is a non-empty array.
 
 Includes:
 
-- `LinidSmartFilter` (federated component)
+- `LinPulsarSmartFilter` (federated component)
 - Active filters are initialized from the URL query params on mount
 - Filter changes reset pagination to page 1, sync the URL, and reload the table data
 
-See [LinidSmartFilter](../components/smart-filter/LinidSmartFilter.md) for the filtering UI itself.
+See [LinPulsarSmartFilter](../components/smart-filter/LinPulsarSmartFilter.md) for the filtering UI itself.
 
 ---
 
@@ -239,15 +239,15 @@ Each click cycles through: **No sort → Ascending → Descending → No sort**.
 
 Rendered only when `options.filters` is provided and non-empty.
 
-- Filter definitions (`options.filters`) are passed as the catalog to `LinidSmartFilter`
-- Active filters are initialized on mount from the URL via `getFiltersFromUrl` (from `useLinidFilterUrl`), matched against the configured filter definitions
+- Filter definitions (`options.filters`) are passed as the catalog to `LinPulsarSmartFilter`
+- Active filters are initialized on mount from the URL via `getFiltersFromUrl` (from `useLinPulsarFilterUrl`), matched against the configured filter definitions
 - On `update:filters`:
   1. The active filters are updated
   2. Pagination is reset to page 1
   3. The URL is updated via `setFiltersInUrl`, preserving any keys listed in `keepQueryParams`
   4. `loadData()` is called, sending the active filters as a query filter (built by `toQueryFilter`) to `getEntities`
 
-Each active filter is serialized to a query param using `filter.toString()`, keyed by `filter.name`. See `useLinidFilterUrl` in `@linagora/linid-im-front-corelib` for the exact URL format, and [LinidSmartFilter](../components/smart-filter/LinidSmartFilter.md) for the filtering UI and supported filter types.
+Each active filter is serialized to a query param using `filter.toString()`, keyed by `filter.name`. See `useLinPulsarFilterUrl` in `@linagora/lin-pulsar-core` for the exact URL format, and [LinPulsarSmartFilter](../components/smart-filter/LinPulsarSmartFilter.md) for the filtering UI and supported filter types.
 
 ---
 
@@ -351,7 +351,7 @@ The `row-actions` zone receives the row through its `entity` prop, so a
 
 ## **UI Customization**
 
-Uses LinID design system via:
+Uses LinPulsar design system via:
 
 - `useUiDesign()`
 - Namespaced UI keys:
@@ -375,10 +375,10 @@ Instead, it relies on:
 
 - `GenericEntityTable` (local `catalog-ui` component)
 - `ButtonsCard` (local `catalog-ui` component, optional)
-- `LinidZoneRenderer` from `@linagora/linid-im-front-corelib` (renders the zones)
-- `catalogUI/LinidSmartFilter` (optional)
-- `uiEventSubject` from `@linagora/linid-im-front-corelib` (used when `reloadTableOn` is configured)
-- `@linagora/linid-im-front-corelib`
+- `LinPulsarZoneRenderer` from `@linagora/lin-pulsar-core` (renders the zones)
+- `catalogUI/LinPulsarSmartFilter` (optional)
+- `uiEventSubject` from `@linagora/lin-pulsar-core` (used when `reloadTableOn` is configured)
+- `@linagora/lin-pulsar-core`
 - Quasar Framework
 
 ---
@@ -390,5 +390,5 @@ The **GenericTablePage** is a fully generic, federated CRUD-like table page that
 - abstracts data loading and pagination
 - standardizes navigation patterns
 - supports optional action zones
-- supports optional, URL-synced filtering via `LinidSmartFilter`
+- supports optional, URL-synced filtering via `LinPulsarSmartFilter`
 - integrates tightly with Module Federation architecture

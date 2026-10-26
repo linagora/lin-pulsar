@@ -1,10 +1,10 @@
 # **Value Formatting**
 
-Column and field definitions can be enhanced with optional formatting properties, contributed by corelib's
+Column and field definitions can be enhanced with optional formatting properties, contributed by lin-pulsar-core's
 `FormatterConfiguration`:
 
 ```ts
-// from @linagora/linid-im-front-corelib
+// from @linagora/lin-pulsar-core
 interface FormatterConfiguration {
   /** Formatter applied to the value before display. An unknown name displays the raw value. */
   formatter?: string;
@@ -45,7 +45,7 @@ The value being formatted is read from the row or item under the column `field` 
 To format date values, use the `formatter` and `formatOptions` properties:
 
 1. Set `formatter: 'toDate'` on your column or field definition to enable date formatting
-2. Provide `formatOptions` with a `formatKey` property that resolves to a translation key against the **global i18n scope** (corelib's `useValueFormatter` delegates to `useCommonMapper().toDate`, which uses `useI18n()`, not the component's scoped i18n)
+2. Provide `formatOptions` with a `formatKey` property that resolves to a translation key against the **global i18n scope** (lin-pulsar-core's `useValueFormatter` delegates to `useCommonMapper().toDate`, which uses `useI18n()`, not the component's scoped i18n)
 3. The translation key should resolve to a dayjs-compatible format string
 4. The cell value will automatically be formatted when data is displayed
 
@@ -58,7 +58,7 @@ Currently, only the following formatter is available:
 - **`toDate`** — Formats date/datetime values using a dayjs-compatible format string from a translation key.
   (Returns an empty string when the value cannot be parsed, so malformed dates render as blank cells rather than displaying the raw value.)
 
-The registry lives in corelib: adding a formatter is a corelib change, and it becomes available to every generic component at once. Nullish values, unknown formatter names and missing options are returned unchanged rather than throwing.
+The registry lives in lin-pulsar-core: adding a formatter is a lin-pulsar-core change, and it becomes available to every generic component at once. Nullish values, unknown formatter names and missing options are returned unchanged rather than throwing.
 
 ### **Example i18n Configuration**
 

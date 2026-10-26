@@ -1,13 +1,13 @@
 # **FormDialog 📋**
 
-Generic, event-driven form dialog for LinID applications.
+Generic, event-driven form dialog for LinPulsar applications.
 
 ---
 
 ## **⚙️ Overview**
 
 The `FormDialog` component listens for UI events to display a dialog containing a dynamic form. It renders form
-fields from `LinidAttributeConfiguration` definitions, manages local form state, and handles asynchronous form
+fields from `LinPulsarAttributeConfiguration` definitions, manages local form state, and handles asynchronous form
 submission with a loading indicator.
 
 The dialog is **draggable**: click and hold the header to reposition it anywhere on screen.
@@ -41,7 +41,7 @@ interface BaseDialogEvent extends DialogEvent {
 
 export interface FormDialogEvent extends BaseDialogEvent {
   instanceId?: string; // Instance identifier passed to each rendered field (required by AttributeFieldProps)
-  formFields?: LinidAttributeConfiguration[]; // Form fields to render
+  formFields?: LinPulsarAttributeConfiguration[]; // Form fields to render
   initialFormData?: Record<string, unknown>; // Initial values to pre-fill the form fields (keys are field names)
   /**
    * Async callback triggered on submit.

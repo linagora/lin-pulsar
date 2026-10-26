@@ -1,6 +1,6 @@
 # **ConfirmationDialog 🔔**
 
-Generic, event-driven confirmation dialog for LinID applications.
+Generic, event-driven confirmation dialog for LinPulsar applications.
 
 ---
 

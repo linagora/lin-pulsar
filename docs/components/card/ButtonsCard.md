@@ -1,6 +1,6 @@
 # **ButtonsCard 🎯**
 
-The **ButtonsCard** component provides a reusable card with confirm and cancel action buttons for LinID.
+The **ButtonsCard** component provides a reusable card with confirm and cancel action buttons for LinPulsar.
 It leverages Quasar's `QCard` and `QBtn` components to offer a consistent action interface across modules.
 
 ---
@@ -243,7 +243,7 @@ Using visibility props with extra buttons:
 
 ## **🎨 UI Customization**
 
-The component uses the LinID design system through `useUiDesign()`. You can customize:
+The component uses the LinPulsar design system through `useUiDesign()`. You can customize:
 
 - **Card container**: `{uiNamespace}.buttons-card` → applies to `q-card`
 - **Icon**: `{uiNamespace}.buttons-card` → applies to `q-icon`
@@ -339,7 +339,7 @@ Example:
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ButtonsCard from '@/components/card/ButtonsCard.vue';
-import { saveEntity } from '@linagora/linid-im-front-corelib';
+import { saveEntity } from '@linagora/lin-pulsar-core';
 
 const router = useRouter();
 const isLoading = ref(false);
@@ -385,7 +385,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 import ButtonsCard from '@/components/ButtonsCard.vue';
-import { saveEntity, saveDraft } from '@linagora/linid-im-front-corelib';
+import { saveEntity, saveDraft } from '@linagora/lin-pulsar-core';
 
 const router = useRouter();
 const $q = useQuasar();
