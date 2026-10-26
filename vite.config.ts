@@ -216,7 +216,7 @@ export default defineConfig({
           singleton: true,
           requiredVersion: '1.18.1',
         },
-        '@linagora/linid-im-front-corelib': {
+        '@linagora/lin-pulsar-core': {
           singleton: true,
           strictVersion: true,
         },

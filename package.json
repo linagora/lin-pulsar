@@ -21,7 +21,7 @@
   "dependencies": {
     "@dicebear/core": "10.7.0",
     "@dicebear/styles": "10.6.0",
-    "@linagora/linid-im-front-corelib": "0.0.109",
+    "@linagora/lin-pulsar-core": "0.1.1",
     "@superset-ui/embedded-sdk": "0.4.0",
     "@vueuse/core": "14.3.0",
     "axios": "1.18.1",
