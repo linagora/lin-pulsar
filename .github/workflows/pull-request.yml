@@ -19,7 +19,7 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: izhangzhihao/delete-comment@d075704468e1cf74e60944d9f335351213c34d85
+      - uses: izhangzhihao/delete-comment@d075704468e1cf74e60944d9f335351213c34d85 # master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           delete_user_name: github-actions[bot]
@@ -29,7 +29,7 @@ jobs:
     name: Check branch name
     runs-on: linagora
     steps:
-      - uses: deepakputhraya/action-branch-name@5f1cc199284b75145ec2d13434422e6987cf6af8
+      - uses: deepakputhraya/action-branch-name@5f1cc199284b75145ec2d13434422e6987cf6af8 # master
         with:
           regex: '^(feature|bugfix|improvement|release|hotfix)\/[a-z0-9_.-]+$'
           allowed_prefixes: 'feature,bugfix,improvement,release,hotfix'
