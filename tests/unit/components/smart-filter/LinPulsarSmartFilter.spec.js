@@ -26,7 +26,7 @@
 
 import { shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import LinidSmartFilter from '../../../../src/components/smart-filter/LinidSmartFilter.vue';
+import LinPulsarSmartFilter from '../../../../src/components/smart-filter/LinPulsarSmartFilter.vue';
 
 vi.mock('@linagora/lin-pulsar-core', () => {
   let idCounter = 0;
@@ -51,10 +51,13 @@ vi.mock('@linagora/lin-pulsar-core', () => {
   };
 });
 
-vi.mock('../../../../src/components/smart-filter/LinidFilterPanel.vue', () => ({
-  default: { template: '<div />' },
-}));
-vi.mock('../../../../src/components/chip/LinidFilterChip.vue', () => ({
+vi.mock(
+  '../../../../src/components/smart-filter/LinPulsarFilterPanel.vue',
+  () => ({
+    default: { template: '<div />' },
+  })
+);
+vi.mock('../../../../src/components/chip/LinPulsarFilterChip.vue', () => ({
   default: { template: '<div />' },
 }));
 vi.mock(
@@ -112,7 +115,7 @@ const defaultProps = {
 };
 
 function mountComponent(props = {}) {
-  return shallowMount(LinidSmartFilter, {
+  return shallowMount(LinPulsarSmartFilter, {
     props: {
       ...defaultProps,
       ...props,
@@ -128,7 +131,7 @@ function mountComponent(props = {}) {
   });
 }
 
-describe('Test component: LinidSmartFilter', () => {
+describe('Test component: LinPulsarSmartFilter', () => {
   let wrapper;
 
   beforeEach(() => {
@@ -231,8 +234,8 @@ describe('Test component: LinidSmartFilter', () => {
     it('should only contain uiNamespace and i18nScope when no filter is selected', () => {
       expect(wrapper.vm.currentPanelProps).toEqual({
         fieldName: undefined,
-        uiNamespace: 'MyApp.linid-smart-filter',
-        i18nScope: 'myScope.LinidSmartFilter',
+        uiNamespace: 'MyApp.lin-pulsar-smart-filter',
+        i18nScope: 'myScope.LinPulsarSmartFilter',
       });
     });
 
@@ -251,8 +254,8 @@ describe('Test component: LinidSmartFilter', () => {
       expect(w.vm.currentPanelProps).toEqual({
         fieldName: 'username',
         placeholder: 'Search username',
-        uiNamespace: 'MyApp.linid-smart-filter',
-        i18nScope: 'myScope.LinidSmartFilter',
+        uiNamespace: 'MyApp.lin-pulsar-smart-filter',
+        i18nScope: 'myScope.LinPulsarSmartFilter',
       });
     });
 

@@ -36,9 +36,9 @@ import type {
 import type { CommonComponentProps } from './common';
 
 /**
- * Props for the LinidFilterPanel component.
+ * Props for the LinPulsarFilterPanel component.
  */
-export interface LinidFilterPanelProps extends CommonComponentProps {
+export interface LinPulsarFilterPanelProps extends CommonComponentProps {
   /**
    * Available filters to display in the navigation list.
    */
@@ -53,7 +53,7 @@ export interface LinidFilterPanelProps extends CommonComponentProps {
 /**
  * Defines the UI properties for each filter type, used to resolve the per-type icon.
  */
-export type LinidFilterPanelUIPropsTypes = Record<
+export type LinPulsarFilterPanelUIPropsTypes = Record<
   string,
   {
     /**
@@ -64,9 +64,9 @@ export type LinidFilterPanelUIPropsTypes = Record<
 >;
 
 /**
- * UI props for the LinidFilterPanel component.
+ * UI props for the LinPulsarFilterPanel component.
  */
-export interface LinidFilterPanelUIProps {
+export interface LinPulsarFilterPanelUIProps {
   /**
    * The UI properties for the filter navigation list.
    */
@@ -78,7 +78,7 @@ export interface LinidFilterPanelUIProps {
   /**
    * The UI properties for the filter item icon, keyed by filter type.
    */
-  types: LinidFilterPanelUIPropsTypes;
+  types: LinPulsarFilterPanelUIPropsTypes;
   /**
    * The UI properties for the icon item section (avatar).
    */
@@ -104,7 +104,7 @@ export interface LinidFilterPanelUIProps {
 /**
  * Base search payload for filter panel components. Can be extended to add filter-specific fields.
  */
-export interface LinidFilterPanelSearchPayload {
+export interface LinPulsarFilterPanelSearchPayload {
   /**
    * The field name targeted by the filter.
    */
@@ -117,17 +117,18 @@ export interface LinidFilterPanelSearchPayload {
 
 /**
  * Generic search output type for filter panel components.
- * Specialize with a payload type extending `LinidFilterPanelSearchPayload` to add filter-specific fields.
+ * Specialize with a payload type extending `LinPulsarFilterPanelSearchPayload` to add filter-specific fields.
  */
-export type LinidFilterPanelSearchOutputs<
-  T extends LinidFilterPanelSearchPayload = LinidFilterPanelSearchPayload,
+export type LinPulsarFilterPanelSearchOutputs<
+  T extends LinPulsarFilterPanelSearchPayload =
+    LinPulsarFilterPanelSearchPayload,
 > = {
   (e: 'search', payload: T): void;
 };
 
 /**
- * Defines the events emitted by the LinidFilterPanel component.
+ * Defines the events emitted by the LinPulsarFilterPanel component.
  */
-export type LinidFilterPanelOutputs = {
+export type LinPulsarFilterPanelOutputs = {
   (e: 'update:selected', filterName: string): void;
 };

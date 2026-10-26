@@ -26,12 +26,12 @@
 
 <template>
   <!-- v8 ignore start -->
-  <div class="linid-smart-filter">
+  <div class="lin-pulsar-smart-filter">
     <q-field
       :stack-label="(filters?.length || 0) > 0"
       v-bind="uiProps.field"
-      class="linid-smart-filter--field"
-      data-cy="linid-smart-filter-field"
+      class="lin-pulsar-smart-filter--field"
+      data-cy="lin-pulsar-smart-filter-field"
       :label="translateOrDefault('', 'label')"
       :hint="translateOrDefault('', 'hint')"
       :prefix="translateOrDefault('', 'prefix')"
@@ -49,10 +49,10 @@
         #control
       >
         <div
-          class="row justify-center q-gutter-sm q-pt-sm linid-smart-filter--chips"
-          data-cy="linid-smart-filter-chips"
+          class="row justify-center q-gutter-sm q-pt-sm lin-pulsar-smart-filter--chips"
+          data-cy="lin-pulsar-smart-filter-chips"
         >
-          <linid-filter-chip
+          <lin-pulsar-filter-chip
             v-for="filter in filters"
             :key="filter.id"
             :filter="filter"
@@ -67,8 +67,8 @@
         <q-icon
           v-if="filters?.length"
           name="close"
-          class="cursor-pointer linid-smart-filter--clear"
-          data-cy="linid-smart-filter-clear"
+          class="cursor-pointer lin-pulsar-smart-filter--clear"
+          data-cy="lin-pulsar-smart-filter-clear"
           v-bind="uiProps.iconClear"
           @click.stop="onClearFilters"
         />
@@ -87,18 +87,18 @@
       <q-menu
         v-model="isFilterMenuOpen"
         :persistent="isMenuPersistent ?? false"
-        class="row linid-smart-filter--menu"
+        class="row lin-pulsar-smart-filter--menu"
         anchor="bottom middle"
         self="top middle"
-        data-cy="linid-smart-filter-menu"
+        data-cy="lin-pulsar-smart-filter-menu"
         v-bind="uiProps.menu"
       >
-        <linid-filter-panel
+        <lin-pulsar-filter-panel
           v-model:selected="selectedFilterName"
           :filters="options?.filters ?? []"
           :ui-namespace="localUiNamespace"
           :i18n-scope="localI18nScope"
-          data-cy="linid-smart-filter-panel"
+          data-cy="lin-pulsar-smart-filter-panel"
         >
           <template
             v-for="(panelComponent, type) in PANEL_COMPONENTS"
@@ -113,19 +113,19 @@
               @search="onSearch"
             />
           </template>
-        </linid-filter-panel>
+        </lin-pulsar-filter-panel>
 
         <q-separator
           v-bind="uiProps.separator"
           vertical
         />
 
-        <linid-favorite-panel
+        <lin-pulsar-favorite-panel
           :favorites="options?.filterSets ?? []"
           :filters="props?.filters ?? []"
           :ui-namespace="localUiNamespace"
           :i18n-scope="localI18nScope"
-          data-cy="linid-smart-favorite-panel"
+          data-cy="lin-pulsar-smart-favorite-panel"
           @apply="(data) => emit('apply:favorite', data)"
           @rename="(data) => emit('rename:favorite', data)"
           @delete="(data) => emit('delete:favorite', data)"
@@ -135,7 +135,7 @@
           <template #default="{ favorite }">
             {{ favorite.label }}
             <q-tooltip>
-              <linid-filter-chip
+              <lin-pulsar-filter-chip
                 v-for="filter in favorite.filters"
                 :key="filter.id"
                 :filter="filter"
@@ -144,7 +144,7 @@
               />
             </q-tooltip>
           </template>
-        </linid-favorite-panel>
+        </lin-pulsar-favorite-panel>
       </q-menu>
     </q-field>
   </div>
@@ -165,15 +165,15 @@ import {
 } from '@linagora/lin-pulsar-core';
 import type { Component } from 'vue';
 import { computed, ref, watch } from 'vue';
-import type { LinidFilterPanelSearchPayload } from '../../types/linidFilterPanel';
+import type { LinPulsarFilterPanelSearchPayload } from '../../types/linPulsarFilterPanel';
 import type {
-  LinidSmartFilterOutputs,
-  LinidSmartFilterProps,
-} from '../../types/smartFilter';
-import LinidFilterChip from '../chip/LinidFilterChip.vue';
+  LinPulsarSmartFilterOutputs,
+  LinPulsarSmartFilterProps,
+} from '../../types/linPulsarSmartFilter';
+import LinPulsarFilterChip from '../chip/LinPulsarFilterChip.vue';
 import DateSearchFilterPanel from './DateSearchFilterPanel.vue';
-import LinidFavoritePanel from './LinidFavoritePanel.vue';
-import LinidFilterPanel from './LinidFilterPanel.vue';
+import LinPulsarFavoritePanel from './LinPulsarFavoritePanel.vue';
+import LinPulsarFilterPanel from './LinPulsarFilterPanel.vue';
 import ListSearchFilterPanel from './ListSearchFilterPanel.vue';
 import NumberSearchFilterPanel from './NumberSearchFilterPanel.vue';
 import TextSearchFilterPanel from './TextSearchFilterPanel.vue';
@@ -187,12 +187,12 @@ const PANEL_COMPONENTS: Record<LinPulsarFilterType, Component> = {
   tree: TreeSearchFilterPanel,
 };
 
-const props = defineProps<LinidSmartFilterProps>();
-const emit = defineEmits<LinidSmartFilterOutputs>();
+const props = defineProps<LinPulsarSmartFilterProps>();
+const emit = defineEmits<LinPulsarSmartFilterOutputs>();
 
-const localUiNamespace = `${props.uiNamespace}.linid-smart-filter`;
+const localUiNamespace = `${props.uiNamespace}.lin-pulsar-smart-filter`;
 const { ui } = useUiDesign();
-const localI18nScope = `${props.i18nScope}.LinidSmartFilter`;
+const localI18nScope = `${props.i18nScope}.LinPulsarSmartFilter`;
 const { translateOrDefault } = useScopedI18n(localI18nScope);
 
 const isFilterMenuOpen = ref(false);
@@ -258,7 +258,7 @@ const currentPanelProps = computed(() => ({
  * selected or values is empty.
  * @param payload - The search payload carrying the target field and new values.
  */
-function onSearch(payload: LinidFilterPanelSearchPayload): void {
+function onSearch(payload: LinPulsarFilterPanelSearchPayload): void {
   if (!selectedFilter.value || payload.values.length === 0) {
     return;
   }

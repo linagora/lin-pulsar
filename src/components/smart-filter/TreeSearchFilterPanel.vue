@@ -60,10 +60,10 @@ import GenericTree from '../tree/GenericTree.vue';
 import { fetchAllPages } from '../../services/paginationService';
 import type { TreeSearchFilterProps } from '../../types/TreeSearchFilterPanel';
 import { onMounted, ref } from 'vue';
-import type { LinidFilterPanelSearchOutputs } from '../../types/linidFilterPanel';
+import type { LinPulsarFilterPanelSearchOutputs } from '../../types/linPulsarFilterPanel';
 
 const props = defineProps<TreeSearchFilterProps>();
-const emit = defineEmits<LinidFilterPanelSearchOutputs>();
+const emit = defineEmits<LinPulsarFilterPanelSearchOutputs>();
 
 const { ui } = useUiDesign();
 const localI18n = `${props.i18nScope}.TreeSearchFilterPanel`;

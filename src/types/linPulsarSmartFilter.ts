@@ -24,22 +24,50 @@
  * LinID Identity Manager software.
  */
 
+import type {
+  LinPulsarFilter,
+  LinPulsarFilterSet,
+} from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
-import type { LinPulsarFilter } from '@linagora/lin-pulsar-core';
 
 /**
- * Props for the LinidFilterChip component.
+ * Props for the LinPulsarSmartFilter component.
  */
-export interface LinidFilterChipProps extends CommonComponentProps {
+export interface LinPulsarSmartFilterProps extends CommonComponentProps {
   /**
-   * Active filter to display.
+   * Represents the active filter state.
    */
-  filter: LinPulsarFilter;
+  filters?: LinPulsarFilter[];
+
+  /**
+   * Available filter definitions and saved filter sets.
+   */
+  options?: {
+    /**
+     * Represents all usable filters.
+     */
+    filters?: LinPulsarFilter[];
+
+    /**
+     * Represents saved search configurations.
+     */
+    filterSets?: LinPulsarFilterSet[];
+  };
+
+  /**
+   * Determines whether the filter menu should remain open.
+   */
+  isMenuPersistent?: boolean;
 }
 
 /**
- * Defines the events emitted by the LinidFilterChip component.
+ * Defines the events emitted by the LinPulsarSmartFilter component.
  */
-export type LinidFilterChipOutputs = {
-  (e: 'remove', id: string): void;
+export type LinPulsarSmartFilterOutputs = {
+  (e: 'update:filters', filters: LinPulsarFilter[]): void;
+  (e: 'apply:favorite', favorite: LinPulsarFilterSet): void;
+  (e: 'rename:favorite', favorite: LinPulsarFilterSet): void;
+  (e: 'delete:favorite', favorite: LinPulsarFilterSet): void;
+  (e: 'create:favorite'): void;
+  (e: 'override:favorite', favorite: LinPulsarFilterSet): void;
 };

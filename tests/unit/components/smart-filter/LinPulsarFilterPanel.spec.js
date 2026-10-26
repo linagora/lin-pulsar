@@ -26,7 +26,7 @@
 
 import { shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import LinidFilterPanel from '../../../../src/components/smart-filter/LinidFilterPanel.vue';
+import LinPulsarFilterPanel from '../../../../src/components/smart-filter/LinPulsarFilterPanel.vue';
 
 const uiMock = vi.fn(() => ({}));
 
@@ -64,12 +64,12 @@ const defaultProps = {
 };
 
 function mountComponent(props = {}) {
-  return shallowMount(LinidFilterPanel, {
+  return shallowMount(LinPulsarFilterPanel, {
     props: { ...defaultProps, ...props },
   });
 }
 
-describe('Test component: LinidFilterPanel', () => {
+describe('Test component: LinPulsarFilterPanel', () => {
   let wrapper;
 
   beforeEach(() => {
@@ -134,11 +134,11 @@ describe('Test component: LinidFilterPanel', () => {
       wrapper = mountComponent();
 
       expect(uiMock).toHaveBeenCalledWith(
-        'Homepage.linid-filter-panel.header',
+        'Homepage.lin-pulsar-filter-panel.header',
         'q-icon'
       );
       expect(uiMock).toHaveBeenCalledWith(
-        'Homepage.linid-filter-panel.header',
+        'Homepage.lin-pulsar-filter-panel.header',
         'q-separator'
       );
     });
@@ -147,15 +147,15 @@ describe('Test component: LinidFilterPanel', () => {
       wrapper = mountComponent();
 
       expect(uiMock).toHaveBeenCalledWith(
-        'Homepage.linid-filter-panel.content',
+        'Homepage.lin-pulsar-filter-panel.content',
         'q-list'
       );
       expect(uiMock).toHaveBeenCalledWith(
-        'Homepage.linid-filter-panel.content',
+        'Homepage.lin-pulsar-filter-panel.content',
         'q-item'
       );
       expect(uiMock).toHaveBeenCalledWith(
-        'Homepage.linid-filter-panel.content',
+        'Homepage.lin-pulsar-filter-panel.content',
         'q-separator'
       );
     });

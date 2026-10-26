@@ -74,10 +74,10 @@ import {
 } from '@linagora/lin-pulsar-core';
 import type { ListSearchFilterProps } from '../../types/ListSearchFilterPanel';
 import { ref } from 'vue';
-import type { LinidFilterPanelSearchOutputs } from '../../types/linidFilterPanel';
+import type { LinPulsarFilterPanelSearchOutputs } from '../../types/linPulsarFilterPanel';
 
 const props = defineProps<ListSearchFilterProps>();
-const emit = defineEmits<LinidFilterPanelSearchOutputs>();
+const emit = defineEmits<LinPulsarFilterPanelSearchOutputs>();
 
 const { ui } = useUiDesign();
 const localI18n = `${props.i18nScope}.ListSearchFilterPanel`;

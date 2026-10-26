@@ -150,9 +150,9 @@ export default defineConfig({
           __dirname,
           'src/pages/GenericImportPage.vue'
         ),
-        './LinidSmartFilter': resolve(
+        './LinPulsarSmartFilter': resolve(
           __dirname,
-          'src/components/smart-filter/LinidSmartFilter.vue'
+          'src/components/smart-filter/LinPulsarSmartFilter.vue'
         ),
         './GenericTreeCard': resolve(
           __dirname,

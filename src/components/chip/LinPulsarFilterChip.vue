@@ -28,13 +28,16 @@
   <q-chip
     removable
     v-bind="uiProps.chip"
-    :class="['linid-filter-chip', `linid-filter-chip--${filter.name}`]"
-    :data-cy="`linid-filter-chip_${filter.name}`"
+    :class="[
+      'lin-pulsar-filter-chip',
+      `lin-pulsar-filter-chip--${filter.name}`,
+    ]"
+    :data-cy="`lin-pulsar-filter-chip_${filter.name}`"
     @remove="emits('remove', filter.id)"
   >
     <q-avatar
       v-bind="uiProps.avatar"
-      class="q-px-md linid-filter-chip--avatar"
+      class="q-px-md lin-pulsar-filter-chip--avatar"
     >
       {{ translateOrDefault(filter.name, 'type') }}
     </q-avatar>
@@ -44,19 +47,19 @@
     >
       <em
         v-if="index > 0"
-        class="q-mx-sm linid-filter-chip--separator"
+        class="q-mx-sm lin-pulsar-filter-chip--separator"
       >
         {{ t('separator') }}
       </em>
       <q-spinner
         v-if="loading && !value.item"
         v-bind="uiProps.spinner"
-        class="linid-filter-chip--loading"
-        data-cy="linid-filter-chip_loading"
+        class="lin-pulsar-filter-chip--loading"
+        data-cy="lin-pulsar-filter-chip_loading"
       />
       <span
         v-else
-        class="linid-filter-chip--value"
+        class="lin-pulsar-filter-chip--value"
       >
         {{ toLabel(value) }}
       </span>
@@ -66,9 +69,9 @@
 
 <script setup lang="ts">
 import type {
-  LinidFilterChipOutputs,
-  LinidFilterChipProps,
-} from '../../types/linidFilterChip';
+  LinPulsarFilterChipOutputs,
+  LinPulsarFilterChipProps,
+} from '../../types/linPulsarFilterChip';
 import type {
   LinPulsarFilterDynamicLabelOptions,
   LinPulsarFilterValue,
@@ -88,8 +91,8 @@ import { onMounted, ref } from 'vue';
 /** Status returned by the API when the response only holds a part of the matching items. */
 const PARTIAL_CONTENT = 206;
 
-const props = defineProps<LinidFilterChipProps>();
-const emits = defineEmits<LinidFilterChipOutputs>();
+const props = defineProps<LinPulsarFilterChipProps>();
+const emits = defineEmits<LinPulsarFilterChipOutputs>();
 
 const { t, te, translateOrDefault } = useScopedI18n(
   `${props.i18nScope}.LinPulsarFilterChip.${props.filter.name}`
@@ -97,7 +100,7 @@ const { t, te, translateOrDefault } = useScopedI18n(
 const { ui } = useUiDesign();
 const { renderString } = useNunjucks();
 
-const localUiNamespace = `${props.uiNamespace}.linid-filter-chip.${props.filter.name}`;
+const localUiNamespace = `${props.uiNamespace}.lin-pulsar-filter-chip.${props.filter.name}`;
 
 const uiProps = {
   avatar: ui<LinPulsarQAvatarProps>(localUiNamespace, 'q-avatar'),
@@ -303,7 +306,7 @@ em {
 
 // A chip holds as many values as the user selected, so it must never grow wider than the field
 // it is rendered in: its content wraps instead, and the chip grows in height.
-.linid-filter-chip {
+.lin-pulsar-filter-chip {
   max-width: 100%;
   height: auto;
   min-height: 2em;
