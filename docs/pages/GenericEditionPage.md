@@ -39,16 +39,16 @@ Example module configuration:
 ```json
 {
   "instanceId": "moduleApplicationsEditionPage",
-  "remoteName": "catalogUI",
+  "remoteName": "LinPulsar",
   "entity": "applications",
-  "lifecycleRemote": "catalogUI/PageLifecycle",
-  "routesRemote": "catalogUI/PageRoutes",
-  "i18nRemote": "catalogUI/EmptyI18n",
+  "lifecycleRemote": "LinPulsar/PageLifecycle",
+  "routesRemote": "LinPulsar/PageRoutes",
+  "i18nRemote": "LinPulsar/EmptyI18n",
   "apiEndpoint": "applications",
   "basePath": "/applications",
   "options": {
-    "layout": "catalogUI/BaseLayout",
-    "page": "catalogUI/GenericEditionPage",
+    "layout": "LinPulsar/BaseLayout",
+    "page": "LinPulsar/GenericEditionPage",
     "idKey": "id",
     "parentPath": "/applications",
     "pagePath": ":id/edit",
@@ -223,7 +223,7 @@ Field-specific translations (labels, hints, validation messages, placeholders) a
 
 ## **UI Customization**
 
-The page uses the LinPulsar design system through `useUiDesign()`.
+The page uses the `lin-pulsar-core` design system through `useUiDesign()`.
 
 ### Form Sections
 

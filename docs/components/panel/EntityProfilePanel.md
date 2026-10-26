@@ -448,10 +448,10 @@ const entity = { id: '1', username: 'john.doe', email: 'john.doe@example.com', s
 
 ### Via Module Federation or a zone
 
-Load the component with `loadAsyncComponent('catalogUI/EntityProfilePanel')` and bind it to a `<component :is>`, or register it in a zone from a module lifecycle and let `LinPulsarZoneRenderer` render it — any prop declared on the renderer is forwarded to the panel:
+Load the component with `loadAsyncComponent('LinPulsar/EntityProfilePanel')` and bind it to a `<component :is>`, or register it in a zone from a module lifecycle and let `LinPulsarZoneRenderer` render it — any prop declared on the renderer is forwarded to the panel:
 
 ```ts
-zoneStore.registerPluginOnce(`${config.instanceId}.UserDetailsPage.profile`, 'catalogUI/EntityProfilePanel');
+zoneStore.registerPluginOnce(`${config.instanceId}.UserDetailsPage.profile`, 'LinPulsar/EntityProfilePanel');
 ```
 
 ```vue
@@ -467,7 +467,7 @@ When the panel is rendered inside a generic page exposing a zone, declare it in 
   "zones": [
     {
       "zone": "moduleUsers.UserDetailsPage.side-left",
-      "plugin": "catalogUI/EntityProfilePanel",
+      "plugin": "LinPulsar/EntityProfilePanel",
       "props": {
         "statusKey": "status",
         "fieldOrder": ["username", "email"],

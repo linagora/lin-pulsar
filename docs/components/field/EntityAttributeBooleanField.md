@@ -3,7 +3,7 @@
 The **EntityAttributeBooleanField** component is a specialized attribute field responsible for rendering and managing
 boolean values within an entity.
 
-It uses Quasar’s `QToggle` component and integrates seamlessly with the LinPulsar design system and scoped i18n to provide a
+It uses Quasar’s `QToggle` component and integrates seamlessly with the `lin-pulsar-core` design system and scoped i18n to provide a
 consistent, configurable, and localized boolean input.
 
 ---
@@ -132,7 +132,7 @@ The component uses `useScopedI18n` to resolve translations for the attribute lab
 
 ## **🎨 UI Customization**
 
-UI customization is handled via the LinPulsar design system and `useUiDesign()`.
+UI customization is handled via the `lin-pulsar-core` design system and `useUiDesign()`.
 
 ### Namespace Resolution
 

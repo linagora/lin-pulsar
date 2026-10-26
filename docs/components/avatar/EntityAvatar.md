@@ -106,7 +106,7 @@ The avatar is registered in the column zone of the table (see
 ```json
 {
   "zone": "moduleAccountsPage.columns.avatar",
-  "plugin": "catalogUI/EntityAvatar",
+  "plugin": "LinPulsar/EntityAvatar",
   "props": {
     "avatarOptions": {
       "seed": ["{{ entity.uid }}"],

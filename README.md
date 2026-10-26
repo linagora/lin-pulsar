@@ -1,11 +1,11 @@
-# **catalogUI**
+# **LinPulsar**
 
 ## **🧩 Overview**
 
-`catalogUI` is a **shared UI component library** for the LinID Identity Manager frontend.
+`LinPulsar` is a **shared UI component library** for **LinOpenFactory**, used by front-end applications built from `lin-open-factory-ui-template`.
 It provides **reusable visual components** that can be consumed by multiple modules across the application, ensuring consistency in design, accessibility, and functionality.
 
-> This library is part of the LinPulsar plugin ecosystem and integrates seamlessly with the Module Federation architecture used in the front-end.
+> This library is part of the **LinOpenFactory** platform and integrates seamlessly with the Module Federation architecture used in the front-end.
 
 ---
 
@@ -33,7 +33,7 @@ It provides **reusable visual components** that can be consumed by multiple modu
 
 ## **📋 Technical Prerequisites**
 
-Ensure the following requirements to use or develop catalogUI:
+Ensure the following requirements to use or develop LinPulsar:
 
 - **Node.js** ≥ 22.19 (LTS)
 - **Package manager:** pnpm 11+ (managed via Corepack)
@@ -52,44 +52,44 @@ See: [`LICENSE.md`](./LICENSE.md) for details.
 
 ## **🧩 Module**
 
-This section groups the default Module Federation implementations provided by `catalogUI`.
+This section groups the default Module Federation implementations provided by `LinPulsar`.
 
 ### **Default Module Implementations**
 
 Some modules require no custom behavior for specific concerns such as lifecycle hooks, routing, or internationalization.
-For these cases, `catalogUI` provides default no-op implementations that satisfy the Module Federation contract while performing no additional logic.
+For these cases, `LinPulsar` provides default no-op implementations that satisfy the Module Federation contract while performing no additional logic.
 
 These implementations are intended to simplify module configuration when no customization is needed.
 
 - 💤 **EmptyLifecycle** — Default lifecycle implementation that performs no operations during module lifecycle phases (init, postInit, destroy, etc.)
-  → Exposed as: `catalogUI/EmptyLifecycle`
+  → Exposed as: `LinPulsar/EmptyLifecycle`
 
 - 🧭 **EmptyRoutes** — Default route configuration that exposes no routes
-  → Exposed as: `catalogUI/EmptyRoutes`
+  → Exposed as: `LinPulsar/EmptyRoutes`
 
 - 🌐 **EmptyI18n** — Default i18n configuration with no translations
-  → Exposed as: `catalogUI/EmptyI18n`
+  → Exposed as: `LinPulsar/EmptyI18n`
 
 - 🌐 **ImportPageI18n** — Default i18n configuration for Import page
-  → Exposed as: `catalogUI/ImportPageI18n`
+  → Exposed as: `LinPulsar/ImportPageI18n`
 
 ### **Generic Page Modules**
 
-`catalogUI` also provides generic page module building blocks used to structure page-based federated modules.
+`LinPulsar` also provides generic page module building blocks used to structure page-based federated modules.
 
 These modules define the standard federation contracts for page routing and lifecycle management.
 
 - 📄 **PageRoutes** — Generic page route federation module
-  → Exposed as: `catalogUI/PageRoutes`
+  → Exposed as: `LinPulsar/PageRoutes`
 
 - ⚙️ **PageLifecycle** — Generic page lifecycle federation module
-  → Exposed as: `catalogUI/PageLifecycle`
+  → Exposed as: `LinPulsar/PageLifecycle`
 
 > Detailed documentation for these modules is available in the dedicated [module page documentation](./docs/modules/GenericPageModule.md).
 
 ### **Generic Page Components**
 
-`catalogUI` also provides generic page components used to build reusable page structures in Module Federation applications.
+`LinPulsar` also provides generic page components used to build reusable page structures in Module Federation applications.
 
 These components are intended to be combined with page modules to accelerate development of standard UI patterns.
 
@@ -111,7 +111,7 @@ The library organizes components by category. For each component, documentation 
 
 ### **Profile Components**
 
-- 👤 **HeaderProfile** — User profile button for the application header, displaying the authenticated user's name and email from the LinPulsar user store
+- 👤 **HeaderProfile** — User profile button for the application header, displaying the authenticated user's name and email from the `lin-pulsar-core` user store
   → Documentation is inside: [`HeaderProfile.md`](./docs/components/profile/HeaderProfile.md)
 - 🚪 **LogoutMenuItem** — Logout entry rendered by HeaderProfile, with a confirmation dialog before navigating to the host logout route
   → Documentation is inside: [`LogoutMenuItem.md`](./docs/components/profile/LogoutMenuItem.md)
@@ -243,7 +243,7 @@ The library organizes components by category. For each component, documentation 
 
 ## **🤝 Contributing**
 
-We welcome contributions to improve and extend catalogUI.
+We welcome contributions to improve and extend LinPulsar.
 Please refer to the **[CONTRIBUTING.md](./CONTRIBUTING.md)** file for:
 
 - Development workflow
@@ -263,13 +263,13 @@ Additional documentation for the library is located in the `docs/` folder:
 
 ### **Design Configuration**
 
-For information on how to customize the visual appearance of CatalogUI components using the `design.json` configuration system, see:
+For information on how to customize the visual appearance of LinPulsar components using the `design.json` configuration system, see:
 
 → **[Design Configuration Guide](./docs/design.md)**
 
 ### **Translation Keys**
 
-For the list of translation keys expected by the CatalogUI components, see:
+For the list of translation keys expected by the LinPulsar components, see:
 
 → **[Translation Keys Guide](./docs/i18n.md)**
 

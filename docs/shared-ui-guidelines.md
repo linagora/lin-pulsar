@@ -1,7 +1,7 @@
 # **Shared UI Guidelines 🛠️**
 
-This document provides guidelines for developing **reusable UI components** in the LinPulsar frontend ecosystem.
-These rules ensure components are **consistent, accessible, and compatible** across modules while integrating with the **Catalog UI** and **Module Federation architecture**.
+This document provides guidelines for developing **reusable UI components** in the LinOpenFactory front-end ecosystem.
+These rules ensure components are **consistent, accessible, and compatible** across modules while integrating with the **LinPulsar** and **Module Federation architecture**.
 
 ---
 
@@ -9,7 +9,7 @@ These rules ensure components are **consistent, accessible, and compatible** acr
 
 - Promote **reusable, standardized UI components** for all modules
 - Ensure **design consistency** across the application
-- Facilitate **integration with Catalog UI** and other modules
+- Facilitate **integration with LinPulsar** and other modules
 - Establish **best practices** for localization and styling
 
 ---
@@ -116,6 +116,6 @@ emits: ['submit', 'cancel']
 
 ## **📌 Notes**
 
-- All UI components in **Catalog UI** should comply with these guidelines
+- All UI components in **LinPulsar** should comply with these guidelines
 - Follow this structure to ensure **consistency, reusability, and scalability**
 - Future updates may include **design tokens, themes, and accessibility rules**

@@ -1,8 +1,8 @@
 # **CONTRIBUTING 🤝**
 
-Thank you for contributing to **linid-im-front-community-plugins**, the repository hosting `catalogUI` (`linid-catalog-ui`), the shared UI component library for the LinID Identity Manager front-end.
+Thank you for contributing to **lin-pulsar**, the repository hosting `LinPulsar` (`@linagora/lin-pulsar`), the Pulsar component catalog of **LinOpenFactory**.
 
-This is a **single-package repository**: the library is consumed by the platform applications through **Module Federation**, under the `catalogUI` remote name.
+This is a **single-package repository**: the library is consumed by the platform applications through **Module Federation**, under the `LinPulsar` remote name.
 
 This document explains the conventions, workflows, and best practices to follow when contributing to this project.
 
@@ -17,7 +17,7 @@ All branches must follow one of the following naming patterns:
 | Type            | Pattern                           | Example                             |
 | --------------- | --------------------------------- | ----------------------------------- |
 | **Main**        | `main` or `dev`                   | `main`                              |
-| **Feature**     | `feature/<short-description>`     | `feature/catalog-ui-add-icons`      |
+| **Feature**     | `feature/<short-description>`     | `feature/lin-pulsar-add-icons`      |
 | **Bugfix**      | `bugfix/<short-description>`      | `bugfix/fix-catalog-render-error`   |
 | **Improvement** | `improvement/<short-description>` | `improvement/refactor-smart-filter` |
 | **Release**     | `release/<version>`               | `release/1.3.0`                     |
@@ -62,7 +62,7 @@ The scope is **optional** and commit messages are validated in CI by **commitlin
 
 ## **📦 Versioning Rules**
 
-This repository hosts a **single package** (`linid-catalog-ui`): versioning is **global to the repository** and driven by **commit types** (see the Releases section below).
+This repository hosts a **single package** (`@linagora/lin-pulsar`): versioning is **global to the repository** and driven by **commit types** (see the Releases section below).
 
 ### 📌 Summary table
 
@@ -152,7 +152,7 @@ pnpm install
 pnpm dev
 ```
 
-This starts the Vite dev server on port `5001`, serving the `catalogUI` Module Federation remote and its exposed components.
+This starts the Vite dev server on port `5001`, serving the `LinPulsar` Module Federation remote and its exposed components.
 
 ### Build the library
 
@@ -265,7 +265,7 @@ When merging into `main`:
 - The `package.json` version is bumped based on **commit types** (`feat` → minor, `fix` → patch, breaking change → major)
 - The `CHANGELOG.md` file is generated
 - A git tag `vX.Y.Z` is created and pushed
-- The Docker image is built from the new tag and published to Docker Hub as `linagora/linid-catalog-ui:latest` and `linagora/linid-catalog-ui:<version>`
+- The Docker image is built from the new tag and published to Docker Hub as `linagora/lin-pulsar:latest` and `linagora/lin-pulsar:<version>`
 
 ⚠ **No manual versioning is allowed.**
 

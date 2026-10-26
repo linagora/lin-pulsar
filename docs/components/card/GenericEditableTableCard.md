@@ -310,7 +310,7 @@ with `instanceId`, `uiNamespace` and `i18nScope`:
 ```json
 {
   "zone": "moduleOrganizationDetailsPage.content.after",
-  "plugin": "catalogUI/GenericEditableTableCard",
+  "plugin": "LinPulsar/GenericEditableTableCard",
   "props": {
     "columns": [{ "name": "name", "label": "columns.name", "field": "name", "align": "left" }],
     "formFields": [
@@ -343,7 +343,7 @@ payload expected by the API:
 ```json
 {
   "zone": "moduleOrganizationDetailsPage.content.after",
-  "plugin": "catalogUI/GenericEditableTableCard",
+  "plugin": "LinPulsar/GenericEditableTableCard",
   "props": {
     "rowKey": "id",
     "columns": [
@@ -398,7 +398,7 @@ required — `create`, `update` and `delete` can be omitted entirely:
 ```json
 {
   "zone": "moduleOrganizationDetailsPage.content.after",
-  "plugin": "catalogUI/GenericEditableTableCard",
+  "plugin": "LinPulsar/GenericEditableTableCard",
   "props": {
     "readOnly": true,
     "columns": [{ "name": "name", "label": "columns.name", "field": "name", "align": "left" }],
@@ -418,7 +418,7 @@ the built-in buttons:
 ```json
 {
   "zone": "moduleOrganizationDetailsPage.content.after",
-  "plugin": "catalogUI/GenericEditableTableCard",
+  "plugin": "LinPulsar/GenericEditableTableCard",
   "props": {
     "enableActions": false,
     "enableRowActions": false,

@@ -129,7 +129,7 @@ The namespace is `[UI_NAMESPACE].generic-tree-card`. See the [design documentati
 ```json
 {
   "zone": "moduleStructuresPage.content.after",
-  "plugin": "catalogUI/GenericTreeCard",
+  "plugin": "LinPulsar/GenericTreeCard",
   "props": {
     "url": "/api/structure-tree",
     "nodeTypes": [{ "type": "STRUCTURE" }, { "type": "HIERARCHY" }],
@@ -151,7 +151,7 @@ as `entity`. For example, an edition dialog on the hierarchy nodes, with `emitOn
 ```json
 {
   "zone": "moduleStructuresPage.generic-tree-card.node-actions.HIERARCHY",
-  "plugin": "catalogUI/FormDialogButton",
+  "plugin": "LinPulsar/FormDialogButton",
   "props": {
     "url": "/api/hierarchies/{{ entity.id }}",
     "method": "PUT",
@@ -172,7 +172,7 @@ and the `[I18N_SCOPE].GenericTreeCard.ButtonsCard` i18n scope to the hosted comp
 ```json
 {
   "zone": "moduleStructuresPage.generic-tree-card.header-actions",
-  "plugin": "catalogUI/RedirectButton",
+  "plugin": "LinPulsar/RedirectButton",
   "props": { "to": "/structures/hierarchies/new" }
 }
 ```

@@ -3,7 +3,7 @@
 The **EntityAttributeFileField** component is a specialized attribute field designed to handle **file attributes**
 within an entity, typically an image to upload.
 
-It relies on Quasar's `QFile` component and integrates with the LinPulsar design system and scoped i18n to provide a
+It relies on Quasar's `QFile` component and integrates with the `lin-pulsar-core` design system and scoped i18n to provide a
 fully customizable, localized, and reactive file picker.
 
 ---

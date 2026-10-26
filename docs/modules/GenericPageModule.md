@@ -92,11 +92,11 @@ Some components are registered automatically, without any configuration in the m
 
 | Zone                          | Component                      | Registered by                    |
 | ----------------------------- | ------------------------------ | -------------------------------- |
-| `base-layout.dialogComponent` | `catalogUI/ConfirmationDialog` | `catalogUI/PageLifecycle` (init) |
-| `base-layout.dialogComponent` | `catalogUI/FormDialog`         | `catalogUI/PageLifecycle` (init) |
+| `base-layout.dialogComponent` | `LinPulsar/ConfirmationDialog` | `LinPulsar/PageLifecycle` (init) |
+| `base-layout.dialogComponent` | `LinPulsar/FormDialog`         | `LinPulsar/PageLifecycle` (init) |
 
 Both dialogs are registered with `registerPluginOnce`, so they are mounted a single time even when several module
-instances use `catalogUI/PageLifecycle`. This is what allows any component of a generic page to open a confirmation
+instances use `LinPulsar/PageLifecycle`. This is what allows any component of a generic page to open a confirmation
 or a form dialog through the `uiEventSubject` bus, without declaring anything.
 
 ---

@@ -11,7 +11,7 @@ It provides a **standard page structure** using Quasar's `QLayout`, a header wit
 - Handles the main page container for rendering module views
 - Integrates a header with application branding, version info and navigation menu
 - Serves as the base for more complex layouts in the future
-- Leverages the LinPulsar UI design system for consistent theming
+- Leverages the `lin-pulsar-core` design system for consistent theming
 
 ---
 
@@ -55,7 +55,7 @@ The layout has no props. The logout settings of the header profile menu are read
 ```typescript
 {
   path: '/',
-  component: 'catalogUI/BaseLayout',
+  component: 'LinPulsar/BaseLayout',
   meta: { logoutPath: '/auth/logout' },
   children: [...]
 }
@@ -102,7 +102,7 @@ ui('base-layout.header', 'q-avatar'); // Customize logo
 - **Type-Safe:** Full TypeScript support with typed UI props
 - **Scalable:** Can be extended with slots or additional features
 - **Framework-Friendly:** Fully compatible with Vue 3, Quasar, and Vue Router
-- **Design System Integration:** Uses LinPulsar's UI design system for theming
+- **Design System Integration:** Uses the `lin-pulsar-core` design system for theming
 - **i18n Ready:** Supports internationalization for application info
 
 ---

@@ -79,5 +79,5 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            linagora/linid-catalog-ui:latest
-            linagora/linid-catalog-ui:${{ needs.release.outputs.version }}
+            linagora/lin-pulsar:latest
+            linagora/lin-pulsar:${{ needs.release.outputs.version }}

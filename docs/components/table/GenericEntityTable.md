@@ -9,7 +9,7 @@ It renders a simple table from provided columns and rows, without slots, actions
 
 - Provide a reusable base table for entity lists
 - Keep the first iteration minimal and easy to extend later
-- Stay aligned with the LinPulsar design system
+- Stay aligned with the `lin-pulsar-core` design system
 - Provide internationalized labels for pagination and rows
 
 ---
@@ -133,7 +133,7 @@ The `GenericEntityTable` supports **forwarding slots from the parent component t
 ### **Example Usage**
 
 ```vue
-<GenericEntityTable :columns="columns" :rows="rows" ui-namespace="catalogUI">
+<GenericEntityTable :columns="columns" :rows="rows" ui-namespace="LinPulsar">
   <!-- Custom cell template for the "name" column -->
   <template #body-cell-name="props">
     <strong>{{ props.row.name }}</strong>
@@ -164,7 +164,7 @@ unchanged.
 ### **Example Usage**
 
 ```vue
-<GenericEntityTable :columns="columns" :rows="rows" ui-namespace="catalogUI" i18n-scope="myScope">
+<GenericEntityTable :columns="columns" :rows="rows" ui-namespace="LinPulsar" i18n-scope="myScope">
   <template #actions="{ row }">
     <q-btn label="Edit" @click="edit(row)" />
     <q-btn label="Delete" color="negative" @click="remove(row)" />
@@ -271,7 +271,7 @@ The `myModule/ItemChip` component is rendered twice in the cell: first with
 
 ## **🎨 UI Customization**
 
-The component uses the LinPulsar design system through `useUiDesign()` and applies
+The component uses the `lin-pulsar-core` design system through `useUiDesign()` and applies
 props to Quasar's `QTable`:
 
 - **Table props**: `{uiNamespace}.generic-entity-table` → applies to `q-table`
@@ -279,8 +279,8 @@ props to Quasar's `QTable`:
 Example:
 
 ```typescript
-// For uiNamespace = 'catalogUI'
-// Table: ui('catalogUI.generic-entity-table', 'q-table')
+// For uiNamespace = 'LinPulsar'
+// Table: ui('LinPulsar.generic-entity-table', 'q-table')
 ```
 
 ---
@@ -289,7 +289,7 @@ Example:
 
 - **Simple:** No slots, actions, or event handling in this iteration
 - **Type-safe:** Columns and rows are typed with Quasar definitions
-- **Consistent:** UI props come from the LinPulsar design system
+- **Consistent:** UI props come from the `lin-pulsar-core` design system
 - **Reusable:** Designed as a base for future enhancements
 
 ---
@@ -311,14 +311,14 @@ const columns: QTableColumn[] = [
 
 const rows = [{ id: 1, name: 'John Doe' }];
 
-remoteComponent.value = loadAsyncComponent('catalogUI/GenericEntityTable');
+remoteComponent.value = loadAsyncComponent('LinPulsar/GenericEntityTable');
 </script>
 
 <template>
   <component
     :is="remoteComponent"
     v-if="remoteComponent"
-    ui-namespace="catalogUI"
+    ui-namespace="LinPulsar"
     i18n-scope="i18nScope"
     :columns="columns"
     :rows="rows"

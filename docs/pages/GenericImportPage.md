@@ -47,15 +47,15 @@ Example module configuration:
 ```json
 {
   "instanceId": "moduleUserImportPage",
-  "remoteName": "catalogUI",
-  "lifecycleRemote": "catalogUI/PageLifecycle",
-  "routesRemote": "catalogUI/PageRoutes",
-  "i18nRemote": "catalogUI/ImportPageI18n",
+  "remoteName": "LinPulsar",
+  "lifecycleRemote": "LinPulsar/PageLifecycle",
+  "routesRemote": "LinPulsar/PageRoutes",
+  "i18nRemote": "LinPulsar/ImportPageI18n",
   "apiEndpoint": "api/users",
   "basePath": "/users",
   "options": {
-    "layout": "catalogUI/BaseLayout",
-    "page": "catalogUI/GenericImportPage",
+    "layout": "LinPulsar/BaseLayout",
+    "page": "LinPulsar/GenericImportPage",
     "pagePath": "import",
     "parentPath": "/users",
     "fieldMappingTemplates": {
@@ -81,7 +81,7 @@ The page provides no dedicated button: a link towards it is placed in a zone of 
   "zones": [
     {
       "zone": "moduleUserTablePage.header.actions",
-      "plugin": "catalogUI/RedirectButton",
+      "plugin": "LinPulsar/RedirectButton",
       "props": {
         "to": "/users/import"
       }
@@ -203,7 +203,7 @@ No zone receives an `entity`. `content.before`, `content.after` and `content.act
 ## **Internationalization**
 
 Default `fr-FR` and `en-US` translations for this page are available through the federated remote
-`catalogUI/ImportPageI18n` (implemented in `src/federation/import-page-i18n.ts`). Setting it as the
+`LinPulsar/ImportPageI18n` (implemented in `src/federation/import-page-i18n.ts`). Setting it as the
 `i18nRemote` of the module configuration provides usable default translations for the page without writing a
 custom i18n module: the remote namespaces its translations under the `{{ config.instanceId }}` placeholder
 key, which the module host replaces with the actual `instanceId` of the configuration. Business column
@@ -246,7 +246,7 @@ of the defaults.
 
 ## **UI Customization**
 
-The page uses the LinPulsar design system through `useUiDesign()`, with the `instanceId` as namespace.
+The page uses the `lin-pulsar-core` design system through `useUiDesign()`, with the `instanceId` as namespace.
 
 | Namespace                                              | Type             | Description                                                  |
 | ------------------------------------------------------ | ---------------- | ------------------------------------------------------------ |

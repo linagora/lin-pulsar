@@ -168,7 +168,7 @@ const uiProps = {
   ),
 };
 
-const fieldComponent = loadAsyncComponent('catalogUI/EntityAttributeField');
+const fieldComponent = loadAsyncComponent('LinPulsar/EntityAttributeField');
 
 const isExpanded = ref(false);
 const localFilters = ref<Record<string, unknown>>(

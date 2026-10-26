@@ -9,7 +9,7 @@ It renders a hierarchical tree from provided nodes, with per-type icon support, 
 
 - Provide a reusable base tree for hierarchical entity structures
 - Keep the first iteration minimal and easy to extend later
-- Stay aligned with the LinPulsar design system
+- Stay aligned with the `lin-pulsar-core` design system
 - Support per-node-type styling (icons, labels) via the UI namespace
 - Support per-node-type contextual actions with dynamic icon support
 - Provide internationalized labels for empty states and actions
@@ -276,7 +276,7 @@ This conversion is handled internally by `GenericTree` — consumers simply pass
 
 ## **UI Customization**
 
-The component uses the LinPulsar design system through `useUiDesign()` and applies props to several Quasar components:
+The component uses the `lin-pulsar-core` design system through `useUiDesign()` and applies props to several Quasar components:
 
 | Namespace                                                 | Target       | Description                            |
 | --------------------------------------------------------- | ------------ | -------------------------------------- |
@@ -306,7 +306,7 @@ Example:
 
 - **Simple:** Minimal wrapper with sensible defaults
 - **Type-safe:** Node structure typed via lin-pulsar-core `TreeNode<T>` and `TreeNodeType`
-- **Consistent:** UI props and icons come from the LinPulsar design system
+- **Consistent:** UI props and icons come from the `lin-pulsar-core` design system
 - **Extensible:** Per-node `extraActions` allow customization without changing node types
 - **Reusable:** Designed as a base for future enhancements (lazy loading, drag-and-drop, etc.)
 
@@ -364,7 +364,7 @@ function handleShare(node: QTreeNode) {
   console.log('share', node);
 }
 
-remoteComponent.value = loadAsyncComponent('catalogUI/GenericTree');
+remoteComponent.value = loadAsyncComponent('LinPulsar/GenericTree');
 </script>
 
 <template>
@@ -438,7 +438,7 @@ const nodeTypes: TreeNodeType[] = [
 
 const tickedNodes = ref<string[]>([]);
 
-remoteComponent.value = loadAsyncComponent('catalogUI/GenericTree');
+remoteComponent.value = loadAsyncComponent('LinPulsar/GenericTree');
 </script>
 
 <template>

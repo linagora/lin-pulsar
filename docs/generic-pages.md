@@ -1,6 +1,6 @@
-# Catalog UI - Generic Pages
+# LinPulsar - Generic Pages
 
-This document lists the generic pages provided by `catalog-ui` and the zones they expose.
+This document lists the generic pages provided by `LinPulsar` and the zones they expose.
 
 Generic pages are fully driven by the module host configuration: a module declares which page it uses through the
 `options.page` property, and injects its own components into the page zones through the `zones` property.
@@ -13,11 +13,11 @@ Generic pages are fully driven by the module host configuration: a module declar
 
 | Page                                                  | Exposed as                      | Purpose                                                        |
 | ----------------------------------------------------- | ------------------------------- | -------------------------------------------------------------- |
-| [GenericTablePage](./pages/GenericTablePage.md)       | `catalogUI/GenericTablePage`    | Paginated, filterable list of entities                         |
-| [GenericDetailsPage](./pages/GenericDetailsPage.md)   | `catalogUI/GenericDetailsPage`  | Details of a single entity, grouped in sections                |
-| [GenericCreationPage](./pages/GenericCreationPage.md) | `catalogUI/GenericCreationPage` | Creation of a single entity, with fields grouped in sections   |
-| [GenericEditionPage](./pages/GenericEditionPage.md)   | `catalogUI/GenericEditionPage`  | Edition of an existing entity, with fields grouped in sections |
-| [GenericImportPage](./pages/GenericImportPage.md)     | `catalogUI/GenericImportPage`   | Bulk import of entities from CSV files                         |
+| [GenericTablePage](./pages/GenericTablePage.md)       | `LinPulsar/GenericTablePage`    | Paginated, filterable list of entities                         |
+| [GenericDetailsPage](./pages/GenericDetailsPage.md)   | `LinPulsar/GenericDetailsPage`  | Details of a single entity, grouped in sections                |
+| [GenericCreationPage](./pages/GenericCreationPage.md) | `LinPulsar/GenericCreationPage` | Creation of a single entity, with fields grouped in sections   |
+| [GenericEditionPage](./pages/GenericEditionPage.md)   | `LinPulsar/GenericEditionPage`  | Edition of an existing entity, with fields grouped in sections |
+| [GenericImportPage](./pages/GenericImportPage.md)     | `LinPulsar/GenericImportPage`   | Bulk import of entities from CSV files                         |
 
 These pages are used together with the generic page modules documented in
 [GenericPageModule.md](./modules/GenericPageModule.md).
@@ -63,9 +63,9 @@ Zones are declared in the `zones` property of the module host configuration:
 ```json
 {
   "instanceId": "moduleApplicationDetailsPage",
-  "remoteName": "catalogUI",
-  "lifecycleRemote": "catalogUI/PageLifecycle",
-  "routesRemote": "catalogUI/PageRoutes",
+  "remoteName": "LinPulsar",
+  "lifecycleRemote": "LinPulsar/PageLifecycle",
+  "routesRemote": "LinPulsar/PageRoutes",
   "apiEndpoint": "applications",
   "basePath": "/applications",
   "zones": [
@@ -82,8 +82,8 @@ Zones are declared in the `zones` property of the module host configuration:
     }
   ],
   "options": {
-    "layout": "catalogUI/BaseLayout",
-    "page": "catalogUI/GenericDetailsPage",
+    "layout": "LinPulsar/BaseLayout",
+    "page": "LinPulsar/GenericDetailsPage",
     "pagePath": ":id",
     "sections": []
   }

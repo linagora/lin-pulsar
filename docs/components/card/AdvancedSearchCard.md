@@ -11,7 +11,7 @@ It dynamically renders filter fields based on `LinPulsarAttributeConfiguration` 
 - Separates commonly used filters from advanced filters for better UX
 - Dynamically renders appropriate input fields based on attribute configuration
 - Provides two-way binding for filter values through v-model pattern
-- Integrates with the LinPulsar design system for consistent styling
+- Integrates with the `lin-pulsar-core` design system for consistent styling
 - Supports smooth expand/collapse animations for the advanced section
 
 ---
@@ -64,7 +64,7 @@ Field names support **dot notation** to target values located inside sub-objects
 
 ## **UI Customization**
 
-The component uses the LinPulsar design system through `useUiDesign()`. You can customize:
+The component uses the `lin-pulsar-core` design system through `useUiDesign()`. You can customize:
 
 - **Card container**: `{uiNamespace}.advanced-search-card` → applies to `q-card`
 - **Card icon**: `{uiNamespace}.advanced-search-card` → applies to `q-icon`
@@ -268,7 +268,7 @@ watch(
 
 - **Field resolution:** Fields are matched by name from the `fields` array. If a field name in `defaultFieldsNames` or `advancedFieldsNames` doesn't exist in `fields`, it will be silently skipped
 - **Empty advanced section:** If `advancedFieldsNames` is empty, the toggle button is not displayed
-- **Lazy loading:** The `EntityAttributeField` component is loaded using `loadAsyncComponent('catalogUI/EntityAttributeField')` to improve initial load time
+- **Lazy loading:** The `EntityAttributeField` component is loaded using `loadAsyncComponent('LinPulsar/EntityAttributeField')` to improve initial load time
 - **Validation rules:** All filter fields (both default and advanced) automatically ignore validation rules because the prop `:ignore-rules="true"` is passed to each field component. This ensures that no validation is performed on filter fields, since they are used for searching, not data entry
 - **Two-way binding:** The component maintains a local copy of filters and syncs with the parent through props and events
 - **External changes:** The component watches for external changes to the `filters` prop and updates its local state accordingly

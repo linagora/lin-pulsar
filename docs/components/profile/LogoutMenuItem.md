@@ -12,7 +12,7 @@ It is rendered by default as the last entry of [HeaderProfile](./HeaderProfile.m
 - Provides a consistent logout entry at the end of the profile menu, shared by every host
 - Asks the user for a confirmation before leaving the application
 - Delegates the logout itself to a host route, so the component stays agnostic of the authentication mechanism (OIDC, SAML, …)
-- Integrates with the LinPulsar design system and i18n for consistent styling and wording
+- Integrates with the `lin-pulsar-core` design system and i18n for consistent styling and wording
 
 ---
 
@@ -49,7 +49,7 @@ This component emits no events. The navigation to `path` is performed through th
 
 ### Host requirements
 
-- A `ConfirmationDialog` must be mounted in the layout. `BaseLayout` renders the `base-layout.dialogComponent` zone for this purpose, in which the host registers `catalogUI/ConfirmationDialog`.
+- A `ConfirmationDialog` must be mounted in the layout. `BaseLayout` renders the `base-layout.dialogComponent` zone for this purpose, in which the host registers `LinPulsar/ConfirmationDialog`.
 - The route given in `path` (`logoutPath` of `HeaderProfile`, `/logout` by default) must exist in the host router and perform the logout.
 - The translation keys described below must be provided by the host.
 
@@ -57,7 +57,7 @@ This component emits no events. The navigation to `path` is performed through th
 
 ## **UI Customization**
 
-The component uses the LinPulsar design system through `useUiDesign()`. The local namespace is built as `{uiNamespace}.logout-menu-item`. You can customize:
+The component uses the `lin-pulsar-core` design system through `useUiDesign()`. The local namespace is built as `{uiNamespace}.logout-menu-item`. You can customize:
 
 - **Separator**: `{uiNamespace}.logout-menu-item` → applies to `q-separator`
 - **Item**: `{uiNamespace}.logout-menu-item` → applies to `q-item`

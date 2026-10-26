@@ -41,12 +41,12 @@ Example module configuration:
 ```json
 {
   "instanceId": "moduleApplicationDetailsPage",
-  "remoteName": "catalogUI",
+  "remoteName": "LinPulsar",
   "apiEndpoint": "applications",
   "basePath": "/applications",
   "options": {
-    "layout": "catalogUI/BaseLayout",
-    "page": "catalogUI/GenericDetailsPage",
+    "layout": "LinPulsar/BaseLayout",
+    "page": "LinPulsar/GenericDetailsPage",
     "pagePath": ":id",
     "parentPath": "/applications",
     "sections": [
@@ -162,7 +162,7 @@ Every zone additionally receives the loaded `entity` and the configured `parentP
 
 ## **UI Customization**
 
-The page uses the LinPulsar design system through `useUiDesign()`:
+The page uses the `lin-pulsar-core` design system through `useUiDesign()`:
 
 - **Edit button**: `{instanceId}.buttons-card.edit-button` → applies to `q-btn`
 - **Section cards**: `{instanceId}.sections.{key}.entity-details-card` namespaces (see `EntityDetailsCard`)

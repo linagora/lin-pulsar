@@ -110,7 +110,7 @@ The link is declared in the `zones` property of the module host configuration (s
 ```json
 {
   "zone": "moduleAccountsPage.row-actions",
-  "plugin": "catalogUI/EntityLink",
+  "plugin": "LinPulsar/EntityLink",
   "props": {
     "to": "/accounts/{{ entity.id }}",
     "routeDependencies": ["entity.id"]

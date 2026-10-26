@@ -33,5 +33,5 @@ export default createModulePageLifecycle<ModulePageOptions>({
   version: '0.0.1',
   description: 'Module to manage page entity.',
   dialogZone: 'base-layout.dialogComponent',
-  dialogComponents: ['catalogUI/ConfirmationDialog', 'catalogUI/FormDialog'],
+  dialogComponents: ['LinPulsar/ConfirmationDialog', 'LinPulsar/FormDialog'],
 });

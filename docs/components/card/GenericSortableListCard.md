@@ -314,7 +314,7 @@ injects `entity`, `instanceId`, `uiNamespace` and `i18nScope`:
 ```json
 {
   "zone": "moduleOrganizationDetailsPage.content.after",
-  "plugin": "catalogUI/GenericSortableListCard",
+  "plugin": "LinPulsar/GenericSortableListCard",
   "props": {
     "orderKey": "priority",
     "itemKey": "id",
