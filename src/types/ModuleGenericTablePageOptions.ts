@@ -103,7 +103,7 @@ export interface ModuleGenericTablePageOptions extends ModulePageOptions {
   keepQueryParams?: string[];
 
   /**
-   * Filter definitions exposed through the LinidSmartFilter component.
+   * Filter definitions exposed through the LinPulsarSmartFilter component.
    *
    * When provided and non-empty, the smart filter is rendered above the
    * table, filter changes are reflected in the URL query params, and the

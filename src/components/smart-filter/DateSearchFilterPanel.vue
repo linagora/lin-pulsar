@@ -126,7 +126,7 @@ import type {
   DateSearchFilterPanelProps,
   DateSearchFilterPanelUIProps,
 } from '../../types/dateSearchFilterPanel';
-import type { LinidFilterPanelSearchOutputs } from '../../types/linidFilterPanel';
+import type { LinPulsarFilterPanelSearchOutputs } from '../../types/linPulsarFilterPanel';
 
 const OPERATOR_KEYS: DateFilterOperatorKey[] = [
   'inferior',
@@ -141,7 +141,7 @@ const OPERATOR_MAP: Record<DateFilterOperatorKey, LinPulsarFilterOperator> = {
 };
 
 const props = defineProps<DateSearchFilterPanelProps>();
-const emit = defineEmits<LinidFilterPanelSearchOutputs>();
+const emit = defineEmits<LinPulsarFilterPanelSearchOutputs>();
 
 const { t, translateOrDefault } = useScopedI18n(
   `${props.i18nScope}.DateSearchFilterPanel`

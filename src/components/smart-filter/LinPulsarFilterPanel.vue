@@ -27,10 +27,10 @@
 <template>
   <!-- v8 ignore start -->
   <div
-    class="column col-grow linid-filter-panel"
-    data-cy="linid-filter-panel"
+    class="column col-grow lin-pulsar-filter-panel"
+    data-cy="lin-pulsar-filter-panel"
   >
-    <div class="text-weight-bold q-pa-sm linid-filter-panel--title">
+    <div class="text-weight-bold q-pa-sm lin-pulsar-filter-panel--title">
       <q-icon
         v-if="uiProps.titleIcon?.name"
         v-bind="uiProps.titleIcon"
@@ -40,11 +40,11 @@
 
     <q-separator v-bind="uiProps.titleSeparator" />
 
-    <div class="row col-grow no-wrap linid-filter-panel--content">
+    <div class="row col-grow no-wrap lin-pulsar-filter-panel--content">
       <q-list
         v-bind="uiProps.list"
-        class="col-auto linid-filter-panel--list"
-        data-cy="linid-filter-panel_list"
+        class="col-auto lin-pulsar-filter-panel--list"
+        data-cy="lin-pulsar-filter-panel_list"
       >
         <q-item
           v-for="filter in props.filters"
@@ -52,7 +52,7 @@
           v-bind="uiProps.item"
           clickable
           :active="filter.name === selectedFilterName"
-          :data-cy="`linid-filter-panel_item-${filter.name}`"
+          :data-cy="`lin-pulsar-filter-panel_item-${filter.name}`"
           @click="selectFilter(filter.name)"
         >
           <q-item-section
@@ -74,8 +74,8 @@
       />
 
       <div
-        class="col-grow q-pa-md linid-filter-panel--editor"
-        data-cy="linid-filter-panel_editor"
+        class="col-grow q-pa-md lin-pulsar-filter-panel--editor"
+        data-cy="lin-pulsar-filter-panel_editor"
       >
         <slot
           v-if="selectedFilter"
@@ -98,18 +98,18 @@ import type {
 import { useScopedI18n, useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed, watch } from 'vue';
 import type {
-  LinidFilterPanelOutputs,
-  LinidFilterPanelProps,
-  LinidFilterPanelUIProps,
-} from '../../types/linidFilterPanel';
+  LinPulsarFilterPanelOutputs,
+  LinPulsarFilterPanelProps,
+  LinPulsarFilterPanelUIProps,
+} from '../../types/linPulsarFilterPanel';
 
-const props = defineProps<LinidFilterPanelProps>();
-const emit = defineEmits<LinidFilterPanelOutputs>();
+const props = defineProps<LinPulsarFilterPanelProps>();
+const emit = defineEmits<LinPulsarFilterPanelOutputs>();
 
 const { t } = useScopedI18n(`${props.i18nScope}.LinPulsarFilterPanel`);
 const { ui } = useUiDesign();
 
-const localUiNamespace = `${props.uiNamespace}.linid-filter-panel`;
+const localUiNamespace = `${props.uiNamespace}.lin-pulsar-filter-panel`;
 const headerUiNamespace = `${localUiNamespace}.header`;
 const contentUiNamespace = `${localUiNamespace}.content`;
 
@@ -117,7 +117,7 @@ const filterTypes = computed(() => [
   ...new Set(props.filters.map((filter) => filter.type)),
 ]);
 
-const uiProps = computed<LinidFilterPanelUIProps>(() => ({
+const uiProps = computed<LinPulsarFilterPanelUIProps>(() => ({
   titleIcon: ui<LinPulsarQIconProps>(headerUiNamespace, 'q-icon'),
   titleSeparator: ui<LinPulsarQSeparatorProps>(
     headerUiNamespace,
@@ -125,7 +125,7 @@ const uiProps = computed<LinidFilterPanelUIProps>(() => ({
   ),
   list: ui<LinPulsarQListProps>(contentUiNamespace, 'q-list'),
   item: ui<LinPulsarQItemProps>(contentUiNamespace, 'q-item'),
-  types: filterTypes.value.reduce<LinidFilterPanelUIProps['types']>(
+  types: filterTypes.value.reduce<LinPulsarFilterPanelUIProps['types']>(
     (acc, type) => {
       acc[type] = {
         icon: ui<LinPulsarQIconProps>(
@@ -190,7 +190,7 @@ watch(
 </script>
 
 <style>
-.linid-filter-panel-list {
+.lin-pulsar-filter-panel-list {
   min-width: 200px;
 }
 </style>

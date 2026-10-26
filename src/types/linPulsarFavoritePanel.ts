@@ -37,9 +37,9 @@ import type {
 import type { CommonComponentProps } from './common';
 
 /**
- * Props for the LinidFavoritePanel component.
+ * Props for the LinPulsarFavoritePanel component.
  */
-export interface LinidFavoritePanelProps extends CommonComponentProps {
+export interface LinPulsarFavoritePanelProps extends CommonComponentProps {
   /**
    * Available favorites to display in the navigation list.
    */
@@ -51,9 +51,9 @@ export interface LinidFavoritePanelProps extends CommonComponentProps {
 }
 
 /**
- * UI props for the LinidFavoritePanel component.
+ * UI props for the LinPulsarFavoritePanel component.
  */
-export interface LinidFavoritePanelUIProps {
+export interface LinPulsarFavoritePanelUIProps {
   /**
    * The UI properties for the filter navigation list.
    */
@@ -125,9 +125,9 @@ export interface LinidFavoritePanelUIProps {
 }
 
 /**
- * Defines the events emitted by the LinidFavoritePanel component.
+ * Defines the events emitted by the LinPulsarFavoritePanel component.
  */
-export type LinidFavoritePanelOutputs = {
+export type LinPulsarFavoritePanelOutputs = {
   (e: 'apply', favorite: LinPulsarFilterSet): void;
   (e: 'delete', favorite: LinPulsarFilterSet): void;
   (e: 'rename', favorite: LinPulsarFilterSet): void;

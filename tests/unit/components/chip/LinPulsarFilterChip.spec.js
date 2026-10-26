@@ -54,7 +54,7 @@ vi.mock('@linagora/lin-pulsar-core', async () => {
   };
 });
 
-import LinidFilterChip from '../../../../src/components/chip/LinidFilterChip.vue';
+import LinPulsarFilterChip from '../../../../src/components/chip/LinPulsarFilterChip.vue';
 
 const DYNAMIC_LABEL_OPTIONS = {
   url: "/organizational-units?id={{ values | join('|') }}",
@@ -107,14 +107,14 @@ const buildResponse = (items, status = 200, last) => ({
  * @returns The mounted wrapper.
  */
 async function mountChip(filter) {
-  const wrapper = shallowMount(LinidFilterChip, {
+  const wrapper = shallowMount(LinPulsarFilterChip, {
     props: { filter, uiNamespace: 'test', i18nScope: 'test' },
   });
   await flushPromises();
   return wrapper;
 }
 
-describe('Test component: LinidFilterChip', () => {
+describe('Test component: LinPulsarFilterChip', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockHttpGet.mockReset();
@@ -446,7 +446,7 @@ describe('Test component: LinidFilterChip', () => {
         })
       );
 
-      const wrapper = shallowMount(LinidFilterChip, {
+      const wrapper = shallowMount(LinPulsarFilterChip, {
         props: {
           filter: buildFilter({
             values: [buildValue('1')],

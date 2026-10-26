@@ -81,7 +81,7 @@ import {
   useUiDesign,
 } from '@linagora/lin-pulsar-core';
 import { computed, ref } from 'vue';
-import type { LinidFilterPanelSearchOutputs } from '../../types/linidFilterPanel';
+import type { LinPulsarFilterPanelSearchOutputs } from '../../types/linPulsarFilterPanel';
 import type {
   NumberFilterOperatorKey,
   NumberSearchFilterPanelProps,
@@ -101,7 +101,7 @@ const OPERATOR_MAP: Record<NumberFilterOperatorKey, LinPulsarFilterOperator> = {
 };
 
 const props = defineProps<NumberSearchFilterPanelProps>();
-const emit = defineEmits<LinidFilterPanelSearchOutputs>();
+const emit = defineEmits<LinPulsarFilterPanelSearchOutputs>();
 
 const { t, translateOrDefault } = useScopedI18n(
   `${props.i18nScope}.NumberSearchFilterPanel`

@@ -60,7 +60,7 @@
     </div>
 
     <div class="row relative-position justify-center full-width q-mb-md">
-      <LinidSmartFilter
+      <LinPulsarSmartFilter
         v-if="options.filters?.length"
         :filters="filters"
         :options="{ filters: options.filters, filterSets: favorites }"
@@ -210,7 +210,7 @@ import type { Subscription } from 'rxjs';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ButtonsCard from '../components/card/ButtonsCard.vue';
-import LinidSmartFilter from '../components/smart-filter/LinidSmartFilter.vue';
+import LinPulsarSmartFilter from '../components/smart-filter/LinPulsarSmartFilter.vue';
 import GenericEntityTable from '../components/table/GenericEntityTable.vue';
 import { useColumnZones } from '../composables/useColumnZones';
 import type {
@@ -630,7 +630,7 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.linid-smart-filter {
+.lin-pulsar-smart-filter {
   width: 50%;
   min-width: 50%;
 }

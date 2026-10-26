@@ -27,10 +27,10 @@
 <template>
   <!-- v8 ignore start -->
   <div
-    class="col-grow linid-favorite-panel"
-    data-cy="linid-favorite-panel"
+    class="col-grow lin-pulsar-favorite-panel"
+    data-cy="lin-pulsar-favorite-panel"
   >
-    <div class="text-weight-bold q-pa-sm linid-favorite-panel--title">
+    <div class="text-weight-bold q-pa-sm lin-pulsar-favorite-panel--title">
       <q-icon
         v-if="uiProps.titleIcon?.name"
         v-bind="uiProps.titleIcon"
@@ -40,7 +40,7 @@
 
     <q-separator v-bind="uiProps.titleSeparator" />
 
-    <div class="q-gutter-sm q-pa-sm linid-favorite-panel--action-buttons">
+    <div class="q-gutter-sm q-pa-sm lin-pulsar-favorite-panel--action-buttons">
       <q-btn
         v-bind="uiProps.createButton"
         :label="t('createFavorite')"
@@ -50,18 +50,18 @@
       />
     </div>
 
-    <div class="row no-wrap linid-favorite-panel--content">
+    <div class="row no-wrap lin-pulsar-favorite-panel--content">
       <q-list
         v-bind="uiProps.list"
-        class="full-width col-auto linid-favorite-panel--list"
-        data-cy="linid-favorite-panel_list"
+        class="full-width col-auto lin-pulsar-favorite-panel--list"
+        data-cy="lin-pulsar-favorite-panel_list"
       >
         <q-item
           v-for="(favorite, index) in favorites"
           :key="`fav_${index}`"
           v-bind="uiProps.item"
           clickable
-          :data-cy="`linid-favorite-panel_item-${index}`"
+          :data-cy="`lin-pulsar-favorite-panel_item-${index}`"
           @click="emit('apply', favorite)"
         >
           <q-item-section
@@ -150,24 +150,24 @@ import type {
 import { useScopedI18n, useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
 import type {
-  LinidFavoritePanelOutputs,
-  LinidFavoritePanelProps,
-  LinidFavoritePanelUIProps,
-} from '../../types/linidFavoritePanel';
+  LinPulsarFavoritePanelOutputs,
+  LinPulsarFavoritePanelProps,
+  LinPulsarFavoritePanelUIProps,
+} from '../../types/linPulsarFavoritePanel';
 
-const props = defineProps<LinidFavoritePanelProps>();
-const emit = defineEmits<LinidFavoritePanelOutputs>();
+const props = defineProps<LinPulsarFavoritePanelProps>();
+const emit = defineEmits<LinPulsarFavoritePanelOutputs>();
 
 const { t, translateOrDefault } = useScopedI18n(
   `${props.i18nScope}.LinPulsarFavoritePanel`
 );
 const { ui } = useUiDesign();
 
-const localUiNamespace = `${props.uiNamespace}.linid-favorite-panel`;
+const localUiNamespace = `${props.uiNamespace}.lin-pulsar-favorite-panel`;
 const headerUiNamespace = `${localUiNamespace}.header`;
 const contentUiNamespace = `${localUiNamespace}.content`;
 
-const uiProps = computed<LinidFavoritePanelUIProps>(() => ({
+const uiProps = computed<LinPulsarFavoritePanelUIProps>(() => ({
   titleIcon: ui<LinPulsarQIconProps>(headerUiNamespace, 'q-icon'),
   titleSeparator: ui<LinPulsarQSeparatorProps>(
     headerUiNamespace,
@@ -228,7 +228,7 @@ const uiProps = computed<LinidFavoritePanelUIProps>(() => ({
 </script>
 
 <style>
-.linid-favorite-panel--list {
+.lin-pulsar-favorite-panel--list {
   max-height: 14rem;
   overflow-y: auto;
 }
