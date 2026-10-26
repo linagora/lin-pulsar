@@ -188,7 +188,7 @@ The library organizes components by category. For each component, documentation 
 ### **Filtering Components**
 
 - 🔎 **LinPulsarSmartFilter** — Filter field with a toggle-able menu managing active filters, typed filter panels and saved filter favorites
-  → Documentation is inside: [`LinPulsarSmartFilter.md`](docs/components/smart-filter/LinPulsarSmartFilter.md)
+  → Documentation is inside: [`LinPulsarSmartFilter.md`](./docs/components/smart-filter/LinPulsarSmartFilter.md)
 
   Its panels (`LinPulsarFilterPanel`, `LinPulsarFavoritePanel`, `TextSearchFilterPanel`, `NumberSearchFilterPanel`, `DateSearchFilterPanel`, `ListSearchFilterPanel`, `TreeSearchFilterPanel`) and the `LinPulsarFilterChip` are internal to the smart filter and documented in the same file.
 

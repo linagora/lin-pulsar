@@ -45,17 +45,17 @@ jobs:
         run: |
           AUTH_HEADER=$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)
 
-          git -c http.extraheader="AUTHORIZATION: basic $AUTH_HEADER" push origin main
-          git -c http.extraheader="AUTHORIZATION: basic $AUTH_HEADER" push origin --tags
+          git -c http.extraheader="AUTHORIZATION: basic $AUTH_HEADER" push --atomic --follow-tags origin main
 
       - name: Set release outputs
         id: set_output
         run: |
-          TAG=$(git describe --tags --abbrev=0)
-          PREV_TAG=$(git describe --tags --abbrev=0 "$(git rev-list --tags --skip=1 --max-count=1)")
+          # Other tags may point at the release commit: keep only the highest release tag.
+          TAGS=$(git tag --list 'v*' --points-at HEAD --sort=-v:refname)
+          TAG=${TAGS%%$'\n'*}
 
           echo "version=$TAG" >> "$GITHUB_OUTPUT"
-          if [ "$TAG" != "$PREV_TAG" ]; then
+          if [ -n "$TAG" ]; then
             echo "release_created=true" >> "$GITHUB_OUTPUT"
           else
             echo "release_created=false" >> "$GITHUB_OUTPUT"
