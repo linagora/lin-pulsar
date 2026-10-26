@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import type { LinidAttributeConfiguration } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarAttributeConfiguration } from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -83,10 +83,10 @@ export interface FormDialogButtonProps extends CommonComponentProps {
   multipart?: boolean;
 
   /**
-   * Form fields rendered in the form dialog, defined as an array of LinidAttributeConfiguration
+   * Form fields rendered in the form dialog, defined as an array of LinPulsarAttributeConfiguration
    * objects (see FormDialog).
    */
-  formFields: LinidAttributeConfiguration[];
+  formFields: LinPulsarAttributeConfiguration[];
 
   /**
    * Whether the form is pre-filled with the entity values when the dialog opens. Fields whose name

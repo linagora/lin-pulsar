@@ -134,13 +134,13 @@
 
 <script setup lang="ts">
 import {
-  type LinidQBadgeProps,
-  type LinidQBtnProps,
-  type LinidQSpinnerProps,
-  type LinidQTableProps,
+  type LinPulsarQBadgeProps,
+  type LinPulsarQBtnProps,
+  type LinPulsarQSpinnerProps,
+  type LinPulsarQTableProps,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { QTableColumn } from 'quasar';
 import { computed, type ComputedRef } from 'vue';
 import type {
@@ -161,23 +161,32 @@ const { t, translateOrDefault } = useScopedI18n(
 const { ui } = useUiDesign();
 
 const uiProps = {
-  table: ui<LinidQTableProps>(localUiNamespace, 'q-table'),
-  expandBtnOpen: ui<LinidQBtnProps>(
+  table: ui<LinPulsarQTableProps>(localUiNamespace, 'q-table'),
+  expandBtnOpen: ui<LinPulsarQBtnProps>(
     `${localUiNamespace}.expand-button-open`,
     'q-btn'
   ),
-  expandBtnClose: ui<LinidQBtnProps>(
+  expandBtnClose: ui<LinPulsarQBtnProps>(
     `${localUiNamespace}.expand-button-close`,
     'q-btn'
   ),
-  deleteBtn: ui<LinidQBtnProps>(`${localUiNamespace}.delete-button`, 'q-btn'),
-  spinner: ui<LinidQSpinnerProps>(localUiNamespace, 'q-spinner'),
+  deleteBtn: ui<LinPulsarQBtnProps>(
+    `${localUiNamespace}.delete-button`,
+    'q-btn'
+  ),
+  spinner: ui<LinPulsarQSpinnerProps>(localUiNamespace, 'q-spinner'),
   badge: {
-    READY: ui<LinidQBadgeProps>(`${localUiNamespace}.READY`, 'q-badge'),
-    IMPORTING: ui<LinidQBadgeProps>(`${localUiNamespace}.IMPORTING`, 'q-badge'),
-    IMPORTED: ui<LinidQBadgeProps>(`${localUiNamespace}.IMPORTED`, 'q-badge'),
-    ERROR: ui<LinidQBadgeProps>(`${localUiNamespace}.ERROR`, 'q-badge'),
-  } satisfies Record<ImportStatus, LinidQBadgeProps>,
+    READY: ui<LinPulsarQBadgeProps>(`${localUiNamespace}.READY`, 'q-badge'),
+    IMPORTING: ui<LinPulsarQBadgeProps>(
+      `${localUiNamespace}.IMPORTING`,
+      'q-badge'
+    ),
+    IMPORTED: ui<LinPulsarQBadgeProps>(
+      `${localUiNamespace}.IMPORTED`,
+      'q-badge'
+    ),
+    ERROR: ui<LinPulsarQBadgeProps>(`${localUiNamespace}.ERROR`, 'q-badge'),
+  } satisfies Record<ImportStatus, LinPulsarQBadgeProps>,
 };
 
 const columns: ComputedRef<QTableColumn[]> = computed(() => [

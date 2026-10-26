@@ -31,7 +31,7 @@
     data-cy="generic-creation-page"
   >
     <div class="col-12 col-md-10 col-lg-10">
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="`${instanceId}.header.before`"
         :instance-id="instanceId"
         :ui-namespace="uiNamespace"
@@ -41,7 +41,7 @@
         class="row items-center justify-between q-mb-md generic-creation-page--header"
       >
         <div class="row items-center q-gutter-x-md">
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${instanceId}.header.prefix`"
             :entity="entity || {}"
             :instance-id="instanceId"
@@ -55,7 +55,7 @@
           >
             {{ t('title') }}
           </h1>
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${instanceId}.header.suffix`"
             :entity="entity || {}"
             :instance-id="instanceId"
@@ -71,7 +71,7 @@
             :show-cancel-button="false"
           >
             <template #append-buttons>
-              <LinidZoneRenderer
+              <LinPulsarZoneRenderer
                 :zone="`${instanceId}.header.actions`"
                 :entity="entity || {}"
                 :instance-id="instanceId"
@@ -83,14 +83,14 @@
         </div>
       </div>
 
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="`${instanceId}.header.after`"
         :instance-id="instanceId"
         :ui-namespace="uiNamespace"
         :i18n-scope="i18nScope"
       />
 
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="`${instanceId}.content.before`"
         :instance-id="instanceId"
         :ui-namespace="uiNamespace"
@@ -135,7 +135,7 @@
             class="row justify-start q-col-gutter-md generic-creation-page--form-section--fields"
             :data-cy="`field-container_${formSection.id}`"
           >
-            <LinidZoneRenderer
+            <LinPulsarZoneRenderer
               :zone="`${instanceId}.content.form-section-${formSection.id}.prepend`"
               :entity="entity || {}"
               :instance-id="instanceId"
@@ -156,7 +156,7 @@
               "
               :ui-namespace="`${uiNamespace}.form-section-${formSection.id}`"
             />
-            <LinidZoneRenderer
+            <LinPulsarZoneRenderer
               :zone="`${instanceId}.content.form-section-${formSection.id}.append`"
               :entity="entity || {}"
               :instance-id="instanceId"
@@ -175,7 +175,7 @@
             @cancel="cancel"
           >
             <template #append-buttons>
-              <LinidZoneRenderer
+              <LinPulsarZoneRenderer
                 :zone="`${instanceId}.content.actions`"
                 :entity="entity || {}"
                 :instance-id="instanceId"
@@ -188,7 +188,7 @@
         </div>
       </q-form>
 
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="`${instanceId}.content.after`"
         :instance-id="instanceId"
         :ui-namespace="uiNamespace"
@@ -202,20 +202,20 @@
 
 <script setup lang="ts">
 import type {
-  LinidQCardProps,
-  LinidQCardSectionProps,
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
   UiEvent,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import {
   getModuleHostConfiguration,
-  LinidZoneRenderer,
+  LinPulsarZoneRenderer,
   saveEntity,
   uiEventSubject,
   useNotify,
   useNunjucks,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { type Subscription } from 'rxjs';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -252,12 +252,12 @@ const uiProps = computed(() =>
     (acc, { id }) => {
       const formSectionUiNamespace = `${uiNamespace.value}.form-section-${id}`;
 
-      acc.card[id] = ui<LinidQCardProps>(formSectionUiNamespace, 'q-card');
-      acc.headerSection[id] = ui<LinidQCardSectionProps>(
+      acc.card[id] = ui<LinPulsarQCardProps>(formSectionUiNamespace, 'q-card');
+      acc.headerSection[id] = ui<LinPulsarQCardSectionProps>(
         `${formSectionUiNamespace}.header-section`,
         'q-card-section'
       );
-      acc.fieldsSection[id] = ui<LinidQCardSectionProps>(
+      acc.fieldsSection[id] = ui<LinPulsarQCardSectionProps>(
         `${formSectionUiNamespace}.fields-section`,
         'q-card-section'
       );

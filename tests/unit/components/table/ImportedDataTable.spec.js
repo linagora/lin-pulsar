@@ -28,7 +28,7 @@ import { shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ImportedDataTable from '../../../../src/components/table/ImportedDataTable.vue';
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   useScopedI18n: () => ({
     translateOrDefault: (_defaultValue, key) => key,
     t: (key) => key,

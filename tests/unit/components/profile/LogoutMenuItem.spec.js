@@ -36,7 +36,7 @@ const { mockPush, mockResolve, mockNotify, mockUiEventSubjectNext, mockUi } =
     mockUi: vi.fn(),
   }));
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   useScopedI18n: () => ({ t: (key) => `translated_${key}` }),
   useUiDesign: () => ({ ui: mockUi }),
   useNotify: () => ({ Notify: mockNotify }),

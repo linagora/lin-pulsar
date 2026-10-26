@@ -25,10 +25,10 @@
  */
 
 import type {
-  LinidAttributeConfiguration,
-  LinidQCardProps,
-  LinidQCardSectionProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarAttributeConfiguration,
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
+} from '@linagora/lin-pulsar-core';
 import type { ModulePageOptions } from './ModulePageOptions';
 
 /**
@@ -72,7 +72,7 @@ export interface FormSection {
   /**
    * List of field names to include in this section, in the desired order.
    */
-  fields: LinidAttributeConfiguration[];
+  fields: LinPulsarAttributeConfiguration[];
 }
 
 /**
@@ -82,13 +82,13 @@ export interface GenericCreationPageUIProps {
   /**
    * The UI properties for the card of each form section.
    */
-  card: Record<string, LinidQCardProps>;
+  card: Record<string, LinPulsarQCardProps>;
   /**
    * The UI properties for the header section (title and description) of each form section.
    */
-  headerSection: Record<string, LinidQCardSectionProps>;
+  headerSection: Record<string, LinPulsarQCardSectionProps>;
   /**
    * The UI properties for the section holding the fields of each form section.
    */
-  fieldsSection: Record<string, LinidQCardSectionProps>;
+  fieldsSection: Record<string, LinPulsarQCardSectionProps>;
 }

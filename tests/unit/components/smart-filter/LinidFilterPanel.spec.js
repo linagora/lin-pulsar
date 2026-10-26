@@ -30,7 +30,7 @@ import LinidFilterPanel from '../../../../src/components/smart-filter/LinidFilte
 
 const uiMock = vi.fn(() => ({}));
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   useUiDesign: () => ({ ui: uiMock }),
   useScopedI18n: () => ({ t: vi.fn((key) => key) }),
 }));

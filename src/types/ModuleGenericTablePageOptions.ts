@@ -26,8 +26,8 @@
 
 import type {
   FormatterConfiguration,
-  LinidFilter,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarFilter,
+} from '@linagora/lin-pulsar-core';
 import type { QTableColumn } from 'quasar';
 import type { ModulePageOptions } from './ModulePageOptions';
 
@@ -110,7 +110,7 @@ export interface ModuleGenericTablePageOptions extends ModulePageOptions {
    * table data is reloaded with the active filters. When omitted or empty,
    * no smart filter is rendered.
    */
-  filters?: LinidFilter[];
+  filters?: LinPulsarFilter[];
 
   /**
    * UI event keys triggering a reload of the table data.

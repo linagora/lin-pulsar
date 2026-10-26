@@ -25,13 +25,13 @@
  */
 
 import type {
-  LinidQBtnProps,
-  LinidQCheckboxProps,
-  LinidQDateProps,
-  LinidQIconProps,
-  LinidQInputProps,
-  LinidQOptionGroupProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarQBtnProps,
+  LinPulsarQCheckboxProps,
+  LinPulsarQDateProps,
+  LinPulsarQIconProps,
+  LinPulsarQInputProps,
+  LinPulsarQOptionGroupProps,
+} from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -66,29 +66,29 @@ export interface DateSearchFilterPanelUIProps {
   /**
    * The UI properties for the date text input.
    */
-  input: LinidQInputProps;
+  input: LinPulsarQInputProps;
   /**
    * The UI properties for the calendar icon that opens the date picker.
    */
-  icon: LinidQIconProps;
+  icon: LinPulsarQIconProps;
   /**
    * The UI properties for the date picker.
    */
-  date: LinidQDateProps;
+  date: LinPulsarQDateProps;
   /**
    * The UI properties for the close button inside the date picker.
    */
-  closeButton: LinidQBtnProps;
+  closeButton: LinPulsarQBtnProps;
   /**
    * The UI properties for the negation checkbox.
    */
-  checkbox: LinidQCheckboxProps;
+  checkbox: LinPulsarQCheckboxProps;
   /**
    * The UI properties for the operator radio group.
    */
-  optionGroup: LinidQOptionGroupProps;
+  optionGroup: LinPulsarQOptionGroupProps;
   /**
    * The UI properties for the search button.
    */
-  searchButton: LinidQBtnProps;
+  searchButton: LinPulsarQBtnProps;
 }

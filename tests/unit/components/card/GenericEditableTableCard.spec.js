@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import { uiEventSubject } from '@linagora/linid-im-front-corelib';
+import { uiEventSubject } from '@linagora/lin-pulsar-core';
 import { flushPromises, shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import GenericEditableTableCard from '../../../../src/components/card/GenericEditableTableCard.vue';
@@ -41,8 +41,8 @@ const mockHttpDelete = vi.fn(() => Promise.resolve({ data: {} }));
 const mockSubscription = { unsubscribe: vi.fn() };
 const mockSubscribe = vi.fn(() => mockSubscription);
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
-  LinidZoneRenderer: { template: '<div />' },
+vi.mock('@linagora/lin-pulsar-core', () => ({
+  LinPulsarZoneRenderer: { template: '<div />' },
   getHttpClient: () => ({
     get: mockHttpGet,
     post: mockHttpPost,

@@ -31,13 +31,13 @@ import DateSearchFilterPanel from '../../../../src/components/smart-filter/DateS
 const mockTe = vi.hoisted(() => vi.fn(() => false));
 const mockGlobalT = vi.hoisted(() => vi.fn((key) => key));
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   useUiDesign: () => ({ ui: vi.fn(() => ({})) }),
   useScopedI18n: () => ({
     t: vi.fn((key) => key),
     translateOrDefault: vi.fn((_defaultValue) => _defaultValue),
   }),
-  LinidFilterValue: class {
+  LinPulsarFilterValue: class {
     constructor(isNegation, operator, value) {
       this.isNegation = isNegation;
       this.operator = operator;

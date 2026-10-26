@@ -25,10 +25,10 @@
  */
 
 import type {
-  LinidQIconProps,
+  LinPulsarQIconProps,
   TreeNode,
   TreeNodeType,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -87,7 +87,7 @@ export type UiPropsTypes = Record<
     /**
      * The UI properties for the displayed icon.
      */
-    icon: LinidQIconProps;
+    icon: LinPulsarQIconProps;
     /**
      * The UI properties for the action icon.
      */
@@ -104,7 +104,7 @@ export type UiPropsAction = Record<
     /**
      * The UI properties for the displayed icon.
      */
-    icon: LinidQIconProps;
+    icon: LinPulsarQIconProps;
   }
 >;
 

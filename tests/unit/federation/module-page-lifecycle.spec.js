@@ -26,9 +26,9 @@
 
 import {
   setPiniaStore,
-  useLinidUiStore,
-  useLinidZoneStore,
-} from '@linagora/linid-im-front-corelib';
+  useLinPulsarUiStore,
+  useLinPulsarZoneStore,
+} from '@linagora/lin-pulsar-core';
 import { createPinia } from 'pinia';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import modulePage from '../../../src/federation/module-page-lifecycle';
@@ -39,8 +39,8 @@ describe('Test module lifecycle: ModulePage', () => {
   });
 
   beforeEach(() => {
-    useLinidUiStore().$reset();
-    useLinidZoneStore().$reset();
+    useLinPulsarUiStore().$reset();
+    useLinPulsarZoneStore().$reset();
   });
 
   it('should have correct module metadata', () => {
@@ -59,7 +59,7 @@ describe('Test module lifecycle: ModulePage', () => {
 
       const result = await modulePage.postInit(config);
 
-      expect(useLinidUiStore().mainNavigationItems).toEqual([]);
+      expect(useLinPulsarUiStore().mainNavigationItems).toEqual([]);
       expect(result).toEqual({ success: true });
     });
 
@@ -74,7 +74,7 @@ describe('Test module lifecycle: ModulePage', () => {
 
       const result = await modulePage.postInit(config);
 
-      expect(useLinidUiStore().mainNavigationItems).toEqual([
+      expect(useLinPulsarUiStore().mainNavigationItems).toEqual([
         {
           id: 'page-instance-2',
           labelKey: 'page-instance-2.NavigationMenu.label',
@@ -88,7 +88,7 @@ describe('Test module lifecycle: ModulePage', () => {
       await modulePage.postInit({ instanceId: 'page-instance-2' });
 
       const entries =
-        useLinidZoneStore().zones['base-layout.dialogComponent'] ?? [];
+        useLinPulsarZoneStore().zones['base-layout.dialogComponent'] ?? [];
       expect(entries.map((entry) => entry.plugin)).toEqual([
         'catalogUI/ConfirmationDialog',
         'catalogUI/FormDialog',

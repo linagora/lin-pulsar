@@ -140,18 +140,14 @@
 
 <script setup lang="ts">
 import type {
-  LinidQBtnProps,
-  LinidQCheckboxProps,
-  LinidQIconProps,
-  LinidQInputProps,
-  LinidQTreeProps,
+  LinPulsarQBtnProps,
+  LinPulsarQCheckboxProps,
+  LinPulsarQIconProps,
+  LinPulsarQInputProps,
+  LinPulsarQTreeProps,
   TreeNode,
-} from '@linagora/linid-im-front-corelib';
-import {
-  useScopedI18n,
-  useTree,
-  useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
+import { useScopedI18n, useTree, useUiDesign } from '@linagora/lin-pulsar-core';
 import type { QTreeNode } from 'quasar';
 import type { Ref } from 'vue';
 import { computed, ref, toRaw, watch, watchEffect } from 'vue';
@@ -354,29 +350,29 @@ watch(
 );
 
 const uiProps = computed(() => ({
-  filterInput: ui<LinidQInputProps>(
+  filterInput: ui<LinPulsarQInputProps>(
     `${props.uiNamespace}.GenericTree`,
     'q-input'
   ),
   // A controlled expansion owns the expanded state: a defaultExpandAll coming from the design,
   // including a global default, would override it with every node on first render.
   tree: {
-    ...ui<LinidQTreeProps>(`${props.uiNamespace}.GenericTree`, 'q-tree'),
+    ...ui<LinPulsarQTreeProps>(`${props.uiNamespace}.GenericTree`, 'q-tree'),
     ...(props.expanded === undefined ? {} : { defaultExpandAll: false }),
   },
   selectedIcon: {
     name: 'check',
     color: 'positive',
-    ...ui<LinidQIconProps>(
+    ...ui<LinPulsarQIconProps>(
       `${props.uiNamespace}.GenericTree.selected-icon`,
       'q-icon'
     ),
   },
-  buttonActions: ui<LinidQBtnProps>(
+  buttonActions: ui<LinPulsarQBtnProps>(
     `${props.uiNamespace}.GenericTree.ButtonActions`,
     'q-btn'
   ),
-  checkbox: ui<LinidQCheckboxProps>(
+  checkbox: ui<LinPulsarQCheckboxProps>(
     `${props.uiNamespace}.GenericTree`,
     'q-checkbox'
   ),
@@ -390,14 +386,14 @@ const uiProps = computed(() => ({
     ]),
   ].reduce<UiPropsTypes>((acc, type) => {
     acc[type] = {
-      icon: ui<LinidQIconProps>(
+      icon: ui<LinPulsarQIconProps>(
         `${props.uiNamespace}.GenericTree.types.${type}`,
         'q-icon'
       ),
       actions: (resolvedActionsByType.value[type] || []).reduce<UiPropsAction>(
         (actionsAcc, action) => {
           actionsAcc[action] = {
-            icon: ui<LinidQIconProps>(
+            icon: ui<LinPulsarQIconProps>(
               `${props.uiNamespace}.GenericTree.types.${type}.actions.${action}`,
               'q-icon'
             ),

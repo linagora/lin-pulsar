@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import { getEntities, LinidFilterSet } from '@linagora/linid-im-front-corelib';
+import { getEntities, LinPulsarFilterSet } from '@linagora/lin-pulsar-core';
 import { flushPromises, shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import GenericTablePage from '../../../src/pages/GenericTablePage.vue';
@@ -52,8 +52,8 @@ const mockSetFiltersInUrl = vi.fn();
 const mockGetFiltersFromUrl = vi.fn(() => []);
 const mockSubscription = { unsubscribe: vi.fn() };
 const mockSubscribe = vi.fn(() => mockSubscription);
-const { MockLinidFilter } = vi.hoisted(() => ({
-  MockLinidFilter: class MockLinidFilter {
+const { MockLinPulsarFilter } = vi.hoisted(() => ({
+  MockLinPulsarFilter: class MockLinPulsarFilter {
     constructor(name, type, options, values) {
       this.name = name;
       this.type = type;
@@ -77,8 +77,8 @@ const { buildEntityPage } = vi.hoisted(() => ({
 const { mockToQuasarPagination } = vi.hoisted(() => ({
   mockToQuasarPagination: vi.fn(() => ({ convertedPagination: true })),
 }));
-const { MockLinidFilterSet } = vi.hoisted(() => ({
-  MockLinidFilterSet: class MockLinidFilterSet {
+const { MockLinPulsarFilterSet } = vi.hoisted(() => ({
+  MockLinPulsarFilterSet: class MockLinPulsarFilterSet {
     constructor(id, label, filters) {
       this.id = id;
       this.label = label;
@@ -95,14 +95,14 @@ const { MockLinidFilterSet } = vi.hoisted(() => ({
   },
 }));
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   getEntities: vi.fn(() => Promise.resolve(buildEntityPage())),
   getNestedValue: (obj, path) =>
     path.split('.').reduce((acc, key) => acc?.[key], obj),
-  useLinidZoneStore: () => ({
+  useLinPulsarZoneStore: () => ({
     hasZoneEntries: mockHasZoneEntries,
   }),
-  LinidZoneRenderer: { name: 'LinidZoneRenderer', template: '<div />' },
+  LinPulsarZoneRenderer: { name: 'LinPulsarZoneRenderer', template: '<div />' },
   useScopedI18n: () => ({
     t: vi.fn((v) => v),
     te: vi.fn(() => false),
@@ -118,7 +118,7 @@ vi.mock('@linagora/linid-im-front-corelib', () => ({
     toQuasarPagination: mockToQuasarPagination,
   }),
   useUiDesign: () => ({ ui: () => ({}) }),
-  useLinidUserPreference: vi.fn(() => ({
+  useLinPulsarUserPreference: vi.fn(() => ({
     userPreferenceStore: {
       userPreferences: {
         'unused.key': 'test',
@@ -128,12 +128,12 @@ vi.mock('@linagora/linid-im-front-corelib', () => ({
       },
     },
   })),
-  useLinidFilterUrl: () => ({
+  useLinPulsarFilterUrl: () => ({
     setFiltersInUrl: mockSetFiltersInUrl,
     getFiltersFromUrl: mockGetFiltersFromUrl,
   }),
-  LinidFilter: MockLinidFilter,
-  LinidFilterSet: MockLinidFilterSet,
+  LinPulsarFilter: MockLinPulsarFilter,
+  LinPulsarFilterSet: MockLinPulsarFilterSet,
   uiEventSubject: {
     subscribe: (callback) => mockSubscribe(callback),
     next: vi.fn(),
@@ -371,7 +371,9 @@ describe('Test component: GenericTablePage', () => {
         sortBy: 'name',
         descending: true,
       };
-      const newFilters = [new MockLinidFilter('name', 'text', {}, ['paris'])];
+      const newFilters = [
+        new MockLinPulsarFilter('name', 'text', {}, ['paris']),
+      ];
 
       await wrapper.vm.onFiltersChange(newFilters);
 
@@ -389,7 +391,9 @@ describe('Test component: GenericTablePage', () => {
       wrapper = shallowMount(GenericTablePage, {
         global: { stubs: ['GenericEntityTable'] },
       });
-      const newFilters = [new MockLinidFilter('name', 'text', {}, ['paris'])];
+      const newFilters = [
+        new MockLinPulsarFilter('name', 'text', {}, ['paris']),
+      ];
 
       await wrapper.vm.onFiltersChange(newFilters);
 
@@ -419,7 +423,7 @@ describe('Test component: GenericTablePage', () => {
     });
 
     it('should rebuild the filters of a favorite from their definition', () => {
-      const fromString = vi.spyOn(LinidFilterSet, 'fromString');
+      const fromString = vi.spyOn(LinPulsarFilterSet, 'fromString');
 
       wrapper = shallowMount(GenericTablePage, {
         global: { stubs: ['GenericEntityTable'] },
@@ -435,7 +439,7 @@ describe('Test component: GenericTablePage', () => {
   describe('Test function: toQueryFilter', () => {
     it('should build a query filter from the active filters', () => {
       wrapper.vm.filters = [
-        new MockLinidFilter('name', 'text', {}, ['paris', 'lyon']),
+        new MockLinPulsarFilter('name', 'text', {}, ['paris', 'lyon']),
       ];
 
       expect(wrapper.vm.toQueryFilter()).toEqual({
@@ -455,9 +459,13 @@ describe('Test component: GenericTablePage', () => {
 
   describe('Test constant: filters', () => {
     it('should initialize filters from the URL using the configured filter definitions', () => {
-      const urlFilters = [new MockLinidFilter('name', 'text', {}, ['paris'])];
+      const urlFilters = [
+        new MockLinPulsarFilter('name', 'text', {}, ['paris']),
+      ];
       mockGetFiltersFromUrl.mockReturnValueOnce(urlFilters);
-      mockModuleOptions.filters = [new MockLinidFilter('name', 'text', {}, [])];
+      mockModuleOptions.filters = [
+        new MockLinPulsarFilter('name', 'text', {}, []),
+      ];
 
       const localWrapper = shallowMount(GenericTablePage, {
         global: { stubs: ['GenericEntityTable'] },
@@ -519,7 +527,7 @@ describe('Test component: GenericTablePage', () => {
   describe('Test computed: favorites', () => {
     it('should set the favorites', () => {
       expect(wrapper.vm.favorites).toEqual([
-        LinidFilterSet.fromString('2', 'Test', 'name=value'),
+        LinPulsarFilterSet.fromString('2', 'Test', 'name=value'),
       ]);
     });
   });

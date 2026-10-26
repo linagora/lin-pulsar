@@ -63,7 +63,7 @@
         :props="cellProps"
         :data-cy="`entity-cell-${name}_${cellProps.key}`"
       >
-        <LinidZoneRenderer
+        <LinPulsarZoneRenderer
           v-for="(item, index) in cellEntities.get(cellProps.key)?.[name] ?? []"
           :key="index"
           :zone="columnZone(name)"
@@ -102,7 +102,7 @@
           </template>
 
           <template v-else-if="zoneColumnNames.includes(col.name)">
-            <LinidZoneRenderer
+            <LinPulsarZoneRenderer
               v-for="(item, index) in cellEntities.get(bodyProps.key)?.[
                 col.name
               ] ?? []"
@@ -126,12 +126,12 @@
 <script setup lang="ts">
 import {
   getNestedValue,
-  type LinidQTableProps,
-  LinidZoneRenderer,
+  type LinPulsarQTableProps,
+  LinPulsarZoneRenderer,
   useScopedI18n,
   useUiDesign,
   useValueFormatter,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed, useSlots } from 'vue';
 import { useColumnZones } from '../../composables/useColumnZones';
 import type { GenericEntityTableProps } from '../../types/genericEntityTable';
@@ -208,7 +208,7 @@ const cellEntities = computed(() => {
   return entitiesByRow;
 });
 
-const uiProps = ui<LinidQTableProps>(
+const uiProps = ui<LinPulsarQTableProps>(
   `${props.uiNamespace}.generic-entity-table`,
   'q-table'
 );

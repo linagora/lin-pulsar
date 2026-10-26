@@ -41,13 +41,13 @@
 </template>
 
 <script setup lang="ts">
-import type { LinidQToggleProps } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarQToggleProps } from '@linagora/lin-pulsar-core';
 import {
   getNestedValue,
   setNestedValue,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { ref, watch } from 'vue';
 import type {
   AttributeFieldProps,
@@ -70,7 +70,7 @@ const localValue = ref(
     props.definition.inputSettings?.defaultValue ??
     null
 );
-const uiProps = ui<LinidQToggleProps>(
+const uiProps = ui<LinPulsarQToggleProps>(
   `${props.uiNamespace}.${props.definition.name}`,
   'q-toggle'
 );

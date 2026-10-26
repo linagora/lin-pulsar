@@ -101,7 +101,7 @@
             </q-select>
           </q-item-section>
         </q-item>
-        <LinidZoneRenderer :zone="`${localUiNamespace}.menu-items`" />
+        <LinPulsarZoneRenderer :zone="`${localUiNamespace}.menu-items`" />
         <LogoutMenuItem
           v-if="!hideLogout"
           :ui-namespace="localUiNamespace"
@@ -115,21 +115,21 @@
 
 <script setup lang="ts">
 import type {
-  LinidQBtnProps,
-  LinidQImgProps,
-  LinidQItemLabelProps,
-  LinidQItemProps,
-  LinidQSelectProps,
-  LinidQItemSectionProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarQBtnProps,
+  LinPulsarQImgProps,
+  LinPulsarQItemLabelProps,
+  LinPulsarQItemProps,
+  LinPulsarQSelectProps,
+  LinPulsarQItemSectionProps,
+} from '@linagora/lin-pulsar-core';
 import {
-  LinidZoneRenderer,
-  useLinidUserStore,
-  useLinidUiStore,
+  LinPulsarZoneRenderer,
+  useLinPulsarUserStore,
+  useLinPulsarUiStore,
   useUiDesign,
   useScopedI18n,
   changeLocale,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { QMenu } from 'quasar';
 import { computed, ref, watch } from 'vue';
 import type { HeaderProfileProps } from '../../types/headerProfile';
@@ -142,8 +142,8 @@ const props = withDefaults(defineProps<HeaderProfileProps>(), {
 
 const { ui } = useUiDesign();
 const { t } = useScopedI18n('application');
-const userStore = useLinidUserStore();
-const uiStore = useLinidUiStore();
+const userStore = useLinPulsarUserStore();
+const uiStore = useLinPulsarUiStore();
 const name = computed(() => userStore.user.fullName);
 const email = computed(() => userStore.user.email);
 const availableLocales = computed(() => uiStore.i18n.languages);
@@ -151,12 +151,15 @@ const availableLocales = computed(() => uiStore.i18n.languages);
 const localUiNamespace = `${props.uiNamespace}.header-profile`;
 
 const uiProps = {
-  btn: ui<LinidQBtnProps>(localUiNamespace, 'q-btn'),
-  itemSection: ui<LinidQItemSectionProps>(localUiNamespace, 'q-item-section'),
-  itemLabel: ui<LinidQItemLabelProps>(localUiNamespace, 'q-item-label'),
-  flag: ui<LinidQImgProps>(localUiNamespace, 'q-img'),
-  select: ui<LinidQSelectProps>(localUiNamespace, 'q-select'),
-  item: ui<LinidQItemProps>(localUiNamespace, 'q-item'),
+  btn: ui<LinPulsarQBtnProps>(localUiNamespace, 'q-btn'),
+  itemSection: ui<LinPulsarQItemSectionProps>(
+    localUiNamespace,
+    'q-item-section'
+  ),
+  itemLabel: ui<LinPulsarQItemLabelProps>(localUiNamespace, 'q-item-label'),
+  flag: ui<LinPulsarQImgProps>(localUiNamespace, 'q-img'),
+  select: ui<LinPulsarQSelectProps>(localUiNamespace, 'q-select'),
+  item: ui<LinPulsarQItemProps>(localUiNamespace, 'q-item'),
 };
 
 const selectedLanguage = ref(uiStore.i18n.locale);

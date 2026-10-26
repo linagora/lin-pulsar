@@ -147,15 +147,15 @@
 
 <script lang="ts" setup>
 import type {
-  LinidQBtnDropdownProps,
-  LinidQIconProps,
-  LinidQItemLabelProps,
-  LinidQItemProps,
-  LinidQItemSectionProps,
-  LinidQListProps,
-  LinidQMenuProps,
-} from '@linagora/linid-im-front-corelib';
-import { useScopedI18n, useUiDesign } from '@linagora/linid-im-front-corelib';
+  LinPulsarQBtnDropdownProps,
+  LinPulsarQIconProps,
+  LinPulsarQItemLabelProps,
+  LinPulsarQItemProps,
+  LinPulsarQItemSectionProps,
+  LinPulsarQListProps,
+  LinPulsarQMenuProps,
+} from '@linagora/lin-pulsar-core';
+import { useScopedI18n, useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
 import type {
   DropdownButtonOutputs,
@@ -174,15 +174,21 @@ const { ui } = useUiDesign();
 
 const uiProps = computed(() => {
   return {
-    dropdownBtn: ui<LinidQBtnDropdownProps>(localUiNamespace, 'q-btn-dropdown'),
-    list: ui<LinidQListProps>(localUiNamespace, 'q-list'),
-    menu: ui<LinidQMenuProps>(localUiNamespace, 'q-menu'),
+    dropdownBtn: ui<LinPulsarQBtnDropdownProps>(
+      localUiNamespace,
+      'q-btn-dropdown'
+    ),
+    list: ui<LinPulsarQListProps>(localUiNamespace, 'q-list'),
+    menu: ui<LinPulsarQMenuProps>(localUiNamespace, 'q-menu'),
     menuTrigger: {
-      iconSection: ui<LinidQItemSectionProps>(
+      iconSection: ui<LinPulsarQItemSectionProps>(
         `${localUiNamespace}.menu-trigger`,
         'q-item-section'
       ),
-      icon: ui<LinidQIconProps>(`${localUiNamespace}.menu-trigger`, 'q-icon'),
+      icon: ui<LinPulsarQIconProps>(
+        `${localUiNamespace}.menu-trigger`,
+        'q-icon'
+      ),
     },
     items: Object.fromEntries<ParentMenuItemUIProps>(
       props.items.map((item): [string, ParentMenuItemUIProps] => {
@@ -220,17 +226,17 @@ const itemsWithUI = computed(() =>
  */
 function buildMenuItemUIProps(namespace: string): MenuItemUIProps {
   return {
-    item: ui<LinidQItemProps>(namespace, 'q-item'),
-    iconSection: ui<LinidQItemSectionProps>(
+    item: ui<LinPulsarQItemProps>(namespace, 'q-item'),
+    iconSection: ui<LinPulsarQItemSectionProps>(
       `${namespace}.icon`,
       'q-item-section'
     ),
-    icon: ui<LinidQIconProps>(`${namespace}.icon`, 'q-icon'),
-    labelSection: ui<LinidQItemSectionProps>(
+    icon: ui<LinPulsarQIconProps>(`${namespace}.icon`, 'q-icon'),
+    labelSection: ui<LinPulsarQItemSectionProps>(
       `${namespace}.label`,
       'q-item-section'
     ),
-    label: ui<LinidQItemLabelProps>(`${namespace}.label`, 'q-item-label'),
+    label: ui<LinPulsarQItemLabelProps>(`${namespace}.label`, 'q-item-label'),
   };
 }
 </script>

@@ -95,7 +95,7 @@
           />
           <q-item-section v-if="hasBeforeFieldsSection">
             <slot name="before-field-labels" />
-            <LinidZoneRenderer
+            <LinPulsarZoneRenderer
               :zone="beforeFieldLabelsZoneName"
               :entity="entity || {}"
               :instance-id="instanceId"
@@ -121,7 +121,7 @@
           </q-item-section>
           <q-item-section v-if="hasAfterFieldsSection">
             <slot name="after-field-labels" />
-            <LinidZoneRenderer
+            <LinPulsarZoneRenderer
               :zone="afterFieldLabelsZoneName"
               :entity="entity || {}"
               :instance-id="instanceId"
@@ -163,7 +163,7 @@
                     :item="item"
                     :index="index"
                   />
-                  <LinidZoneRenderer
+                  <LinPulsarZoneRenderer
                     :zone="beforeFieldValuesZoneName"
                     :entity="item || {}"
                     :instance-id="instanceId"
@@ -196,7 +196,7 @@
                     :item="item"
                     :index="index"
                   />
-                  <LinidZoneRenderer
+                  <LinPulsarZoneRenderer
                     :zone="afterFieldValuesZoneName"
                     :entity="item || {}"
                     :instance-id="instanceId"
@@ -215,7 +215,7 @@
                       :item="item"
                       :index="index"
                     />
-                    <LinidZoneRenderer
+                    <LinPulsarZoneRenderer
                       :zone="`${localUiNamespace}.item.actions`"
                       :entity="item || {}"
                       :instance-id="instanceId"
@@ -273,32 +273,32 @@
 
 <script setup lang="ts">
 import type {
-  LinidDraggableProps,
-  LinidQBtnProps,
-  LinidQCardProps,
-  LinidQCardSectionProps,
-  LinidQIconProps,
-  LinidQItemLabelProps,
-  LinidQItemProps,
-  LinidQItemSectionProps,
-  LinidQListProps,
-  LinidQScrollAreaProps,
+  LinPulsarDraggableProps,
+  LinPulsarQBtnProps,
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
+  LinPulsarQIconProps,
+  LinPulsarQItemLabelProps,
+  LinPulsarQItemProps,
+  LinPulsarQItemSectionProps,
+  LinPulsarQListProps,
+  LinPulsarQScrollAreaProps,
   UiEvent,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import {
   deepEqual,
   getHttpClient,
   getNestedValue,
-  LinidZoneRenderer,
+  LinPulsarZoneRenderer,
   setNestedValue,
   uiEventSubject,
-  useLinidZoneStore,
+  useLinPulsarZoneStore,
   useNotify,
   useNunjucks,
   useScopedI18n,
   useUiDesign,
   useValueFormatter,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { ResizeObserverEntry } from '@vueuse/core';
 import { useResizeObserver } from '@vueuse/core';
 import type { HTMLElement } from 'happy-dom';
@@ -385,80 +385,83 @@ const formattedItems = computed(() =>
 let initialItems: Record<string, unknown>[] = [];
 
 const uiProps = computed<GenericSortableListCardUIProps>(() => ({
-  card: ui<LinidQCardProps>(localUiNamespace.value, 'q-card'),
-  headerSection: ui<LinidQCardSectionProps>(
+  card: ui<LinPulsarQCardProps>(localUiNamespace.value, 'q-card'),
+  headerSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.header-section`,
     'q-card-section'
   ),
-  unsavedChangesSection: ui<LinidQCardSectionProps>(
+  unsavedChangesSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.unsaved-changes-section`,
     'q-card-section'
   ),
-  listSection: ui<LinidQCardSectionProps>(
+  listSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.list-section`,
     'q-card-section'
   ),
-  scrollArea: ui<LinidQScrollAreaProps>(
+  scrollArea: ui<LinPulsarQScrollAreaProps>(
     localUiNamespace.value,
     'q-scroll-area'
   ),
-  list: ui<LinidQListProps>(localUiNamespace.value, 'q-list'),
-  item: ui<LinidQItemProps>(localUiNamespace.value, 'q-item'),
-  draggable: ui<LinidDraggableProps>(localUiNamespace.value, 'draggable'),
-  iconSection: ui<LinidQItemSectionProps>(
+  list: ui<LinPulsarQListProps>(localUiNamespace.value, 'q-list'),
+  item: ui<LinPulsarQItemProps>(localUiNamespace.value, 'q-item'),
+  draggable: ui<LinPulsarDraggableProps>(localUiNamespace.value, 'draggable'),
+  iconSection: ui<LinPulsarQItemSectionProps>(
     `${localUiNamespace.value}.icon-section`,
     'q-item-section'
   ),
-  icon: ui<LinidQIconProps>(`${localUiNamespace.value}.icon-section`, 'q-icon'),
-  headerItem: ui<LinidQItemProps>(
+  icon: ui<LinPulsarQIconProps>(
+    `${localUiNamespace.value}.icon-section`,
+    'q-icon'
+  ),
+  headerItem: ui<LinPulsarQItemProps>(
     `${localUiNamespace.value}.header-item`,
     'q-item'
   ),
-  fieldLabelSection: ui<LinidQItemSectionProps>(
+  fieldLabelSection: ui<LinPulsarQItemSectionProps>(
     `${localUiNamespace.value}.field-label-section`,
     'q-item-section'
   ),
-  fieldLabel: ui<LinidQItemLabelProps>(
+  fieldLabel: ui<LinPulsarQItemLabelProps>(
     `${localUiNamespace.value}.field-label`,
     'q-item-label'
   ),
-  fieldValueSection: ui<LinidQItemSectionProps>(
+  fieldValueSection: ui<LinPulsarQItemSectionProps>(
     `${localUiNamespace.value}.field-value-section`,
     'q-item-section'
   ),
-  fieldValue: ui<LinidQItemLabelProps>(
+  fieldValue: ui<LinPulsarQItemLabelProps>(
     `${localUiNamespace.value}.field-value`,
     'q-item-label'
   ),
-  noDataIconSection: ui<LinidQItemSectionProps>(
+  noDataIconSection: ui<LinPulsarQItemSectionProps>(
     `${localUiNamespace.value}.no-data-icon-section`,
     'q-item-section'
   ),
-  noDataIcon: ui<LinidQIconProps>(
+  noDataIcon: ui<LinPulsarQIconProps>(
     `${localUiNamespace.value}.no-data-icon-section`,
     'q-icon'
   ),
-  noDataLabelSection: ui<LinidQItemSectionProps>(
+  noDataLabelSection: ui<LinPulsarQItemSectionProps>(
     `${localUiNamespace.value}.no-data-label-section`,
     'q-item-section'
   ),
-  itemActionsSection: ui<LinidQItemSectionProps>(
+  itemActionsSection: ui<LinPulsarQItemSectionProps>(
     `${localUiNamespace.value}.item-actions-section`,
     'q-item-section'
   ),
-  editButton: ui<LinidQBtnProps>(
+  editButton: ui<LinPulsarQBtnProps>(
     `${localUiNamespace.value}.item-actions-section.edit-button`,
     'q-btn'
   ),
-  deleteButton: ui<LinidQBtnProps>(
+  deleteButton: ui<LinPulsarQBtnProps>(
     `${localUiNamespace.value}.item-actions-section.delete-button`,
     'q-btn'
   ),
-  addButton: ui<LinidQBtnProps>(
+  addButton: ui<LinPulsarQBtnProps>(
     `${localUiNamespace.value}.add-button`,
     'q-btn'
   ),
-  saveButton: ui<LinidQBtnProps>(
+  saveButton: ui<LinPulsarQBtnProps>(
     `${localUiNamespace.value}.save-button`,
     'q-btn'
   ),
@@ -757,7 +760,7 @@ onUnmounted(() => {
 });
 
 /********************************
- * Slots and LinidZoneRenderer.
+ * Slots and LinPulsarZoneRenderer.
  *******************************/
 
 const beforeFieldLabelsZoneName = computed(
@@ -777,7 +780,7 @@ const afterFieldValuesZoneName = computed(
 );
 
 const slots = useSlots();
-const { hasZoneEntries } = useLinidZoneStore();
+const { hasZoneEntries } = useLinPulsarZoneStore();
 
 const hasBeforeFieldsSection = computed<boolean>(
   () =>

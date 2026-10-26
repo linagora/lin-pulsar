@@ -62,16 +62,16 @@
 
 <script setup lang="ts">
 import type {
-  LinidQBtnProps,
-  LinidQListProps,
-  LinidQItemProps,
-  LinidQItemSectionProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarQBtnProps,
+  LinPulsarQListProps,
+  LinPulsarQItemProps,
+  LinPulsarQItemSectionProps,
+} from '@linagora/lin-pulsar-core';
 import {
-  LinidFilterValue,
+  LinPulsarFilterValue,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { ListSearchFilterProps } from '../../types/ListSearchFilterPanel';
 import { ref } from 'vue';
 import type { LinidFilterPanelSearchOutputs } from '../../types/linidFilterPanel';
@@ -87,25 +87,25 @@ const localUiNamespace = `${props.uiNamespace}.list-search-filter-panel`;
 const tickedItems = ref<string[]>([]);
 
 const uiProps = {
-  list: ui<LinidQListProps>(localUiNamespace, 'q-list'),
-  item: ui<LinidQItemProps>(localUiNamespace, 'q-item'),
-  itemSectionCheckbox: ui<LinidQItemSectionProps>(
+  list: ui<LinPulsarQListProps>(localUiNamespace, 'q-list'),
+  item: ui<LinPulsarQItemProps>(localUiNamespace, 'q-item'),
+  itemSectionCheckbox: ui<LinPulsarQItemSectionProps>(
     `${localUiNamespace}.checkboxSection`,
     'q-item-section'
   ),
-  itemSectionLabel: ui<LinidQItemSectionProps>(
+  itemSectionLabel: ui<LinPulsarQItemSectionProps>(
     `${localUiNamespace}.labelSection`,
     'q-item-section'
   ),
-  filterButton: ui<LinidQBtnProps>(localUiNamespace, 'q-btn'),
+  filterButton: ui<LinPulsarQBtnProps>(localUiNamespace, 'q-btn'),
 };
 
 /**
  * Emits a 'search' event with the ticked nodes.
  */
 function onSearch() {
-  const result: LinidFilterValue[] = tickedItems.value.map((item) => {
-    return new LinidFilterValue(false, '', item);
+  const result: LinPulsarFilterValue[] = tickedItems.value.map((item) => {
+    return new LinPulsarFilterValue(false, '', item);
   });
   emit('search', {
     field: props.fieldName,

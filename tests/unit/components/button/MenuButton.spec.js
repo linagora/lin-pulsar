@@ -30,8 +30,8 @@ import MenuButton from '../../../../src/components/button/MenuButton.vue';
 
 const mockUi = vi.fn((namespace, component) => ({ namespace, component }));
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
-  LinidZoneRenderer: { template: '<div />' },
+vi.mock('@linagora/lin-pulsar-core', () => ({
+  LinPulsarZoneRenderer: { template: '<div />' },
   useScopedI18n: () => ({ translateOrDefault: vi.fn() }),
   useUiDesign: () => ({ ui: mockUi }),
 }));
@@ -56,7 +56,7 @@ describe('Test component: MenuButton', () => {
     return shallowMount(MenuButton, {
       props: { ...defaultProps, ...props },
       global: {
-        stubs: ['QBtn', 'QMenu', 'QList', 'QItem', 'LinidZoneRenderer'],
+        stubs: ['QBtn', 'QMenu', 'QList', 'QItem', 'LinPulsarZoneRenderer'],
       },
     });
   }

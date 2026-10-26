@@ -31,7 +31,7 @@
     data-cy="generic-import-page"
   >
     <div class="col-12 col-md-10 col-lg-10">
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="`${instanceId}.header.before`"
         :instance-id="instanceId"
         :ui-namespace="uiNamespace"
@@ -41,7 +41,7 @@
         class="row items-center justify-between q-mb-md generic-import-page--header"
       >
         <div class="row items-center q-gutter-x-md">
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${instanceId}.header.prefix`"
             :instance-id="instanceId"
             :ui-namespace="uiNamespace"
@@ -54,7 +54,7 @@
           >
             {{ t('title') }}
           </h1>
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${instanceId}.header.suffix`"
             :instance-id="instanceId"
             :ui-namespace="uiNamespace"
@@ -69,7 +69,7 @@
             :show-cancel-button="false"
           >
             <template #append-buttons>
-              <LinidZoneRenderer
+              <LinPulsarZoneRenderer
                 :zone="`${instanceId}.header.actions`"
                 :instance-id="instanceId"
                 :ui-namespace="uiNamespace"
@@ -80,14 +80,14 @@
         </div>
       </div>
 
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="`${instanceId}.header.after`"
         :instance-id="instanceId"
         :ui-namespace="uiNamespace"
         :i18n-scope="i18nScope"
       />
 
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="`${instanceId}.content.before`"
         :instance-id="instanceId"
         :ui-namespace="uiNamespace"
@@ -145,7 +145,7 @@
             />
           </template>
           <template #append-buttons>
-            <LinidZoneRenderer
+            <LinPulsarZoneRenderer
               :zone="`${instanceId}.content.actions`"
               :instance-id="instanceId"
               :ui-namespace="uiNamespace"
@@ -156,7 +156,7 @@
         </ButtonsCard>
       </div>
 
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="`${instanceId}.content.after`"
         :instance-id="instanceId"
         :ui-namespace="uiNamespace"
@@ -171,19 +171,19 @@
 <script setup lang="ts">
 import type {
   DropdownClickPayload,
-  LinidQCardProps,
-  LinidQCardSectionProps,
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
   MenuItem,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import {
   getModuleHostConfiguration,
-  LinidZoneRenderer,
+  LinPulsarZoneRenderer,
   saveEntity,
   useNotify,
   useNunjucks,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import pLimit from 'p-limit';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -241,12 +241,12 @@ const { ui } = useUiDesign();
 const { renderString } = useNunjucks();
 
 const uiProps: GenericImportPageUIProps = {
-  card: ui<LinidQCardProps>(`${uiNamespace.value}.import-card`, 'q-card'),
-  filesSection: ui<LinidQCardSectionProps>(
+  card: ui<LinPulsarQCardProps>(`${uiNamespace.value}.import-card`, 'q-card'),
+  filesSection: ui<LinPulsarQCardSectionProps>(
     `${uiNamespace.value}.import-card.files-section`,
     'q-card-section'
   ),
-  tableSection: ui<LinidQCardSectionProps>(
+  tableSection: ui<LinPulsarQCardSectionProps>(
     `${uiNamespace.value}.import-card.table-section`,
     'q-card-section'
   ),

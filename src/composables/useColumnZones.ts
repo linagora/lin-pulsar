@@ -26,8 +26,8 @@
 
 import {
   getNestedValue,
-  useLinidZoneStore,
-} from '@linagora/linid-im-front-corelib';
+  useLinPulsarZoneStore,
+} from '@linagora/lin-pulsar-core';
 import type { GenericTableColumn } from '../types/ModuleGenericTablePageOptions';
 
 /**
@@ -38,7 +38,7 @@ import type { GenericTableColumn } from '../types/ModuleGenericTablePageOptions'
  * @returns The column zone helpers.
  */
 export function useColumnZones(uiNamespace: () => string) {
-  const linidZoneStore = useLinidZoneStore();
+  const linPulsarZoneStore = useLinPulsarZoneStore();
 
   /**
    * Returns the zone identifier hosting the custom rendering of a column.
@@ -53,7 +53,7 @@ export function useColumnZones(uiNamespace: () => string) {
    * @returns True when the column zone holds at least one entry.
    */
   const hasColumnZone = (name: string) =>
-    linidZoneStore.hasZoneEntries(columnZone(name));
+    linPulsarZoneStore.hasZoneEntries(columnZone(name));
 
   /**
    * Entities rendered by the zone of a column for a row. A single-item column renders the row

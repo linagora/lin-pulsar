@@ -121,18 +121,18 @@
 
 <script setup lang="ts">
 import type {
-  LinidQBtnProps,
-  LinidQCardProps,
-  LinidQCardSectionProps,
-  LinidQIconProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarQBtnProps,
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
+  LinPulsarQIconProps,
+} from '@linagora/lin-pulsar-core';
 import {
   fromDot,
   getNestedValue,
   loadAsyncComponent,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed, ref, watch } from 'vue';
 import type {
   AdvancedSearchCardOutputs,
@@ -148,21 +148,21 @@ const { t, te } = useScopedI18n(localI18n);
 const { ui } = useUiDesign();
 
 const uiProps = {
-  card: ui<LinidQCardProps>(localUiNamespace, 'q-card'),
-  icon: ui<LinidQIconProps>(localUiNamespace, 'q-icon'),
-  titleSection: ui<LinidQCardSectionProps>(
+  card: ui<LinPulsarQCardProps>(localUiNamespace, 'q-card'),
+  icon: ui<LinPulsarQIconProps>(localUiNamespace, 'q-icon'),
+  titleSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace}.title-section`,
     'q-card-section'
   ),
-  defaultFiltersSection: ui<LinidQCardSectionProps>(
+  defaultFiltersSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace}.default-filters-section`,
     'q-card-section'
   ),
-  advancedFiltersSection: ui<LinidQCardSectionProps>(
+  advancedFiltersSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace}.advanced-filters-section`,
     'q-card-section'
   ),
-  toggleButton: ui<LinidQBtnProps>(
+  toggleButton: ui<LinPulsarQBtnProps>(
     `${localUiNamespace}.toggle-button`,
     'q-btn'
   ),

@@ -43,14 +43,14 @@
 </template>
 
 <script setup lang="ts">
-import type { LinidQFileProps } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarQFileProps } from '@linagora/lin-pulsar-core';
 import {
   getNestedValue,
   setNestedValue,
   useQuasarRules,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed, ref, watch } from 'vue';
 import type {
   AttributeFieldProps,
@@ -73,7 +73,7 @@ const localValue = ref<File | null>(
   (getNestedValue(props.entity, props.definition.name) as File | null) ?? null
 );
 
-const uiProps = ui<LinidQFileProps>(
+const uiProps = ui<LinPulsarQFileProps>(
   `${props.uiNamespace}.${props.definition.name}`,
   'q-file'
 );

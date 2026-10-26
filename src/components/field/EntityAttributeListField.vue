@@ -50,12 +50,12 @@
 <script setup lang="ts">
 import {
   getNestedValue,
-  type LinidQSelectProps,
+  type LinPulsarQSelectProps,
   setNestedValue,
   useQuasarRules,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed, onMounted, ref, watch } from 'vue';
 import type {
   AttributeFieldProps,
@@ -123,7 +123,7 @@ const options = computed((): FieldListValue[] => {
   });
 });
 
-const uiProps = ui<LinidQSelectProps>(
+const uiProps = ui<LinPulsarQSelectProps>(
   `${props.uiNamespace}.${props.definition.name}`,
   'q-select'
 );

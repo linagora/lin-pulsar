@@ -32,9 +32,9 @@ const mockUi = vi.fn(() => ({}));
 const mockRules = [vi.fn(), vi.fn(), vi.fn()];
 const mockUseQuasarRules = vi.fn(() => mockRules);
 
-vi.mock('@linagora/linid-im-front-corelib', async () => {
+vi.mock('@linagora/lin-pulsar-core', async () => {
   const { getNestedValue, setNestedValue } = await vi.importActual(
-    '@linagora/linid-im-front-corelib'
+    '@linagora/lin-pulsar-core'
   );
   return {
     getNestedValue,

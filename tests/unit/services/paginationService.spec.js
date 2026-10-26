@@ -29,7 +29,7 @@ import { fetchAllPages } from '../../../src/services/paginationService';
 
 const mockGet = vi.fn();
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   getHttpClient: () => ({
     get: mockGet,
   }),

@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import { getEntityById } from '@linagora/linid-im-front-corelib';
+import { getEntityById } from '@linagora/lin-pulsar-core';
 import { flushPromises, shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import GenericDetailsPage from '../../../src/pages/GenericDetailsPage.vue';
@@ -68,8 +68,8 @@ function createModuleOptions() {
 
 let mockModuleOptions = createModuleOptions();
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
-  LinidZoneRenderer: { template: '<div />' },
+vi.mock('@linagora/lin-pulsar-core', () => ({
+  LinPulsarZoneRenderer: { template: '<div />' },
   getEntityById: vi.fn(() => Promise.resolve({ id: 'test-entity-id' })),
   getModuleHostConfiguration: () => ({
     options: mockModuleOptions,

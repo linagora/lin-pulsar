@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import type { TreeNode } from '@linagora/linid-im-front-corelib';
+import type { TreeNode } from '@linagora/lin-pulsar-core';
 
 /** The flat node properties holding the node identity and hierarchy. */
 export interface TreeNodeKeys {

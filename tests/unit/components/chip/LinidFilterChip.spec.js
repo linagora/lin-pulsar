@@ -30,8 +30,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mockHttpGet = vi.fn();
 const mockTe = vi.fn(() => true);
 
-vi.mock('@linagora/linid-im-front-corelib', async () => {
-  const actual = await vi.importActual('@linagora/linid-im-front-corelib');
+vi.mock('@linagora/lin-pulsar-core', async () => {
+  const actual = await vi.importActual('@linagora/lin-pulsar-core');
   return {
     ...actual,
     useUiDesign: () => ({ ui: vi.fn(() => ({})) }),

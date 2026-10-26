@@ -36,8 +36,8 @@ const mockRouterPush = vi.fn();
 const mockSubscription = { unsubscribe: vi.fn() };
 const mockSubscribe = vi.fn(() => mockSubscription);
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
-  LinidZoneRenderer: { template: '<div />' },
+vi.mock('@linagora/lin-pulsar-core', () => ({
+  LinPulsarZoneRenderer: { template: '<div />' },
   getHttpClient: () => ({
     get: mockHttpGet,
   }),

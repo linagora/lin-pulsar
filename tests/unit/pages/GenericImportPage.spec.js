@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import { saveEntity } from '@linagora/linid-im-front-corelib';
+import { saveEntity } from '@linagora/lin-pulsar-core';
 import { shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import GenericImportPage from '../../../src/pages/GenericImportPage.vue';
@@ -45,8 +45,8 @@ vi.mock('vue-router', () => ({
   }),
 }));
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
-  LinidZoneRenderer: {
+vi.mock('@linagora/lin-pulsar-core', () => ({
+  LinPulsarZoneRenderer: {
     template: '<div />',
   },
   saveEntity: vi.fn(() => Promise.resolve({})),

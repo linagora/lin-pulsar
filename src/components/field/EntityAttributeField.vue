@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { uiEventSubject } from '@linagora/linid-im-front-corelib';
+import { uiEventSubject } from '@linagora/lin-pulsar-core';
 import type { Component } from 'vue';
 import { computed, defineAsyncComponent } from 'vue';
 import type {

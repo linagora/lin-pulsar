@@ -26,12 +26,12 @@
 
 import type {
   DropdownClickPayload,
-  LinidQIconProps,
-  LinidQItemLabelProps,
-  LinidQItemProps,
-  LinidQItemSectionProps,
+  LinPulsarQIconProps,
+  LinPulsarQItemLabelProps,
+  LinPulsarQItemProps,
+  LinPulsarQItemSectionProps,
   MenuItem,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -61,23 +61,23 @@ export interface MenuItemUIProps {
   /**
    * The UI props for the q-item component.
    */
-  item: LinidQItemProps;
+  item: LinPulsarQItemProps;
   /**
    * The UI props for the icon section.
    */
-  iconSection: LinidQItemSectionProps;
+  iconSection: LinPulsarQItemSectionProps;
   /**
    * The UI props for the q-icon inside the icon section.
    */
-  icon: LinidQIconProps;
+  icon: LinPulsarQIconProps;
   /**
    * The UI props for the label section.
    */
-  labelSection: LinidQItemSectionProps;
+  labelSection: LinPulsarQItemSectionProps;
   /**
    * The UI props for the q-item-label.
    */
-  label: LinidQItemLabelProps;
+  label: LinPulsarQItemLabelProps;
 }
 
 /**

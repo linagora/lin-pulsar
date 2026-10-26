@@ -32,9 +32,9 @@ const { mockRoute } = vi.hoisted(() => ({
   mockRoute: { meta: {} },
 }));
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
-  LinidZoneRenderer: { template: '<div />' },
-  useLinidUiStore: () => ({ mainNavigationItems: [] }),
+vi.mock('@linagora/lin-pulsar-core', () => ({
+  LinPulsarZoneRenderer: { template: '<div />' },
+  useLinPulsarUiStore: () => ({ mainNavigationItems: [] }),
   useScopedI18n: () => ({ t: (key) => key }),
   useUiDesign: () => ({ ui: vi.fn(() => ({})) }),
 }));

@@ -27,7 +27,7 @@
 import { shallowMount, flushPromises } from '@vue/test-utils';
 import { reactive } from 'vue';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { changeLocale } from '@linagora/linid-im-front-corelib';
+import { changeLocale } from '@linagora/lin-pulsar-core';
 import HeaderProfile from '../../../../src/components/profile/HeaderProfile.vue';
 
 const mockUserStore = reactive({
@@ -45,13 +45,13 @@ const mockUiStore = reactive({
   i18n: { locale: 'fr-FR', languages: ['fr-FR', 'en-US'] },
 });
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
-  useLinidUserStore: () => mockUserStore,
-  useLinidUiStore: () => mockUiStore,
+vi.mock('@linagora/lin-pulsar-core', () => ({
+  useLinPulsarUserStore: () => mockUserStore,
+  useLinPulsarUiStore: () => mockUiStore,
   useUiDesign: () => ({ ui: mockUi }),
   useScopedI18n: () => ({ t: (key) => key }),
   changeLocale: vi.fn(() => Promise.resolve()),
-  LinidZoneRenderer: { template: '<div />' },
+  LinPulsarZoneRenderer: { template: '<div />' },
 }));
 
 describe('Test component: HeaderProfile', () => {

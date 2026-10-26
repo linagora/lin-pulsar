@@ -44,13 +44,13 @@
 </template>
 
 <script setup lang="ts">
-import type { LinidQFileProps } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarQFileProps } from '@linagora/lin-pulsar-core';
 import {
   useNotify,
   useNunjucks,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { ParseError, ParseResult } from 'papaparse';
 import Papa from 'papaparse';
 import { ref, watch } from 'vue';
@@ -72,7 +72,7 @@ const { renderString } = useNunjucks();
 
 const files = ref<File[] | null>(null);
 const isLoading = ref(false);
-const uiProps = ui<LinidQFileProps>(
+const uiProps = ui<LinPulsarQFileProps>(
   `${props.uiNamespace}.load-files-field`,
   'q-file'
 );

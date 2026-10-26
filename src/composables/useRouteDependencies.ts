@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import { getNestedValue } from '@linagora/linid-im-front-corelib';
+import { getNestedValue } from '@linagora/lin-pulsar-core';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
 import { computed, toValue } from 'vue';
 

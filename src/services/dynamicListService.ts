@@ -24,8 +24,8 @@
  * LinID Identity Manager software.
  */
 
-import type { Page, Pagination } from '@linagora/linid-im-front-corelib';
-import { getHttpClient } from '@linagora/linid-im-front-corelib';
+import type { Page, Pagination } from '@linagora/lin-pulsar-core';
+import { getHttpClient } from '@linagora/lin-pulsar-core';
 import type { DynamicListElement } from '../types/field';
 
 /**

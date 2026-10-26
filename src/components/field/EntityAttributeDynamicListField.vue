@@ -81,17 +81,17 @@
 <script setup lang="ts">
 import {
   getNestedValue,
-  type LinidQItemLabelProps,
-  type LinidQItemProps,
-  type LinidQItemSectionProps,
-  type LinidQSelectProps,
+  type LinPulsarQItemLabelProps,
+  type LinPulsarQItemProps,
+  type LinPulsarQItemSectionProps,
+  type LinPulsarQSelectProps,
   type Page,
   setNestedValue,
   useNunjucks,
   useQuasarRules,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { getDynamicListPage } from '../../services/dynamicListService';
 import { useRouteDependencies } from '../../composables/useRouteDependencies';
@@ -163,14 +163,14 @@ const localUiNamespace = `${props.uiNamespace}.${props.definition.name}`;
 
 /** The option entries are only used when a `disabledText` translation calls for the two-line layout. */
 const uiProps = {
-  select: ui<LinidQSelectProps>(localUiNamespace, 'q-select'),
-  item: ui<LinidQItemProps>(localUiNamespace, 'q-item'),
-  section: ui<LinidQItemSectionProps>(localUiNamespace, 'q-item-section'),
-  label: ui<LinidQItemLabelProps>(localUiNamespace, 'q-item-label'),
+  select: ui<LinPulsarQSelectProps>(localUiNamespace, 'q-select'),
+  item: ui<LinPulsarQItemProps>(localUiNamespace, 'q-item'),
+  section: ui<LinPulsarQItemSectionProps>(localUiNamespace, 'q-item-section'),
+  label: ui<LinPulsarQItemLabelProps>(localUiNamespace, 'q-item-label'),
   /** A caption by default: the design configuration can still turn it into any other label style. */
   disabledCaption: {
     caption: true,
-    ...ui<LinidQItemLabelProps>(
+    ...ui<LinPulsarQItemLabelProps>(
       `${localUiNamespace}.disabled-caption`,
       'q-item-label'
     ),

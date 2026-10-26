@@ -74,8 +74,8 @@ vi.mock('../../../../src/services/diceBearLoaderService', () => ({
   loadDiceBearStyle: mockLoadDiceBearStyle,
 }));
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
-  LinidZoneRenderer: { template: '<div />' },
+vi.mock('@linagora/lin-pulsar-core', () => ({
+  LinPulsarZoneRenderer: { template: '<div />' },
   useNunjucks: () => ({ renderString: mockRender }),
   uiEventSubject: { next: mockUiEventNext, subscribe: mockUiEventSubscribe },
   useScopedI18n: mockUseScopedI18n,
@@ -105,7 +105,7 @@ describe('Test component: EntityProfilePanel', () => {
           'MenuButton',
           'FormDialogButton',
           'StatusBadge',
-          'LinidZoneRenderer',
+          'LinPulsarZoneRenderer',
           'QCard',
           'QCardSection',
           'QImg',

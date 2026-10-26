@@ -25,15 +25,15 @@
  */
 
 import type {
-  LinidFilter,
-  LinidFilterSet,
-  LinidQBtnProps,
-  LinidQIconProps,
-  LinidQItemProps,
-  LinidQItemSectionProps,
-  LinidQListProps,
-  LinidQSeparatorProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarFilter,
+  LinPulsarFilterSet,
+  LinPulsarQBtnProps,
+  LinPulsarQIconProps,
+  LinPulsarQItemProps,
+  LinPulsarQItemSectionProps,
+  LinPulsarQListProps,
+  LinPulsarQSeparatorProps,
+} from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -43,11 +43,11 @@ export interface LinidFavoritePanelProps extends CommonComponentProps {
   /**
    * Available favorites to display in the navigation list.
    */
-  favorites: LinidFilterSet[];
+  favorites: LinPulsarFilterSet[];
   /**
    * Filters used.
    */
-  filters: LinidFilter[];
+  filters: LinPulsarFilter[];
 }
 
 /**
@@ -57,80 +57,80 @@ export interface LinidFavoritePanelUIProps {
   /**
    * The UI properties for the filter navigation list.
    */
-  list: LinidQListProps;
+  list: LinPulsarQListProps;
   /**
    * The UI properties for each filter item.
    */
-  item: LinidQItemProps;
+  item: LinPulsarQItemProps;
   /**
    * The UI properties for the icon item section (avatar).
    */
-  iconSection: LinidQItemSectionProps;
+  iconSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for the icon in icon item section (avatar).
    */
-  icon: LinidQIconProps;
+  icon: LinPulsarQIconProps;
   /**
    * The UI properties for the no-data icon item section (avatar).
    */
-  noDataIconSection: LinidQItemSectionProps;
+  noDataIconSection: LinPulsarQItemSectionProps;
   /**
    The UI properties for the no-data label item section.
    */
-  noDataLabelSection: LinidQItemSectionProps;
+  noDataLabelSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for the  no-data icon in icon item section (avatar).
    */
-  noDataIcon: LinidQIconProps;
+  noDataIcon: LinPulsarQIconProps;
   /**
    * The UI properties for the label item section.
    */
-  labelSection: LinidQItemSectionProps;
+  labelSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for the icon displayed in the title bar.
    */
-  titleIcon: LinidQIconProps;
+  titleIcon: LinPulsarQIconProps;
   /**
    * The UI properties for the horizontal separator below the title.
    */
-  titleSeparator: LinidQSeparatorProps;
+  titleSeparator: LinPulsarQSeparatorProps;
   /**
    * The UI properties for the rename item section.
    */
-  renameSection: LinidQItemSectionProps;
+  renameSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for the rename button.
    */
-  renameButton: LinidQBtnProps;
+  renameButton: LinPulsarQBtnProps;
   /**
    * The UI properties for the override item section.
    */
-  overrideSection: LinidQItemSectionProps;
+  overrideSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for the override button.
    */
-  overrideButton: LinidQBtnProps;
+  overrideButton: LinPulsarQBtnProps;
   /**
    * The UI properties for the delete item section.
    */
-  deleteSection: LinidQItemSectionProps;
+  deleteSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for the delete button.
    */
-  deleteButton: LinidQBtnProps;
+  deleteButton: LinPulsarQBtnProps;
   /**
    * The UI properties for the create button.
    */
-  createButton: LinidQBtnProps;
+  createButton: LinPulsarQBtnProps;
 }
 
 /**
  * Defines the events emitted by the LinidFavoritePanel component.
  */
 export type LinidFavoritePanelOutputs = {
-  (e: 'apply', favorite: LinidFilterSet): void;
-  (e: 'delete', favorite: LinidFilterSet): void;
-  (e: 'rename', favorite: LinidFilterSet): void;
+  (e: 'apply', favorite: LinPulsarFilterSet): void;
+  (e: 'delete', favorite: LinPulsarFilterSet): void;
+  (e: 'rename', favorite: LinPulsarFilterSet): void;
   (e: 'create'): void;
-  (e: 'override', favorite: LinidFilterSet): void;
+  (e: 'override', favorite: LinPulsarFilterSet): void;
 };

@@ -28,13 +28,13 @@ import { shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import TextSearchFilterPanel from '../../../../src/components/smart-filter/TextSearchFilterPanel.vue';
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   useUiDesign: () => ({ ui: vi.fn(() => ({})) }),
   useScopedI18n: () => ({
     t: vi.fn((key) => key),
     translateOrDefault: vi.fn((_defaultValue, key) => key),
   }),
-  LinidFilterValue: class {
+  LinPulsarFilterValue: class {
     constructor(isNegation, operator, value) {
       this.isNegation = isNegation;
       this.operator = operator;

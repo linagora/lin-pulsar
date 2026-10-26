@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import type { TreeNodeType } from '@linagora/linid-im-front-corelib';
+import type { TreeNodeType } from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**

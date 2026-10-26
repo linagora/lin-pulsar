@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import type { ModulePageLifecycleHostOptions } from '@linagora/linid-im-front-corelib';
+import type { ModulePageLifecycleHostOptions } from '@linagora/lin-pulsar-core';
 
 /**
  * Base configuration options for a generic page module.

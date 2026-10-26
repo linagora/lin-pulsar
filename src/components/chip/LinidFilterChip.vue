@@ -70,19 +70,19 @@ import type {
   LinidFilterChipProps,
 } from '../../types/linidFilterChip';
 import type {
-  LinidFilterDynamicLabelOptions,
-  LinidFilterValue,
-  LinidQAvatarProps,
-  LinidQChipProps,
-  LinidQSpinnerProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarFilterDynamicLabelOptions,
+  LinPulsarFilterValue,
+  LinPulsarQAvatarProps,
+  LinPulsarQChipProps,
+  LinPulsarQSpinnerProps,
+} from '@linagora/lin-pulsar-core';
 import {
   getHttpClient,
   getNestedValue,
   useNunjucks,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { onMounted, ref } from 'vue';
 
 /** Status returned by the API when the response only holds a part of the matching items. */
@@ -92,7 +92,7 @@ const props = defineProps<LinidFilterChipProps>();
 const emits = defineEmits<LinidFilterChipOutputs>();
 
 const { t, te, translateOrDefault } = useScopedI18n(
-  `${props.i18nScope}.LinidFilterChip.${props.filter.name}`
+  `${props.i18nScope}.LinPulsarFilterChip.${props.filter.name}`
 );
 const { ui } = useUiDesign();
 const { renderString } = useNunjucks();
@@ -100,16 +100,16 @@ const { renderString } = useNunjucks();
 const localUiNamespace = `${props.uiNamespace}.linid-filter-chip.${props.filter.name}`;
 
 const uiProps = {
-  avatar: ui<LinidQAvatarProps>(localUiNamespace, 'q-avatar'),
-  chip: ui<LinidQChipProps>(localUiNamespace, 'q-chip'),
-  spinner: ui<LinidQSpinnerProps>(localUiNamespace, 'q-spinner'),
+  avatar: ui<LinPulsarQAvatarProps>(localUiNamespace, 'q-avatar'),
+  chip: ui<LinPulsarQChipProps>(localUiNamespace, 'q-chip'),
+  spinner: ui<LinPulsarQSpinnerProps>(localUiNamespace, 'q-spinner'),
 };
 
 /**
  * Values of the filter, wrapped in a ref so that the items resolved asynchronously are written
- * back to the original `LinidFilterValue` instances and re-render the chip.
+ * back to the original `LinPulsarFilterValue` instances and re-render the chip.
  */
-const values = ref<LinidFilterValue[]>(props.filter.values);
+const values = ref<LinPulsarFilterValue[]>(props.filter.values);
 const loading = ref(false);
 
 /**
@@ -121,7 +121,7 @@ const loading = ref(false);
  * @param value - The filter value to display.
  * @returns The translated label, or the raw value when there is no item or no `value` key.
  */
-function toLabel(value: LinidFilterValue): string {
+function toLabel(value: LinPulsarFilterValue): string {
   if (!value.item || !te('value')) {
     return value.value;
   }
@@ -204,7 +204,7 @@ function assignItems(
  * @returns A promise resolved once the items that could be retrieved have been assigned.
  */
 async function resolveInOneRequest(
-  options: LinidFilterDynamicLabelOptions
+  options: LinPulsarFilterDynamicLabelOptions
 ): Promise<void> {
   if (!options.valuePath) {
     return;
@@ -241,7 +241,7 @@ async function resolveInOneRequest(
  * @returns A promise resolved once every request has settled.
  */
 async function resolveOneRequestPerValue(
-  options: LinidFilterDynamicLabelOptions
+  options: LinPulsarFilterDynamicLabelOptions
 ): Promise<void> {
   await Promise.allSettled(
     values.value

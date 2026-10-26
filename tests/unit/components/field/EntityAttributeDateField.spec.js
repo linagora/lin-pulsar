@@ -44,9 +44,9 @@ const mockValidateFromApi = vi.fn(() => vi.fn());
 const mockTranslateOrDefault = vi.fn((defaultValue) => defaultValue);
 const mockGlobalTe = vi.fn(() => false);
 
-vi.mock('@linagora/linid-im-front-corelib', async () => {
+vi.mock('@linagora/lin-pulsar-core', async () => {
   const { getNestedValue, setNestedValue } = await vi.importActual(
-    '@linagora/linid-im-front-corelib'
+    '@linagora/lin-pulsar-core'
   );
   return {
     getNestedValue,

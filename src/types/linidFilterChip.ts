@@ -25,7 +25,7 @@
  */
 
 import type { CommonComponentProps } from './common';
-import type { LinidFilter } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarFilter } from '@linagora/lin-pulsar-core';
 
 /**
  * Props for the LinidFilterChip component.
@@ -34,7 +34,7 @@ export interface LinidFilterChipProps extends CommonComponentProps {
   /**
    * Active filter to display.
    */
-  filter: LinidFilter;
+  filter: LinPulsarFilter;
 }
 
 /**

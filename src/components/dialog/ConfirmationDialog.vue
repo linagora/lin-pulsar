@@ -71,14 +71,14 @@
 
 <script setup lang="ts">
 import type {
-  LinidQCardSectionProps,
-  LinidQDialogProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarQCardSectionProps,
+  LinPulsarQDialogProps,
+} from '@linagora/lin-pulsar-core';
 import {
   loadAsyncComponent,
   useDialog,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed, ref } from 'vue';
 import type { ConfirmationDialogEvent } from '../../types/dialog';
 import { DialogKey } from '../../types/dialog';
@@ -100,12 +100,12 @@ const localUiNamespace = computed(
 
 const { ui } = useUiDesign();
 const uiProps = computed(() => ({
-  dialog: ui<LinidQDialogProps>(localUiNamespace.value, 'q-dialog'),
-  titleSection: ui<LinidQCardSectionProps>(
+  dialog: ui<LinPulsarQDialogProps>(localUiNamespace.value, 'q-dialog'),
+  titleSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.title-section`,
     'q-card-section'
   ),
-  contentSection: ui<LinidQCardSectionProps>(
+  contentSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.content-section`,
     'q-card-section'
   ),

@@ -25,9 +25,9 @@
  */
 
 import type {
-  LinidFilter,
-  LinidFilterSet,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarFilter,
+  LinPulsarFilterSet,
+} from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -37,7 +37,7 @@ export interface LinidSmartFilterProps extends CommonComponentProps {
   /**
    * Represents the active filter state.
    */
-  filters?: LinidFilter[];
+  filters?: LinPulsarFilter[];
 
   /**
    * Available filter definitions and saved filter sets.
@@ -46,12 +46,12 @@ export interface LinidSmartFilterProps extends CommonComponentProps {
     /**
      * Represents all usable filters.
      */
-    filters?: LinidFilter[];
+    filters?: LinPulsarFilter[];
 
     /**
      * Represents saved search configurations.
      */
-    filterSets?: LinidFilterSet[];
+    filterSets?: LinPulsarFilterSet[];
   };
 
   /**
@@ -64,10 +64,10 @@ export interface LinidSmartFilterProps extends CommonComponentProps {
  * Defines the events emitted by the LinidSmartFilter component.
  */
 export type LinidSmartFilterOutputs = {
-  (e: 'update:filters', filters: LinidFilter[]): void;
-  (e: 'apply:favorite', favorite: LinidFilterSet): void;
-  (e: 'rename:favorite', favorite: LinidFilterSet): void;
-  (e: 'delete:favorite', favorite: LinidFilterSet): void;
+  (e: 'update:filters', filters: LinPulsarFilter[]): void;
+  (e: 'apply:favorite', favorite: LinPulsarFilterSet): void;
+  (e: 'rename:favorite', favorite: LinPulsarFilterSet): void;
+  (e: 'delete:favorite', favorite: LinPulsarFilterSet): void;
   (e: 'create:favorite'): void;
-  (e: 'override:favorite', favorite: LinidFilterSet): void;
+  (e: 'override:favorite', favorite: LinPulsarFilterSet): void;
 };

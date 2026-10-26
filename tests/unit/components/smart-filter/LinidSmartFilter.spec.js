@@ -28,9 +28,9 @@ import { shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import LinidSmartFilter from '../../../../src/components/smart-filter/LinidSmartFilter.vue';
 
-vi.mock('@linagora/linid-im-front-corelib', () => {
+vi.mock('@linagora/lin-pulsar-core', () => {
   let idCounter = 0;
-  class LinidFilter {
+  class LinPulsarFilter {
     constructor(name, type, options, values, dynamicLabelOptions) {
       idCounter += 1;
       this.id = `generated-${name}-${idCounter}`;
@@ -42,7 +42,7 @@ vi.mock('@linagora/linid-im-front-corelib', () => {
     }
   }
   return {
-    LinidFilter,
+    LinPulsarFilter,
     useUiDesign: () => ({ ui: vi.fn(() => ({})) }),
     useScopedI18n: () => ({
       t: vi.fn((key) => key),

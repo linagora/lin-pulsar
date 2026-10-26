@@ -24,8 +24,8 @@
  * LinID Identity Manager software.
  */
 
-import type { Page } from '@linagora/linid-im-front-corelib';
-import { getHttpClient } from '@linagora/linid-im-front-corelib';
+import type { Page } from '@linagora/lin-pulsar-core';
+import { getHttpClient } from '@linagora/lin-pulsar-core';
 
 /**
  * Fetches every page of a paginated endpoint and accumulates their content. Pages are requested

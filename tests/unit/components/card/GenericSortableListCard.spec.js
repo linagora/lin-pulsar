@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import { uiEventSubject } from '@linagora/linid-im-front-corelib';
+import { uiEventSubject } from '@linagora/lin-pulsar-core';
 import { flushPromises, shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import GenericSortableListCard from '../../../../src/components/card/GenericSortableListCard.vue';
@@ -39,9 +39,9 @@ const mockHttpPost = vi.fn(() => Promise.resolve({ data: {} }));
 const mockHttpPut = vi.fn(() => Promise.resolve({ data: {} }));
 const mockHttpDelete = vi.fn(() => Promise.resolve({ data: {} }));
 
-vi.mock('@linagora/linid-im-front-corelib', async () => {
+vi.mock('@linagora/lin-pulsar-core', async () => {
   const { deepEqual, getNestedValue, setNestedValue } = await vi.importActual(
-    '@linagora/linid-im-front-corelib'
+    '@linagora/lin-pulsar-core'
   );
   return {
     getNestedValue,
@@ -61,7 +61,7 @@ vi.mock('@linagora/linid-im-front-corelib', async () => {
       Notify: mockNotify,
     }),
     useUiDesign: () => ({ ui: () => ({}) }),
-    useLinidZoneStore: () => ({
+    useLinPulsarZoneStore: () => ({
       hasZoneEntries: (zone) => (mockZones[zone]?.length ?? 0) > 0,
     }),
     useValueFormatter: () => ({
@@ -142,7 +142,7 @@ describe('Test component: GenericSortableListCard', () => {
     return shallowMount(GenericSortableListCard, {
       props: { ...defaultProps, ...props },
       slots,
-      global: { stubs: { LinidZoneRenderer: true } },
+      global: { stubs: { LinPulsarZoneRenderer: true } },
     });
   }
 

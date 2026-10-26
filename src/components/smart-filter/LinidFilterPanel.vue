@@ -89,13 +89,13 @@
 
 <script setup lang="ts">
 import type {
-  LinidQIconProps,
-  LinidQItemProps,
-  LinidQItemSectionProps,
-  LinidQListProps,
-  LinidQSeparatorProps,
-} from '@linagora/linid-im-front-corelib';
-import { useScopedI18n, useUiDesign } from '@linagora/linid-im-front-corelib';
+  LinPulsarQIconProps,
+  LinPulsarQItemProps,
+  LinPulsarQItemSectionProps,
+  LinPulsarQListProps,
+  LinPulsarQSeparatorProps,
+} from '@linagora/lin-pulsar-core';
+import { useScopedI18n, useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed, watch } from 'vue';
 import type {
   LinidFilterPanelOutputs,
@@ -106,7 +106,7 @@ import type {
 const props = defineProps<LinidFilterPanelProps>();
 const emit = defineEmits<LinidFilterPanelOutputs>();
 
-const { t } = useScopedI18n(`${props.i18nScope}.LinidFilterPanel`);
+const { t } = useScopedI18n(`${props.i18nScope}.LinPulsarFilterPanel`);
 const { ui } = useUiDesign();
 
 const localUiNamespace = `${props.uiNamespace}.linid-filter-panel`;
@@ -118,14 +118,17 @@ const filterTypes = computed(() => [
 ]);
 
 const uiProps = computed<LinidFilterPanelUIProps>(() => ({
-  titleIcon: ui<LinidQIconProps>(headerUiNamespace, 'q-icon'),
-  titleSeparator: ui<LinidQSeparatorProps>(headerUiNamespace, 'q-separator'),
-  list: ui<LinidQListProps>(contentUiNamespace, 'q-list'),
-  item: ui<LinidQItemProps>(contentUiNamespace, 'q-item'),
+  titleIcon: ui<LinPulsarQIconProps>(headerUiNamespace, 'q-icon'),
+  titleSeparator: ui<LinPulsarQSeparatorProps>(
+    headerUiNamespace,
+    'q-separator'
+  ),
+  list: ui<LinPulsarQListProps>(contentUiNamespace, 'q-list'),
+  item: ui<LinPulsarQItemProps>(contentUiNamespace, 'q-item'),
   types: filterTypes.value.reduce<LinidFilterPanelUIProps['types']>(
     (acc, type) => {
       acc[type] = {
-        icon: ui<LinidQIconProps>(
+        icon: ui<LinPulsarQIconProps>(
           `${contentUiNamespace}.types.${type}`,
           'q-icon'
         ),
@@ -134,15 +137,18 @@ const uiProps = computed<LinidFilterPanelUIProps>(() => ({
     },
     {}
   ),
-  iconSection: ui<LinidQItemSectionProps>(
+  iconSection: ui<LinPulsarQItemSectionProps>(
     `${contentUiNamespace}.icon-section`,
     'q-item-section'
   ),
-  labelSection: ui<LinidQItemSectionProps>(
+  labelSection: ui<LinPulsarQItemSectionProps>(
     `${contentUiNamespace}.label-section`,
     'q-item-section'
   ),
-  contentSeparator: ui<LinidQSeparatorProps>(contentUiNamespace, 'q-separator'),
+  contentSeparator: ui<LinPulsarQSeparatorProps>(
+    contentUiNamespace,
+    'q-separator'
+  ),
 }));
 
 /**

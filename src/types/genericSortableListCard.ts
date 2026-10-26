@@ -26,18 +26,18 @@
 
 import type {
   FormatterConfiguration,
-  LinidAttributeConfiguration,
-  LinidDraggableProps,
-  LinidQBtnProps,
-  LinidQCardProps,
-  LinidQCardSectionProps,
-  LinidQIconProps,
-  LinidQItemLabelProps,
-  LinidQItemProps,
-  LinidQItemSectionProps,
-  LinidQListProps,
-  LinidQScrollAreaProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarAttributeConfiguration,
+  LinPulsarDraggableProps,
+  LinPulsarQBtnProps,
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
+  LinPulsarQIconProps,
+  LinPulsarQItemLabelProps,
+  LinPulsarQItemProps,
+  LinPulsarQItemSectionProps,
+  LinPulsarQListProps,
+  LinPulsarQScrollAreaProps,
+} from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -69,9 +69,9 @@ export interface GenericSortableListCardProps extends CommonComponentProps {
 
   /**
    * Form fields rendered in the creation form dialog, defined as an array of
-   * LinidAttributeConfiguration objects (see FormDialog).
+   * LinPulsarAttributeConfiguration objects (see FormDialog).
    */
-  formFields: LinidAttributeConfiguration[];
+  formFields: LinPulsarAttributeConfiguration[];
 
   /**
    * API endpoints used to fetch, create, delete and update items.
@@ -183,95 +183,95 @@ export interface GenericSortableListCardUIProps {
   /**
    * The UI properties for the card container.
    */
-  card: LinidQCardProps;
+  card: LinPulsarQCardProps;
   /**
    * The UI properties for the header section holding the title and the actions.
    */
-  headerSection: LinidQCardSectionProps;
+  headerSection: LinPulsarQCardSectionProps;
   /**
    * The UI properties for the section displaying the unsaved changes hint.
    */
-  unsavedChangesSection: LinidQCardSectionProps;
+  unsavedChangesSection: LinPulsarQCardSectionProps;
   /**
    * The UI properties for the section wrapping the sortable list.
    */
-  listSection: LinidQCardSectionProps;
+  listSection: LinPulsarQCardSectionProps;
   /**
    * The UI properties for the scroll area wrapping the sortable list.
    */
-  scrollArea: LinidQScrollAreaProps;
+  scrollArea: LinPulsarQScrollAreaProps;
   /**
    * The UI properties for the sortable list.
    */
-  list: LinidQListProps;
+  list: LinPulsarQListProps;
   /**
    * The UI properties for each list item.
    */
-  item: LinidQItemProps;
+  item: LinPulsarQItemProps;
   /**
    * The UI properties for the header row rendered above the sortable list.
    */
-  headerItem: LinidQItemProps;
+  headerItem: LinPulsarQItemProps;
   /**
    * The UI properties for the section wrapping each field label in the header row.
    */
-  fieldLabelSection: LinidQItemSectionProps;
+  fieldLabelSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for each field label displayed in the header row.
    */
-  fieldLabel: LinidQItemLabelProps;
+  fieldLabel: LinPulsarQItemLabelProps;
   /**
    * The UI properties for the section wrapping each field value in a list item.
    */
-  fieldValueSection: LinidQItemSectionProps;
+  fieldValueSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for each field value displayed in a list item.
    */
-  fieldValue: LinidQItemLabelProps;
+  fieldValue: LinPulsarQItemLabelProps;
   /**
    * The UI properties passed to the vuedraggable container (animation, handle, scroll, etc.).
    */
-  draggable: LinidDraggableProps;
+  draggable: LinPulsarDraggableProps;
   /**
    * The UI properties for the icon item section (avatar).
    */
-  iconSection: LinidQItemSectionProps;
+  iconSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for the icon in icon item section (avatar).
    */
-  icon: LinidQIconProps;
+  icon: LinPulsarQIconProps;
   /**
    * The UI properties for the no-data icon item section (avatar).
    */
-  noDataIconSection: LinidQItemSectionProps;
+  noDataIconSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for the no-data label item section.
    */
-  noDataLabelSection: LinidQItemSectionProps;
+  noDataLabelSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for the no-data icon in icon item section (avatar).
    */
-  noDataIcon: LinidQIconProps;
+  noDataIcon: LinPulsarQIconProps;
   /**
    * The UI properties for the item actions section.
    */
-  itemActionsSection: LinidQItemSectionProps;
+  itemActionsSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for the edit button.
    */
-  editButton: LinidQBtnProps;
+  editButton: LinPulsarQBtnProps;
   /**
    * The UI properties for the delete button.
    */
-  deleteButton: LinidQBtnProps;
+  deleteButton: LinPulsarQBtnProps;
   /**
    * The UI properties for the add button.
    */
-  addButton: LinidQBtnProps;
+  addButton: LinPulsarQBtnProps;
   /**
    * The UI properties for the save button.
    */
-  saveButton: LinidQBtnProps;
+  saveButton: LinPulsarQBtnProps;
 }
 
 /**

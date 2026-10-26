@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import type { LinidFilterDynamicLabelOptions } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarFilterDynamicLabelOptions } from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -75,5 +75,5 @@ export interface TreeSearchFilterProps extends CommonComponentProps {
    * Dynamic label configuration of the selected filter. When set, each emitted filter value
    * carries its tree node as the resolved item, sparing the chip its dynamic item resolution.
    */
-  dynamicLabelOptions?: LinidFilterDynamicLabelOptions;
+  dynamicLabelOptions?: LinPulsarFilterDynamicLabelOptions;
 }

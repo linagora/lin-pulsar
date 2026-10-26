@@ -73,15 +73,15 @@
 <script setup lang="ts">
 import {
   getNestedValue,
-  type LinidQBtnProps,
-  type LinidQFieldProps,
+  type LinPulsarQBtnProps,
+  type LinPulsarQFieldProps,
   setNestedValue,
   type TreeNode,
   useNunjucks,
   useQuasarRules,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { fetchAllPages } from '../../services/paginationService';
 import { useRouteDependencies } from '../../composables/useRouteDependencies';
@@ -124,8 +124,8 @@ const localValue = ref(
   getNestedValue(props.entity, props.definition.name) ?? null
 );
 
-const uiProps = ui<LinidQFieldProps>(localUiNamespace, 'q-field');
-const uiRetryProps = ui<LinidQBtnProps>(
+const uiProps = ui<LinPulsarQFieldProps>(localUiNamespace, 'q-field');
+const uiRetryProps = ui<LinPulsarQBtnProps>(
   `${localUiNamespace}.retry-button`,
   'q-btn'
 );

@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { useNunjucks, useScopedI18n } from '@linagora/linid-im-front-corelib';
+import { useNunjucks, useScopedI18n } from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
 import { useRouteDependencies } from '../../composables/useRouteDependencies';
 import type { EntityLinkProps } from '../../types/entityLink';

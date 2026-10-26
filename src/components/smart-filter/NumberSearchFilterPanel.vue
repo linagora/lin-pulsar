@@ -69,17 +69,17 @@
 
 <script setup lang="ts">
 import type {
-  LinidFilterOperator,
-  LinidQBtnProps,
-  LinidQCheckboxProps,
-  LinidQInputProps,
-  LinidQOptionGroupProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarFilterOperator,
+  LinPulsarQBtnProps,
+  LinPulsarQCheckboxProps,
+  LinPulsarQInputProps,
+  LinPulsarQOptionGroupProps,
+} from '@linagora/lin-pulsar-core';
 import {
-  LinidFilterValue,
+  LinPulsarFilterValue,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed, ref } from 'vue';
 import type { LinidFilterPanelSearchOutputs } from '../../types/linidFilterPanel';
 import type {
@@ -94,7 +94,7 @@ const OPERATOR_KEYS: NumberFilterOperatorKey[] = [
   'equals',
 ];
 
-const OPERATOR_MAP: Record<NumberFilterOperatorKey, LinidFilterOperator> = {
+const OPERATOR_MAP: Record<NumberFilterOperatorKey, LinPulsarFilterOperator> = {
   inferior: 'lt_',
   superior: 'gt_',
   equals: '',
@@ -111,10 +111,13 @@ const { ui } = useUiDesign();
 const localUiNamespace = `${props.uiNamespace}.number-search-filter-panel`;
 
 const uiProps: NumberSearchFilterPanelUIProps = {
-  input: ui<LinidQInputProps>(localUiNamespace, 'q-input'),
-  checkbox: ui<LinidQCheckboxProps>(localUiNamespace, 'q-checkbox'),
-  optionGroup: ui<LinidQOptionGroupProps>(localUiNamespace, 'q-option-group'),
-  searchButton: ui<LinidQBtnProps>(localUiNamespace, 'q-btn'),
+  input: ui<LinPulsarQInputProps>(localUiNamespace, 'q-input'),
+  checkbox: ui<LinPulsarQCheckboxProps>(localUiNamespace, 'q-checkbox'),
+  optionGroup: ui<LinPulsarQOptionGroupProps>(
+    localUiNamespace,
+    'q-option-group'
+  ),
+  searchButton: ui<LinPulsarQBtnProps>(localUiNamespace, 'q-btn'),
 };
 
 const inputValue = ref('');
@@ -131,11 +134,11 @@ const operators = computed(() =>
 );
 
 /**
- * Builds the LinidFilterValue for the current form state.
+ * Builds the LinPulsarFilterValue for the current form state.
  * @returns The constructed filter value.
  */
-function buildFilterValue(): LinidFilterValue {
-  return new LinidFilterValue(
+function buildFilterValue(): LinPulsarFilterValue {
+  return new LinPulsarFilterValue(
     isNegation.value,
     OPERATOR_MAP[selectedOperatorKey.value],
     inputValue.value

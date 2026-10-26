@@ -153,16 +153,16 @@
 
 <script lang="ts" setup>
 import type {
-  LinidFilterType,
-  LinidQFieldProps,
-  LinidQIconProps,
-  LinidQMenuProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarFilterType,
+  LinPulsarQFieldProps,
+  LinPulsarQIconProps,
+  LinPulsarQMenuProps,
+} from '@linagora/lin-pulsar-core';
 import {
-  LinidFilter,
+  LinPulsarFilter,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { Component } from 'vue';
 import { computed, ref, watch } from 'vue';
 import type { LinidFilterPanelSearchPayload } from '../../types/linidFilterPanel';
@@ -179,7 +179,7 @@ import NumberSearchFilterPanel from './NumberSearchFilterPanel.vue';
 import TextSearchFilterPanel from './TextSearchFilterPanel.vue';
 import TreeSearchFilterPanel from './TreeSearchFilterPanel.vue';
 
-const PANEL_COMPONENTS: Record<LinidFilterType, Component> = {
+const PANEL_COMPONENTS: Record<LinPulsarFilterType, Component> = {
   text: TextSearchFilterPanel,
   number: NumberSearchFilterPanel,
   date: DateSearchFilterPanel,
@@ -198,7 +198,7 @@ const { translateOrDefault } = useScopedI18n(localI18nScope);
 const isFilterMenuOpen = ref(false);
 const selectedFilterName = ref('');
 
-let activeFilters: LinidFilter[] = [];
+let activeFilters: LinPulsarFilter[] = [];
 
 watch(
   () => props.filters,
@@ -217,23 +217,26 @@ watch(isFilterMenuOpen, (isOpen) => {
 });
 
 const uiProps = {
-  field: ui<LinidQFieldProps>(`${localUiNamespace}`, 'q-field'),
-  menu: ui<LinidQMenuProps>(`${localUiNamespace}`, 'q-menu'),
-  iconSearch: ui<LinidQIconProps>(`${localUiNamespace}.iconSearch`, 'q-icon'),
-  iconClear: ui<LinidQIconProps>(`${localUiNamespace}.iconClear`, 'q-icon'),
-  separator: ui<LinidQIconProps>(`${localUiNamespace}`, 'q-separator'),
-  iconMenuClose: ui<LinidQIconProps>(
+  field: ui<LinPulsarQFieldProps>(`${localUiNamespace}`, 'q-field'),
+  menu: ui<LinPulsarQMenuProps>(`${localUiNamespace}`, 'q-menu'),
+  iconSearch: ui<LinPulsarQIconProps>(
+    `${localUiNamespace}.iconSearch`,
+    'q-icon'
+  ),
+  iconClear: ui<LinPulsarQIconProps>(`${localUiNamespace}.iconClear`, 'q-icon'),
+  separator: ui<LinPulsarQIconProps>(`${localUiNamespace}`, 'q-separator'),
+  iconMenuClose: ui<LinPulsarQIconProps>(
     `${localUiNamespace}.iconMenuClose`,
     'q-icon'
   ),
-  iconMenuOpen: ui<LinidQIconProps>(
+  iconMenuOpen: ui<LinPulsarQIconProps>(
     `${localUiNamespace}.iconMenuOpen`,
     'q-icon'
   ),
 };
 
 /** The filter object corresponding to the currently selected name in the panel. */
-const selectedFilter = computed<LinidFilter | undefined>(() =>
+const selectedFilter = computed<LinPulsarFilter | undefined>(() =>
   (props.options?.filters ?? []).find(
     (f) => f.name === selectedFilterName.value
   )
@@ -250,7 +253,7 @@ const currentPanelProps = computed(() => ({
 
 /**
  * Called when a search panel emits a `search` event.
- * Always pushes a new `LinidFilter` entry to `activeFilters`, even if one with the same field name
+ * Always pushes a new `LinPulsarFilter` entry to `activeFilters`, even if one with the same field name
  * already exists — each search produces its own chip with its own values. No-ops when no filter is
  * selected or values is empty.
  * @param payload - The search payload carrying the target field and new values.
@@ -261,7 +264,7 @@ function onSearch(payload: LinidFilterPanelSearchPayload): void {
   }
 
   activeFilters.push(
-    new LinidFilter(
+    new LinPulsarFilter(
       payload.field,
       selectedFilter.value?.type,
       selectedFilter.value?.options,
