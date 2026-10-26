@@ -25,10 +25,10 @@
  */
 
 import type {
-  LinidQRouteTabProps,
-  LinidQTabsProps,
+  LinPulsarQRouteTabProps,
+  LinPulsarQTabsProps,
   NavigationMenuItem,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -58,9 +58,9 @@ export interface NavigationMenuUIProps {
   /**
    * Tabs props.
    */
-  tabs: LinidQTabsProps;
+  tabs: LinPulsarQTabsProps;
   /**
    * Route tab props mapped by item ID.
    */
-  routes: Record<string, LinidQRouteTabProps>;
+  routes: Record<string, LinPulsarQRouteTabProps>;
 }

@@ -30,7 +30,7 @@
     data-cy="generics-table-page"
     class="q-pa-md flex column items-center generics-table-page"
   >
-    <LinidZoneRenderer
+    <LinPulsarZoneRenderer
       :zone="`${instanceId}.header.before`"
       :instance-id="instanceId"
       :ui-namespace="uiNamespace"
@@ -38,7 +38,7 @@
     />
 
     <div class="row items-center generics-table-page--header">
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="`${instanceId}.header.prefix`"
         :instance-id="instanceId"
         :ui-namespace="uiNamespace"
@@ -51,7 +51,7 @@
       >
         {{ t('title') }}
       </h1>
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="`${instanceId}.header.suffix`"
         :instance-id="instanceId"
         :ui-namespace="uiNamespace"
@@ -82,7 +82,7 @@
         :show-cancel-button="false"
       >
         <template #append-buttons>
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${instanceId}.header.actions`"
             :ui-namespace="`${uiNamespace}.buttons-card`"
             :i18n-scope="`${i18nScope}.ButtonsCard`"
@@ -98,14 +98,14 @@
         </template>
       </ButtonsCard>
     </div>
-    <LinidZoneRenderer
+    <LinPulsarZoneRenderer
       :zone="`${instanceId}.header.after`"
       :instance-id="instanceId"
       :ui-namespace="uiNamespace"
       :i18n-scope="i18nScope"
     />
 
-    <LinidZoneRenderer
+    <LinPulsarZoneRenderer
       :zone="`${instanceId}.content.before`"
       :instance-id="instanceId"
       :ui-namespace="uiNamespace"
@@ -136,7 +136,7 @@
           >
             <template v-if="col.name === 'table_actions'">
               <div class="flex justify-end q-gutter-x-sm">
-                <LinidZoneRenderer
+                <LinPulsarZoneRenderer
                   :zone="`${instanceId}.row-actions`"
                   :entity="props.row"
                   :row="props.row"
@@ -155,7 +155,7 @@
               </div>
             </template>
             <template v-else-if="hasColumnZone(col.name)">
-              <LinidZoneRenderer
+              <LinPulsarZoneRenderer
                 v-for="(item, index) in columnEntities(col, props.row)"
                 :key="index"
                 :zone="columnZone(col.name)"
@@ -172,7 +172,7 @@
         </q-tr>
       </template>
     </GenericEntityTable>
-    <LinidZoneRenderer
+    <LinPulsarZoneRenderer
       :zone="`${instanceId}.content.after`"
       :instance-id="instanceId"
       :ui-namespace="uiNamespace"
@@ -185,27 +185,27 @@
 
 <script setup lang="ts">
 import type {
-  LinidFilter,
-  LinidFilterSetUserPreference,
-  LinidQBtnProps,
+  LinPulsarFilter,
+  LinPulsarFilterSetUserPreference,
+  LinPulsarQBtnProps,
   QTableRequestEvent,
   QuasarPagination,
   QueryFilter,
   UiEvent,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import {
   getEntities,
   getModuleHostConfiguration,
-  LinidFilterSet,
-  LinidZoneRenderer,
+  LinPulsarFilterSet,
+  LinPulsarZoneRenderer,
   uiEventSubject,
-  useLinidFilterUrl,
-  useLinidUserPreference,
+  useLinPulsarFilterUrl,
+  useLinPulsarUserPreference,
   useNotify,
   usePagination,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { Subscription } from 'rxjs';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -232,25 +232,28 @@ const options = computed(
 
 const { t, te } = useScopedI18n(i18nScope.value);
 const { userPreferenceStore, deleteUserPreference, saveUserPreference } =
-  useLinidUserPreference();
+  useLinPulsarUserPreference();
 const items = ref<Record<string, unknown>[]>([]);
 const isLoading = ref<boolean>(false);
 let eventSubscription: Subscription;
 const { Notify } = useNotify();
-const { setFiltersInUrl, getFiltersFromUrl } = useLinidFilterUrl(router, route);
-const filters = ref<LinidFilter[]>(
+const { setFiltersInUrl, getFiltersFromUrl } = useLinPulsarFilterUrl(
+  router,
+  route
+);
+const filters = ref<LinPulsarFilter[]>(
   getFiltersFromUrl(options.value.filters ?? [])
 );
 const favoritesBaseConfigurationKey = computed(
   () => `ui.${instanceId.value}.favorites.`
 );
-const favorites = computed<LinidFilterSet[]>(() =>
+const favorites = computed<LinPulsarFilterSet[]>(() =>
   Object.keys(userPreferenceStore.userPreferences)
     .filter((key) => key.indexOf(favoritesBaseConfigurationKey.value) === 0)
     .map((key) => parseFavorite(userPreferenceStore.userPreferences[key]))
     .filter((data) => data !== null)
     .map((data) =>
-      LinidFilterSet.fromString(
+      LinPulsarFilterSet.fromString(
         data.id,
         data.label,
         data.value,
@@ -279,8 +282,8 @@ const { columnZone, hasColumnZone, columnEntities } = useColumnZones(
 );
 const { ui } = useUiDesign();
 const uiProps = computed(() => ({
-  seeButton: ui<LinidQBtnProps>(`${uiNamespace.value}.see-button`, 'q-btn'),
-  createButton: ui<LinidQBtnProps>(
+  seeButton: ui<LinPulsarQBtnProps>(`${uiNamespace.value}.see-button`, 'q-btn'),
+  createButton: ui<LinPulsarQBtnProps>(
     `${uiNamespace.value}.buttons-card.create-button`,
     'q-btn'
   ),
@@ -318,7 +321,7 @@ async function onRequest(props: QTableRequestEvent) {
  * @param newFilters - The updated list of active filters.
  * @returns A promise that resolves when the data has been loaded.
  */
-function onFiltersChange(newFilters: LinidFilter[]): Promise<void> {
+function onFiltersChange(newFilters: LinPulsarFilter[]): Promise<void> {
   filters.value = newFilters;
   pagination.value.page = 1;
   setFiltersInUrl(newFilters, options.value.keepQueryParams ?? []);
@@ -343,7 +346,7 @@ function toQueryFilter(): QueryFilter {
  * Applies a saved favorite filter set by forwarding its filters to the global filter change handler.
  * @param favorite - The selected filter set to apply.
  */
-function onFavoriteApply(favorite: LinidFilterSet) {
+function onFavoriteApply(favorite: LinPulsarFilterSet) {
   onFiltersChange(favorite.filters);
 }
 
@@ -354,7 +357,7 @@ function onFavoriteApply(favorite: LinidFilterSet) {
  * the user preferences store using its identifier.
  * @param favorite - The favorite filter set to delete.
  */
-function openDeleteFavoriteDialog(favorite: LinidFilterSet): void {
+function openDeleteFavoriteDialog(favorite: LinPulsarFilterSet): void {
   uiEventSubject.next({
     key: 'confirmation',
     data: {
@@ -382,7 +385,7 @@ function openDeleteFavoriteDialog(favorite: LinidFilterSet): void {
  * Opens a form dialog to rename a favorite filter set.
  * @param favorite - The favorite filter set to rename.
  */
-function openRenameFavoriteDialog(favorite: LinidFilterSet): void {
+function openRenameFavoriteDialog(favorite: LinPulsarFilterSet): void {
   uiEventSubject.next({
     key: 'form',
     data: {
@@ -418,7 +421,7 @@ function openRenameFavoriteDialog(favorite: LinidFilterSet): void {
           JSON.stringify({
             id: favorite.id,
             label: trimmedFavoriteName,
-            value: new LinidFilterSet(
+            value: new LinPulsarFilterSet(
               favorite.id,
               trimmedFavoriteName,
               filters.value
@@ -440,7 +443,7 @@ function openRenameFavoriteDialog(favorite: LinidFilterSet): void {
  * Opens a confirmation dialog to override an existing favorite filter set with the current filters.
  * @param favorite - The favorite filter set to override.
  */
-function openOverrideFavoriteDialog(favorite: LinidFilterSet): void {
+function openOverrideFavoriteDialog(favorite: LinPulsarFilterSet): void {
   uiEventSubject.next({
     key: 'confirmation',
     data: {
@@ -457,7 +460,7 @@ function openOverrideFavoriteDialog(favorite: LinidFilterSet): void {
           JSON.stringify({
             id: favorite.id,
             label: favorite.label,
-            value: new LinidFilterSet(
+            value: new LinPulsarFilterSet(
               favorite.id,
               favorite.label,
               filters.value
@@ -527,7 +530,7 @@ function openCreateFavoriteDialog(): void {
           JSON.stringify({
             id: favoriteId,
             label: trimmedFavoriteName,
-            value: new LinidFilterSet(
+            value: new LinPulsarFilterSet(
               favoriteId,
               trimmedFavoriteName,
               filters.value
@@ -548,16 +551,16 @@ function openCreateFavoriteDialog(): void {
 /**
  * Parses a serialized favorite filter set from a JSON string and validates its structure.
  *
- * The function expects a JSON string representing a `LinidFilterSetUserPreference`-like object.
+ * The function expects a JSON string representing a `LinPulsarFilterSetUserPreference`-like object.
  * It performs both deserialization and structural validation, ensuring that the value is valid JSON,
  * that the result is a non-null object, that it contains `id`, `label`, and `value` properties,
  * and that all of these properties are non-empty strings after trimming whitespace.
  *
  * If the input is valid, the parsed object is returned. Otherwise, the function returns `null`.
  * @param value - JSON string representing a saved favorite filter set.
- * @returns A validated `LinidFilterSetUserPreference` object, or `null` if invalid or unparsable.
+ * @returns A validated `LinPulsarFilterSetUserPreference` object, or `null` if invalid or unparsable.
  */
-function parseFavorite(value: string): LinidFilterSetUserPreference | null {
+function parseFavorite(value: string): LinPulsarFilterSetUserPreference | null {
   let obj;
   try {
     obj = JSON.parse(value);

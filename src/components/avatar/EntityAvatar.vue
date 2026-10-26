@@ -51,10 +51,10 @@
 
 <script setup lang="ts">
 import type {
-  LinidQAvatarProps,
-  LinidQIconProps,
-} from '@linagora/linid-im-front-corelib';
-import { useScopedI18n, useUiDesign } from '@linagora/linid-im-front-corelib';
+  LinPulsarQAvatarProps,
+  LinPulsarQIconProps,
+} from '@linagora/lin-pulsar-core';
+import { useScopedI18n, useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
 import { useDiceBearAvatar } from '../../composables/useDiceBearAvatar';
 import type { EntityAvatarProps } from '../../types/entityAvatar';
@@ -75,8 +75,8 @@ const { ui } = useUiDesign();
 const { translateOrDefault } = useScopedI18n(localI18nScope.value);
 
 const uiProps = computed(() => ({
-  avatar: ui<LinidQAvatarProps>(localUiNamespace.value, 'q-avatar'),
-  icon: ui<LinidQIconProps>(localUiNamespace.value, 'q-icon'),
+  avatar: ui<LinPulsarQAvatarProps>(localUiNamespace.value, 'q-avatar'),
+  icon: ui<LinPulsarQIconProps>(localUiNamespace.value, 'q-icon'),
 }));
 
 const diceBearSrc = useDiceBearAvatar(

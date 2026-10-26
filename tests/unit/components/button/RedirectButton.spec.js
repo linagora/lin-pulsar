@@ -30,7 +30,7 @@ import RedirectButton from '../../../../src/components/button/RedirectButton.vue
 
 const mockT = vi.fn((key) => key);
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   useScopedI18n: () => ({
     t: mockT,
   }),

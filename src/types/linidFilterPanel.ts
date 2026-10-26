@@ -25,14 +25,14 @@
  */
 
 import type {
-  LinidFilter,
-  LinidFilterValue,
-  LinidQIconProps,
-  LinidQItemProps,
-  LinidQItemSectionProps,
-  LinidQListProps,
-  LinidQSeparatorProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarFilter,
+  LinPulsarFilterValue,
+  LinPulsarQIconProps,
+  LinPulsarQItemProps,
+  LinPulsarQItemSectionProps,
+  LinPulsarQListProps,
+  LinPulsarQSeparatorProps,
+} from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -42,7 +42,7 @@ export interface LinidFilterPanelProps extends CommonComponentProps {
   /**
    * Available filters to display in the navigation list.
    */
-  filters: LinidFilter[];
+  filters: LinPulsarFilter[];
   /**
    * Identifier of the currently selected filter (v-model:selected).
    * When it does not match any filter in `filters`, the first filter is selected instead.
@@ -59,7 +59,7 @@ export type LinidFilterPanelUIPropsTypes = Record<
     /**
      * The UI properties for the displayed icon.
      */
-    icon: LinidQIconProps;
+    icon: LinPulsarQIconProps;
   }
 >;
 
@@ -70,11 +70,11 @@ export interface LinidFilterPanelUIProps {
   /**
    * The UI properties for the filter navigation list.
    */
-  list: LinidQListProps;
+  list: LinPulsarQListProps;
   /**
    * The UI properties for each filter item.
    */
-  item: LinidQItemProps;
+  item: LinPulsarQItemProps;
   /**
    * The UI properties for the filter item icon, keyed by filter type.
    */
@@ -82,23 +82,23 @@ export interface LinidFilterPanelUIProps {
   /**
    * The UI properties for the icon item section (avatar).
    */
-  iconSection: LinidQItemSectionProps;
+  iconSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for the label item section.
    */
-  labelSection: LinidQItemSectionProps;
+  labelSection: LinPulsarQItemSectionProps;
   /**
    * The UI properties for the icon displayed in the title bar.
    */
-  titleIcon: LinidQIconProps;
+  titleIcon: LinPulsarQIconProps;
   /**
    * The UI properties for the horizontal separator below the title.
    */
-  titleSeparator: LinidQSeparatorProps;
+  titleSeparator: LinPulsarQSeparatorProps;
   /**
    * The UI properties for the vertical separator between the filter list and the editor.
    */
-  contentSeparator: LinidQSeparatorProps;
+  contentSeparator: LinPulsarQSeparatorProps;
 }
 
 /**
@@ -112,7 +112,7 @@ export interface LinidFilterPanelSearchPayload {
   /**
    * The list of filter values to apply.
    */
-  values: LinidFilterValue[];
+  values: LinPulsarFilterValue[];
 }
 
 /**

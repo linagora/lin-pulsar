@@ -76,12 +76,12 @@
 
 <script setup lang="ts">
 import type {
-  LinidAttributeConfiguration,
-  LinidQBtnProps,
-  LinidQDateProps,
-  LinidQIconProps,
-  LinidQInputProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarAttributeConfiguration,
+  LinPulsarQBtnProps,
+  LinPulsarQDateProps,
+  LinPulsarQIconProps,
+  LinPulsarQInputProps,
+} from '@linagora/lin-pulsar-core';
 import {
   getI18nInstance,
   getNestedValue,
@@ -93,7 +93,7 @@ import {
   useScopedI18n,
   useUiDesign,
   useCommonMapper,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { Dayjs } from 'dayjs';
 import type { ValidationRule } from 'quasar';
 import { computed, ref, watch } from 'vue';
@@ -131,19 +131,19 @@ const {
 const globalT = getI18nInstance().global.t as ComposerTranslation;
 
 const uiProps = {
-  input: ui<LinidQInputProps>(
+  input: ui<LinPulsarQInputProps>(
     `${props.uiNamespace}.${props.definition.name}`,
     'q-input'
   ),
-  icon: ui<LinidQIconProps>(
+  icon: ui<LinPulsarQIconProps>(
     `${props.uiNamespace}.${props.definition.name}`,
     'q-icon'
   ),
-  btn: ui<LinidQBtnProps>(
+  btn: ui<LinPulsarQBtnProps>(
     `${props.uiNamespace}.${props.definition.name}`,
     'q-btn'
   ),
-  date: ui<LinidQDateProps>(
+  date: ui<LinPulsarQDateProps>(
     `${props.uiNamespace}.${props.definition.name}`,
     'q-date'
   ),
@@ -204,7 +204,7 @@ const renderedDefinition = computed(() => {
     today: formatDate(new Date().toISOString(), valueFormat.value),
   };
 
-  return render<LinidAttributeConfiguration<FieldDateSettings>>(
+  return render<LinPulsarAttributeConfiguration<FieldDateSettings>>(
     props.definition,
     context
   );

@@ -33,8 +33,8 @@
 </template>
 
 <script setup lang="ts">
-import type { LinidQBadgeProps } from '@linagora/linid-im-front-corelib';
-import { getNestedValue, useUiDesign } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarQBadgeProps } from '@linagora/lin-pulsar-core';
+import { getNestedValue, useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { type StatusBadgeProps } from '../../types/statusBadge';
@@ -49,6 +49,6 @@ const statusValue = computed(() => {
 });
 
 const uiProps = computed(() =>
-  ui<LinidQBadgeProps>(`status-badge.${statusValue.value}`, 'q-badge')
+  ui<LinPulsarQBadgeProps>(`status-badge.${statusValue.value}`, 'q-badge')
 );
 </script>

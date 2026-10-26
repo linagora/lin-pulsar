@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import { BasicRemoteModule } from '@linagora/linid-im-front-corelib';
+import { BasicRemoteModule } from '@linagora/lin-pulsar-core';
 
 /**
  * Remote module relying entirely on the default lifecycle implementation.

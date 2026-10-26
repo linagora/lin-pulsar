@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import { createModulePageLifecycle } from '@linagora/linid-im-front-corelib';
+import { createModulePageLifecycle } from '@linagora/lin-pulsar-core';
 import type { ModulePageOptions } from '../types/ModulePageOptions';
 
 export default createModulePageLifecycle<ModulePageOptions>({

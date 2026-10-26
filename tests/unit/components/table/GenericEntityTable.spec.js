@@ -31,14 +31,15 @@ import GenericEntityTable from '../../../../src/components/table/GenericEntityTa
 const mockFormatValue = vi.fn(() => 'formatted-value');
 const mockHasZoneEntries = vi.fn(() => false);
 
-vi.mock('@linagora/linid-im-front-corelib', async () => {
-  const { getNestedValue } = await vi.importActual(
-    '@linagora/linid-im-front-corelib'
-  );
+vi.mock('@linagora/lin-pulsar-core', async () => {
+  const { getNestedValue } = await vi.importActual('@linagora/lin-pulsar-core');
   return {
     getNestedValue,
-    LinidZoneRenderer: { name: 'LinidZoneRenderer', template: '<div />' },
-    useLinidZoneStore: () => ({
+    LinPulsarZoneRenderer: {
+      name: 'LinPulsarZoneRenderer',
+      template: '<div />',
+    },
+    useLinPulsarZoneStore: () => ({
       hasZoneEntries: mockHasZoneEntries,
     }),
     useScopedI18n: () => ({

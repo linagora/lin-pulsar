@@ -30,7 +30,7 @@ import EntityLink from '../../../../src/components/link/EntityLink.vue';
 
 const mockT = vi.fn((key) => key);
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   getNestedValue: (obj, path) =>
     path.split('.').reduce((acc, key) => acc?.[key], obj),
   useScopedI18n: () => ({

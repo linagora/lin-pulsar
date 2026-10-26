@@ -30,7 +30,7 @@ import EntityAttributeField from '../../../../src/components/field/EntityAttribu
 
 const { mockUiEventNext } = vi.hoisted(() => ({ mockUiEventNext: vi.fn() }));
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   uiEventSubject: { next: mockUiEventNext },
 }));
 

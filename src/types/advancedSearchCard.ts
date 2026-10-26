@@ -25,7 +25,7 @@
  */
 
 import type { CommonComponentProps } from './common';
-import type { LinidAttributeConfiguration } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarAttributeConfiguration } from '@linagora/lin-pulsar-core';
 
 /**
  * Props for the AdvancedSearchCard component.
@@ -38,7 +38,7 @@ export interface AdvancedSearchCardProps extends CommonComponentProps {
   /**
    * List of field definitions available for filtering.
    */
-  fields: LinidAttributeConfiguration[];
+  fields: LinPulsarAttributeConfiguration[];
   /**
    * Names of fields to display in the default (always visible) section.
    */

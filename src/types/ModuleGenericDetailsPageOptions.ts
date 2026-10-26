@@ -25,7 +25,7 @@
  */
 
 import type { ModulePageOptions } from './ModulePageOptions';
-import type { FormatterConfiguration } from '@linagora/linid-im-front-corelib';
+import type { FormatterConfiguration } from '@linagora/lin-pulsar-core';
 
 /**
  * Configuration for formatting a specific entity attribute field.

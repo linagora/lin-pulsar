@@ -25,7 +25,7 @@
  */
 
 import { Avatar } from '@dicebear/core';
-import { useNunjucks } from '@linagora/linid-im-front-corelib';
+import { useNunjucks } from '@linagora/lin-pulsar-core';
 import type { Ref } from 'vue';
 import { ref, toRaw, watchEffect } from 'vue';
 import { loadDiceBearStyle } from '../services/diceBearLoaderService';

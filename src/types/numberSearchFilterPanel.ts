@@ -25,11 +25,11 @@
  */
 
 import type {
-  LinidQBtnProps,
-  LinidQCheckboxProps,
-  LinidQInputProps,
-  LinidQOptionGroupProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarQBtnProps,
+  LinPulsarQCheckboxProps,
+  LinPulsarQInputProps,
+  LinPulsarQOptionGroupProps,
+} from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -54,17 +54,17 @@ export interface NumberSearchFilterPanelUIProps {
   /**
    * The UI properties for the numeric input.
    */
-  input: LinidQInputProps;
+  input: LinPulsarQInputProps;
   /**
    * The UI properties for the negation checkbox.
    */
-  checkbox: LinidQCheckboxProps;
+  checkbox: LinPulsarQCheckboxProps;
   /**
    * The UI properties for the operator radio group.
    */
-  optionGroup: LinidQOptionGroupProps;
+  optionGroup: LinPulsarQOptionGroupProps;
   /**
    * The UI properties for the search button.
    */
-  searchButton: LinidQBtnProps;
+  searchButton: LinPulsarQBtnProps;
 }

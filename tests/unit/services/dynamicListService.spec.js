@@ -29,7 +29,7 @@ import { getDynamicListPage } from '../../../src/services/dynamicListService';
 
 const mockGet = vi.fn();
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   getHttpClient: () => ({
     get: mockGet,
   }),

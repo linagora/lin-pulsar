@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LinidQBtnProps } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarQBtnProps } from '@linagora/lin-pulsar-core';
 import {
   getHttpClient,
   uiEventSubject,
@@ -46,7 +46,7 @@ import {
   useNunjucks,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
 import { DialogKey } from '../../types/dialog';
 import type {
@@ -78,7 +78,7 @@ const { render, renderString } = useNunjucks();
 const { ui } = useUiDesign();
 
 const uiProps = computed(() => ({
-  button: ui<LinidQBtnProps>(localUiNamespace.value, 'q-btn'),
+  button: ui<LinPulsarQBtnProps>(localUiNamespace.value, 'q-btn'),
 }));
 
 /**

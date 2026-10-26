@@ -59,18 +59,18 @@
 
 <script setup lang="ts">
 import type {
-  LinidQIconProps,
-  LinidQItemLabelProps,
-  LinidQItemProps,
-  LinidQItemSectionProps,
-  LinidQSeparatorProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarQIconProps,
+  LinPulsarQItemLabelProps,
+  LinPulsarQItemProps,
+  LinPulsarQItemSectionProps,
+  LinPulsarQSeparatorProps,
+} from '@linagora/lin-pulsar-core';
 import {
   uiEventSubject,
   useNotify,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { useRouter } from 'vue-router';
 import { DialogKey } from '../../types/dialog';
 import type { LogoutMenuItemProps } from '../../types/logoutMenuItem';
@@ -89,21 +89,27 @@ const { Notify } = useNotify();
 const localUiNamespace = `${props.uiNamespace}.logout-menu-item`;
 
 const uiProps = {
-  separator: ui<LinidQSeparatorProps>(localUiNamespace, 'q-separator'),
-  item: ui<LinidQItemProps>(localUiNamespace, 'q-item'),
+  separator: ui<LinPulsarQSeparatorProps>(localUiNamespace, 'q-separator'),
+  item: ui<LinPulsarQItemProps>(localUiNamespace, 'q-item'),
   iconSection: {
     avatar: true,
-    ...ui<LinidQItemSectionProps>(`${localUiNamespace}.icon`, 'q-item-section'),
+    ...ui<LinPulsarQItemSectionProps>(
+      `${localUiNamespace}.icon`,
+      'q-item-section'
+    ),
   },
   icon: {
     name: 'logout',
-    ...ui<LinidQIconProps>(`${localUiNamespace}.icon`, 'q-icon'),
+    ...ui<LinPulsarQIconProps>(`${localUiNamespace}.icon`, 'q-icon'),
   },
-  labelSection: ui<LinidQItemSectionProps>(
+  labelSection: ui<LinPulsarQItemSectionProps>(
     `${localUiNamespace}.label`,
     'q-item-section'
   ),
-  label: ui<LinidQItemLabelProps>(`${localUiNamespace}.label`, 'q-item-label'),
+  label: ui<LinPulsarQItemLabelProps>(
+    `${localUiNamespace}.label`,
+    'q-item-label'
+  ),
 };
 
 /**

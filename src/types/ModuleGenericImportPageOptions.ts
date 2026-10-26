@@ -25,9 +25,9 @@
  */
 
 import type {
-  LinidQCardProps,
-  LinidQCardSectionProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
+} from '@linagora/lin-pulsar-core';
 import type { CsvParsingOptions } from './loadFilesField';
 import type { ModulePageOptions } from './ModulePageOptions';
 
@@ -53,13 +53,13 @@ export interface GenericImportPageUIProps {
   /**
    * The UI properties for the card holding the file field and the preview table.
    */
-  card: LinidQCardProps;
+  card: LinPulsarQCardProps;
   /**
    * The UI properties for the section holding the file field.
    */
-  filesSection: LinidQCardSectionProps;
+  filesSection: LinPulsarQCardSectionProps;
   /**
    * The UI properties for the section holding the preview table.
    */
-  tableSection: LinidQCardSectionProps;
+  tableSection: LinPulsarQCardSectionProps;
 }

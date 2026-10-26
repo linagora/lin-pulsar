@@ -32,7 +32,7 @@ import LoadFilesField from '../../../../src/components/field/LoadFilesField.vue'
 const notifyMock = vi.fn();
 const renderStringMock = vi.fn();
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   useNotify: () => ({
     Notify: notifyMock,
   }),

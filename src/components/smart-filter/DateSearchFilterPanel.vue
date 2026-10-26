@@ -102,22 +102,22 @@
 
 <script setup lang="ts">
 import type {
-  LinidFilterOperator,
-  LinidQBtnProps,
-  LinidQCheckboxProps,
-  LinidQDateProps,
-  LinidQIconProps,
-  LinidQInputProps,
-  LinidQOptionGroupProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarFilterOperator,
+  LinPulsarQBtnProps,
+  LinPulsarQCheckboxProps,
+  LinPulsarQDateProps,
+  LinPulsarQIconProps,
+  LinPulsarQInputProps,
+  LinPulsarQOptionGroupProps,
+} from '@linagora/lin-pulsar-core';
 import {
   getI18nInstance,
-  LinidFilterValue,
+  LinPulsarFilterValue,
   QDATE_DEFAULT_MASK,
   useQuasarFieldValidation,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { ValidationRule } from 'quasar';
 import { computed, ref } from 'vue';
 import type { ComposerTranslation } from 'vue-i18n';
@@ -134,7 +134,7 @@ const OPERATOR_KEYS: DateFilterOperatorKey[] = [
   'equals',
 ];
 
-const OPERATOR_MAP: Record<DateFilterOperatorKey, LinidFilterOperator> = {
+const OPERATOR_MAP: Record<DateFilterOperatorKey, LinPulsarFilterOperator> = {
   inferior: 'lt_',
   superior: 'gt_',
   equals: '',
@@ -151,13 +151,16 @@ const { ui } = useUiDesign();
 const localUiNamespace = `${props.uiNamespace}.date-search-filter-panel`;
 
 const uiProps: DateSearchFilterPanelUIProps = {
-  input: ui<LinidQInputProps>(localUiNamespace, 'q-input'),
-  icon: ui<LinidQIconProps>(localUiNamespace, 'q-icon'),
-  date: ui<LinidQDateProps>(localUiNamespace, 'q-date'),
-  closeButton: ui<LinidQBtnProps>(`${localUiNamespace}.close`, 'q-btn'),
-  checkbox: ui<LinidQCheckboxProps>(localUiNamespace, 'q-checkbox'),
-  optionGroup: ui<LinidQOptionGroupProps>(localUiNamespace, 'q-option-group'),
-  searchButton: ui<LinidQBtnProps>(localUiNamespace, 'q-btn'),
+  input: ui<LinPulsarQInputProps>(localUiNamespace, 'q-input'),
+  icon: ui<LinPulsarQIconProps>(localUiNamespace, 'q-icon'),
+  date: ui<LinPulsarQDateProps>(localUiNamespace, 'q-date'),
+  closeButton: ui<LinPulsarQBtnProps>(`${localUiNamespace}.close`, 'q-btn'),
+  checkbox: ui<LinPulsarQCheckboxProps>(localUiNamespace, 'q-checkbox'),
+  optionGroup: ui<LinPulsarQOptionGroupProps>(
+    localUiNamespace,
+    'q-option-group'
+  ),
+  searchButton: ui<LinPulsarQBtnProps>(localUiNamespace, 'q-btn'),
 };
 
 const inputValue = ref('');
@@ -205,11 +208,11 @@ function buildDateValue(): string {
 }
 
 /**
- * Builds the LinidFilterValue for the current form state.
+ * Builds the LinPulsarFilterValue for the current form state.
  * @returns The constructed filter value.
  */
-function buildFilterValue(): LinidFilterValue {
-  return new LinidFilterValue(
+function buildFilterValue(): LinPulsarFilterValue {
+  return new LinPulsarFilterValue(
     isNegation.value,
     OPERATOR_MAP[selectedOperatorKey.value],
     buildDateValue()

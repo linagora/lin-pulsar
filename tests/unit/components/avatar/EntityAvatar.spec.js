@@ -53,7 +53,7 @@ vi.mock('../../../../src/services/diceBearLoaderService', () => ({
   loadDiceBearStyle: mockLoadDiceBearStyle,
 }));
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   useNunjucks: () => ({ renderString: mockRender }),
   useScopedI18n: mockUseScopedI18n,
   useUiDesign: () => ({ ui: mockUi }),

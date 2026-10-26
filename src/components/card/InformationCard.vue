@@ -72,11 +72,11 @@
 
 <script setup lang="ts">
 import type {
-  LinidQCardProps,
-  LinidQCardSectionProps,
-  LinidQIconProps,
-} from '@linagora/linid-im-front-corelib';
-import { useUiDesign } from '@linagora/linid-im-front-corelib';
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
+  LinPulsarQIconProps,
+} from '@linagora/lin-pulsar-core';
+import { useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
 import type { InformationCardProps } from '../../types/InformationCard';
 import BlurLoader from '../loader/BlurLoader.vue';
@@ -102,13 +102,13 @@ const displayValue = computed(() => {
 const { ui } = useUiDesign();
 const localUiNamespace = `${props.uiNamespace}.information-card`;
 const uiProps = {
-  card: ui<LinidQCardProps>(localUiNamespace, 'q-card'),
-  icon: ui<LinidQIconProps>(localUiNamespace, 'q-icon'),
-  titleSection: ui<LinidQCardSectionProps>(
+  card: ui<LinPulsarQCardProps>(localUiNamespace, 'q-card'),
+  icon: ui<LinPulsarQIconProps>(localUiNamespace, 'q-icon'),
+  titleSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace}.title-section`,
     'q-card-section'
   ),
-  contentSection: ui<LinidQCardSectionProps>(
+  contentSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace}.content-section`,
     'q-card-section'
   ),

@@ -52,7 +52,7 @@
       >
         <template #append-buttons>
           <slot name="prepend-header-actions" />
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${localUiNamespace}.header-actions`"
             :entity="entity || {}"
             :instance-id="instanceId"
@@ -92,7 +92,7 @@
         @update:selected="onNodeSelected"
       >
         <template #node-actions="{ node }">
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${localUiNamespace}.node-actions.${node.type}`"
             :entity="node.value as Record<string, unknown>"
             :instance-id="instanceId"
@@ -108,19 +108,19 @@
 
 <script setup lang="ts">
 import type {
-  LinidQCardProps,
-  LinidQCardSectionProps,
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
   TreeNode,
   UiEvent,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import {
-  LinidZoneRenderer,
+  LinPulsarZoneRenderer,
   uiEventSubject,
   useNotify,
   useNunjucks,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { Subscription } from 'rxjs';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -178,12 +178,12 @@ const isEntityResolved = computed(
 );
 
 const uiProps = computed(() => ({
-  card: ui<LinidQCardProps>(localUiNamespace.value, 'q-card'),
-  headerSection: ui<LinidQCardSectionProps>(
+  card: ui<LinPulsarQCardProps>(localUiNamespace.value, 'q-card'),
+  headerSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.header-section`,
     'q-card-section'
   ),
-  treeSection: ui<LinidQCardSectionProps>(
+  treeSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.tree-section`,
     'q-card-section'
   ),

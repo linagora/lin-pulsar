@@ -28,10 +28,8 @@ import { shallowMount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import StatusBadge from '../../../../src/components/badge/StatusBadge.vue';
 
-vi.mock('@linagora/linid-im-front-corelib', async () => {
-  const { getNestedValue } = await vi.importActual(
-    '@linagora/linid-im-front-corelib'
-  );
+vi.mock('@linagora/lin-pulsar-core', async () => {
+  const { getNestedValue } = await vi.importActual('@linagora/lin-pulsar-core');
   return {
     getNestedValue,
     useUiDesign: () => ({ ui: vi.fn(() => ({})) }),

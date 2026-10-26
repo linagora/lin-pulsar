@@ -59,15 +59,15 @@
 
 <script setup lang="ts">
 import type {
-  LinidQCardProps,
-  LinidQCardSectionProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
+} from '@linagora/lin-pulsar-core';
 import {
   getNestedValue,
   useScopedI18n,
   useUiDesign,
   useValueFormatter,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
 import InformationCard from './InformationCard.vue';
 import type { EntityDetailsCardProps } from '../../types/entityDetailsCard';
@@ -117,12 +117,12 @@ const values = computed<Record<string, string>>(() => {
 const localUiNamespace = `${props.uiNamespace}.entity-details-card`;
 
 const uiProps = {
-  card: ui<LinidQCardProps>(localUiNamespace, 'q-card'),
-  titleSection: ui<LinidQCardSectionProps>(
+  card: ui<LinPulsarQCardProps>(localUiNamespace, 'q-card'),
+  titleSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace}.title-section`,
     'q-card-section'
   ),
-  contentSection: ui<LinidQCardSectionProps>(
+  contentSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace}.content-section`,
     'q-card-section'
   ),

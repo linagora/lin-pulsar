@@ -49,16 +49,13 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  LinidQBtnProps,
-  TreeNode,
-} from '@linagora/linid-im-front-corelib';
+import type { LinPulsarQBtnProps, TreeNode } from '@linagora/lin-pulsar-core';
 import {
   useNotify,
-  LinidFilterValue,
+  LinPulsarFilterValue,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import GenericTree from '../tree/GenericTree.vue';
 import { fetchAllPages } from '../../services/paginationService';
 import type { TreeSearchFilterProps } from '../../types/TreeSearchFilterPanel';
@@ -85,7 +82,7 @@ const { Notify } = useNotify();
 const nodesByKey = new Map<string, Record<string, unknown>>();
 
 const uiProps = {
-  searchButton: ui<LinidQBtnProps>(localUiNamespace, 'q-btn'),
+  searchButton: ui<LinPulsarQBtnProps>(localUiNamespace, 'q-btn'),
 };
 
 /**
@@ -93,9 +90,9 @@ const uiProps = {
  * `dynamicLabelOptions`: they are display information the chip would otherwise have to resolve.
  */
 function onSearch() {
-  const filterValues: LinidFilterValue[] = tickedNodeKeys.value.map(
+  const filterValues: LinPulsarFilterValue[] = tickedNodeKeys.value.map(
     (key: string) => {
-      return new LinidFilterValue(
+      return new LinPulsarFilterValue(
         false,
         '',
         key,

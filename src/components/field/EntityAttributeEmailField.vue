@@ -45,14 +45,14 @@
 </template>
 
 <script setup lang="ts">
-import type { LinidQInputProps } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarQInputProps } from '@linagora/lin-pulsar-core';
 import {
   getNestedValue,
   setNestedValue,
   useQuasarRules,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed, ref, watch } from 'vue';
 import type {
   AttributeFieldProps,
@@ -75,7 +75,7 @@ const localValue = ref<string | null>(
   getNestedValue(props.entity, props.definition.name) as string | null
 );
 
-const uiProps = ui<LinidQInputProps>(
+const uiProps = ui<LinPulsarQInputProps>(
   `${props.uiNamespace}.${props.definition.name}`,
   'q-input'
 );

@@ -140,14 +140,14 @@
 
 <script setup lang="ts">
 import type {
-  LinidQBtnProps,
-  LinidQIconProps,
-  LinidQItemProps,
-  LinidQItemSectionProps,
-  LinidQListProps,
-  LinidQSeparatorProps,
-} from '@linagora/linid-im-front-corelib';
-import { useScopedI18n, useUiDesign } from '@linagora/linid-im-front-corelib';
+  LinPulsarQBtnProps,
+  LinPulsarQIconProps,
+  LinPulsarQItemProps,
+  LinPulsarQItemSectionProps,
+  LinPulsarQListProps,
+  LinPulsarQSeparatorProps,
+} from '@linagora/lin-pulsar-core';
+import { useScopedI18n, useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
 import type {
   LinidFavoritePanelOutputs,
@@ -159,7 +159,7 @@ const props = defineProps<LinidFavoritePanelProps>();
 const emit = defineEmits<LinidFavoritePanelOutputs>();
 
 const { t, translateOrDefault } = useScopedI18n(
-  `${props.i18nScope}.LinidFavoritePanel`
+  `${props.i18nScope}.LinPulsarFavoritePanel`
 );
 const { ui } = useUiDesign();
 
@@ -168,56 +168,59 @@ const headerUiNamespace = `${localUiNamespace}.header`;
 const contentUiNamespace = `${localUiNamespace}.content`;
 
 const uiProps = computed<LinidFavoritePanelUIProps>(() => ({
-  titleIcon: ui<LinidQIconProps>(headerUiNamespace, 'q-icon'),
-  titleSeparator: ui<LinidQSeparatorProps>(headerUiNamespace, 'q-separator'),
-  list: ui<LinidQListProps>(contentUiNamespace, 'q-list'),
-  item: ui<LinidQItemProps>(contentUiNamespace, 'q-item'),
-  iconSection: ui<LinidQItemSectionProps>(
+  titleIcon: ui<LinPulsarQIconProps>(headerUiNamespace, 'q-icon'),
+  titleSeparator: ui<LinPulsarQSeparatorProps>(
+    headerUiNamespace,
+    'q-separator'
+  ),
+  list: ui<LinPulsarQListProps>(contentUiNamespace, 'q-list'),
+  item: ui<LinPulsarQItemProps>(contentUiNamespace, 'q-item'),
+  iconSection: ui<LinPulsarQItemSectionProps>(
     `${contentUiNamespace}.icon-section`,
     'q-item-section'
   ),
-  icon: ui<LinidQIconProps>(`${contentUiNamespace}.icon-section`, 'q-icon'),
-  labelSection: ui<LinidQItemSectionProps>(
+  icon: ui<LinPulsarQIconProps>(`${contentUiNamespace}.icon-section`, 'q-icon'),
+  labelSection: ui<LinPulsarQItemSectionProps>(
     `${contentUiNamespace}.label-section`,
     'q-item-section'
   ),
-  noDataIconSection: ui<LinidQItemSectionProps>(
+  noDataIconSection: ui<LinPulsarQItemSectionProps>(
     `${contentUiNamespace}.no-data-icon-section`,
     'q-item-section'
   ),
-  noDataIcon: ui<LinidQIconProps>(
+  noDataIcon: ui<LinPulsarQIconProps>(
     `${contentUiNamespace}.no-data-icon-section`,
     'q-icon'
   ),
-  noDataLabelSection: ui<LinidQItemSectionProps>(
+  noDataLabelSection: ui<LinPulsarQItemSectionProps>(
     `${contentUiNamespace}.no-data-label-section`,
     'q-item-section'
   ),
-  renameSection: ui<LinidQItemSectionProps>(
+  renameSection: ui<LinPulsarQItemSectionProps>(
     `${contentUiNamespace}.rename-section`,
     'q-item-section'
   ),
-  renameButton: ui<LinidQBtnProps>(
+  renameButton: ui<LinPulsarQBtnProps>(
     `${contentUiNamespace}.rename-section`,
     'q-btn'
   ),
-  deleteSection: ui<LinidQItemSectionProps>(
+  deleteSection: ui<LinPulsarQItemSectionProps>(
     `${contentUiNamespace}.delete-section`,
     'q-item-section'
   ),
-  deleteButton: ui<LinidQBtnProps>(
+  deleteButton: ui<LinPulsarQBtnProps>(
     `${contentUiNamespace}.delete-section`,
     'q-btn'
   ),
-  createButton: ui<LinidQBtnProps>(
+  createButton: ui<LinPulsarQBtnProps>(
     `${contentUiNamespace}.create-button`,
     'q-btn'
   ),
-  overrideSection: ui<LinidQItemSectionProps>(
+  overrideSection: ui<LinPulsarQItemSectionProps>(
     `${contentUiNamespace}.override-section`,
     'q-item-section'
   ),
-  overrideButton: ui<LinidQBtnProps>(
+  overrideButton: ui<LinPulsarQBtnProps>(
     `${contentUiNamespace}.override-section`,
     'q-btn'
   ),

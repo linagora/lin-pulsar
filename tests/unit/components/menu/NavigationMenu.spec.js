@@ -31,7 +31,7 @@ import NavigationMenu from '../../../../src/components/menu/NavigationMenu.vue';
 
 const mockRoute = reactive({ path: '/home' });
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   useUiDesign: () => ({
     ui: vi.fn(() => ({})),
   }),

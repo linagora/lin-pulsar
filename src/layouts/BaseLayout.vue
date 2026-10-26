@@ -88,7 +88,7 @@
       </router-view>
     </q-page-container>
 
-    <LinidZoneRenderer zone="base-layout.dialogComponent" />
+    <LinPulsarZoneRenderer zone="base-layout.dialogComponent" />
 
     <!-- zone footer -->
   </q-layout>
@@ -97,19 +97,19 @@
 
 <script setup lang="ts">
 import type {
-  LinidQAvatarProps,
-  LinidQBadgeProps,
-  LinidQHeaderProps,
-  LinidQImgProps,
-  LinidQToolbarProps,
-  LinidQToolbarTitleProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarQAvatarProps,
+  LinPulsarQBadgeProps,
+  LinPulsarQHeaderProps,
+  LinPulsarQImgProps,
+  LinPulsarQToolbarProps,
+  LinPulsarQToolbarTitleProps,
+} from '@linagora/lin-pulsar-core';
 import {
-  LinidZoneRenderer,
-  useLinidUiStore,
+  LinPulsarZoneRenderer,
+  useLinPulsarUiStore,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import NavigationMenu from '../components/menu/NavigationMenu.vue';
@@ -118,7 +118,7 @@ import type { BaseLayoutRouteMeta } from '../types/baseLayout';
 
 const { ui } = useUiDesign();
 const { t } = useScopedI18n('application');
-const uiStore = useLinidUiStore();
+const uiStore = useLinPulsarUiStore();
 const currentRoute = useRoute();
 
 const routeMeta = computed(() => currentRoute.meta as BaseLayoutRouteMeta);
@@ -128,15 +128,15 @@ const hideLogout = computed(() => routeMeta.value.hideLogout === true);
 const headerUiNamespace = 'base-layout.header';
 
 const uiProps = {
-  header: ui<LinidQHeaderProps>(headerUiNamespace, 'q-header'),
-  toolbar: ui<LinidQToolbarProps>(headerUiNamespace, 'q-toolbar'),
-  avatar: ui<LinidQAvatarProps>(headerUiNamespace, 'q-avatar'),
-  toolbarTitle: ui<LinidQToolbarTitleProps>(
+  header: ui<LinPulsarQHeaderProps>(headerUiNamespace, 'q-header'),
+  toolbar: ui<LinPulsarQToolbarProps>(headerUiNamespace, 'q-toolbar'),
+  avatar: ui<LinPulsarQAvatarProps>(headerUiNamespace, 'q-avatar'),
+  toolbarTitle: ui<LinPulsarQToolbarTitleProps>(
     headerUiNamespace,
     'q-toolbar-title'
   ),
-  badge: ui<LinidQBadgeProps>(headerUiNamespace, 'q-badge'),
-  img: ui<LinidQImgProps>(headerUiNamespace, 'q-img'),
+  badge: ui<LinPulsarQBadgeProps>(headerUiNamespace, 'q-badge'),
+  img: ui<LinPulsarQImgProps>(headerUiNamespace, 'q-img'),
 };
 </script>
 

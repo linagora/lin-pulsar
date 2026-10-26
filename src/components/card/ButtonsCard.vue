@@ -92,13 +92,13 @@
 
 <script lang="ts" setup>
 import type {
-  LinidQBtnProps,
-  LinidQCardActionsProps,
-  LinidQCardProps,
-  LinidQCardSectionProps,
-  LinidQIconProps,
-} from '@linagora/linid-im-front-corelib';
-import { useScopedI18n, useUiDesign } from '@linagora/linid-im-front-corelib';
+  LinPulsarQBtnProps,
+  LinPulsarQCardActionsProps,
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
+  LinPulsarQIconProps,
+} from '@linagora/lin-pulsar-core';
+import { useScopedI18n, useUiDesign } from '@linagora/lin-pulsar-core';
 import type {
   ButtonsCardOutputs,
   ButtonsCardProps,
@@ -119,21 +119,21 @@ const { t, te } = useScopedI18n(`${props.i18nScope}.ButtonsCard`);
 const { ui } = useUiDesign();
 
 const uiProps = {
-  card: ui<LinidQCardProps>(`${localUiNamespace}`, 'q-card'),
-  titleSection: ui<LinidQCardSectionProps>(
+  card: ui<LinPulsarQCardProps>(`${localUiNamespace}`, 'q-card'),
+  titleSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace}.title-section`,
     'q-card-section'
   ),
-  icon: ui<LinidQIconProps>(`${localUiNamespace}`, 'q-icon'),
-  cardActions: ui<LinidQCardActionsProps>(
+  icon: ui<LinPulsarQIconProps>(`${localUiNamespace}`, 'q-icon'),
+  cardActions: ui<LinPulsarQCardActionsProps>(
     `${localUiNamespace}`,
     'q-card-actions'
   ),
-  confirmButton: ui<LinidQBtnProps>(
+  confirmButton: ui<LinPulsarQBtnProps>(
     `${localUiNamespace}.confirm-button`,
     'q-btn'
   ),
-  cancelButton: ui<LinidQBtnProps>(
+  cancelButton: ui<LinPulsarQBtnProps>(
     `${localUiNamespace}.cancel-button`,
     'q-btn'
   ),

@@ -31,7 +31,7 @@
     data-cy="generic-details-page"
   >
     <div class="col-12 col-md-10 col-lg-10">
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="`${instanceId}.header.before`"
         :entity="entity || {}"
         :instance-id="instanceId"
@@ -44,7 +44,7 @@
         class="row items-center justify-between q-mb-md generic-details-page--header"
       >
         <div class="row items-center q-gutter-x-md">
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${instanceId}.header.prefix`"
             :entity="entity || {}"
             :instance-id="instanceId"
@@ -59,7 +59,7 @@
           >
             {{ t('title') }}
           </h1>
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${instanceId}.header.suffix`"
             :entity="entity || {}"
             :instance-id="instanceId"
@@ -79,7 +79,7 @@
             @cancel="goBack"
           >
             <template #append-buttons>
-              <LinidZoneRenderer
+              <LinPulsarZoneRenderer
                 :zone="`${instanceId}.header.actions`"
                 :entity="entity || {}"
                 :instance-id="instanceId"
@@ -100,7 +100,7 @@
         </div>
       </div>
 
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="`${instanceId}.header.after`"
         :entity="entity || {}"
         :instance-id="instanceId"
@@ -113,7 +113,7 @@
         <div
           class="flex column col-auto generic-details-page--content--side-left"
         >
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${instanceId}.side-left`"
             :entity="entity || {}"
             :entity-id="entityId"
@@ -126,7 +126,7 @@
         </div>
 
         <div class="col generic-details-page--content--main">
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${instanceId}.content.before`"
             :entity="entity || {}"
             :entity-id="entityId"
@@ -151,7 +151,7 @@
             :data-cy="`details-section_${section.key}`"
           />
 
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${instanceId}.content.after`"
             :entity="entity || {}"
             :entity-id="entityId"
@@ -166,7 +166,7 @@
         <div
           class="flex column col-auto generic-details-page--content--side-right"
         >
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${instanceId}.side-right`"
             :entity="entity || {}"
             :entity-id="entityId"
@@ -184,17 +184,17 @@
 </template>
 
 <script setup lang="ts">
-import type { LinidQBtnProps, UiEvent } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarQBtnProps, UiEvent } from '@linagora/lin-pulsar-core';
 import {
   getEntityById,
   getModuleHostConfiguration,
-  LinidZoneRenderer,
+  LinPulsarZoneRenderer,
   uiEventSubject,
   useNotify,
   useNunjucks,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { Subscription } from 'rxjs';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -226,7 +226,7 @@ const isLoading = ref<boolean>(false);
 let eventSubscription: Subscription;
 
 const uiProps = computed(() => ({
-  editButton: ui<LinidQBtnProps>(
+  editButton: ui<LinPulsarQBtnProps>(
     `${uiNamespace.value}.buttons-card.edit-button`,
     'q-btn'
   ),

@@ -19,7 +19,7 @@
  * details.
  */
 
-import { getEntityById, updateEntity } from '@linagora/linid-im-front-corelib';
+import { getEntityById, updateEntity } from '@linagora/lin-pulsar-core';
 import { flushPromises, shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import GenericEditionPage from '../../../src/pages/GenericEditionPage.vue';
@@ -76,8 +76,8 @@ const mockEntity = {
   name: 'Application',
 };
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
-  LinidZoneRenderer: {
+vi.mock('@linagora/lin-pulsar-core', () => ({
+  LinPulsarZoneRenderer: {
     template: '<div />',
   },
   getEntityById: vi.fn(() => Promise.resolve(mockEntity)),

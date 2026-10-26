@@ -28,7 +28,7 @@ import { shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import InformationCard from '../../../../src/components/card/InformationCard.vue';
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   useUiDesign: () => ({ ui: vi.fn(() => ({})) }),
 }));
 

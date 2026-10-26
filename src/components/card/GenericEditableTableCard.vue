@@ -52,7 +52,7 @@
       >
         <template #append-buttons>
           <slot name="prepend-header-actions" />
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${localUiNamespace}.header-actions`"
             :entity="entity || {}"
             :instance-id="instanceId"
@@ -91,7 +91,7 @@
             :row="row"
             :row-key="key"
           />
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="`${localUiNamespace}.row-actions`"
             :entity="entity || {}"
             :row="row"
@@ -130,24 +130,24 @@
 
 <script setup lang="ts">
 import type {
-  LinidQBtnProps,
-  LinidQCardProps,
-  LinidQCardSectionProps,
+  LinPulsarQBtnProps,
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
   Page,
   QTableRequestEvent,
   QuasarPagination,
   UiEvent,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import {
   getHttpClient,
-  LinidZoneRenderer,
+  LinPulsarZoneRenderer,
   uiEventSubject,
   useNotify,
   useNunjucks,
   usePagination,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { Subscription } from 'rxjs';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { DialogKey } from '../../types/dialog';
@@ -241,24 +241,24 @@ const columns = computed<GenericTableColumn[]>(() => {
 });
 
 const uiProps = computed(() => ({
-  card: ui<LinidQCardProps>(localUiNamespace.value, 'q-card'),
-  headerSection: ui<LinidQCardSectionProps>(
+  card: ui<LinPulsarQCardProps>(localUiNamespace.value, 'q-card'),
+  headerSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.header-section`,
     'q-card-section'
   ),
-  tableSection: ui<LinidQCardSectionProps>(
+  tableSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.table-section`,
     'q-card-section'
   ),
-  addButton: ui<LinidQBtnProps>(
+  addButton: ui<LinPulsarQBtnProps>(
     `${localUiNamespace.value}.buttons-card.add-button`,
     'q-btn'
   ),
-  editButton: ui<LinidQBtnProps>(
+  editButton: ui<LinPulsarQBtnProps>(
     `${localUiNamespace.value}.edit-button`,
     'q-btn'
   ),
-  deleteButton: ui<LinidQBtnProps>(
+  deleteButton: ui<LinPulsarQBtnProps>(
     `${localUiNamespace.value}.delete-button`,
     'q-btn'
   ),

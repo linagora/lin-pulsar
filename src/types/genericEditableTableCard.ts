@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import type { LinidAttributeConfiguration } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarAttributeConfiguration } from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 import type { GenericTableColumn } from './ModuleGenericTablePageOptions';
 
@@ -97,20 +97,20 @@ export interface GenericEditableTableCardProps extends CommonComponentProps {
 
   /**
    * Form fields rendered in the creation and edition form dialogs, defined as an array of
-   * LinidAttributeConfiguration objects (see FormDialog).
+   * LinPulsarAttributeConfiguration objects (see FormDialog).
    *
    * Optional when `readOnly` is `true` or when neither `create` nor `update` endpoint is configured,
    * as no form dialog is ever opened in those cases.
    * @default []
    */
-  formFields?: LinidAttributeConfiguration[];
+  formFields?: LinPulsarAttributeConfiguration[];
 
   /**
    * Form fields rendered in the edition form dialog instead of `formFields`, defined as an array
-   * of LinidAttributeConfiguration objects (see FormDialog). Useful when the edition dialog manages
+   * of LinPulsarAttributeConfiguration objects (see FormDialog). Useful when the edition dialog manages
    * different properties than the creation dialog, such as relationship attributes of the row.
    */
-  editFormFields?: LinidAttributeConfiguration[];
+  editFormFields?: LinPulsarAttributeConfiguration[];
 
   /**
    * JSON payload fully replacing the update request body: only the properties declared here are

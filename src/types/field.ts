@@ -25,9 +25,9 @@
  */
 
 import type {
-  LinidAttributeConfiguration,
+  LinPulsarAttributeConfiguration,
   TreeNodeType,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -44,7 +44,7 @@ export interface AttributeFieldProps<
   /**
    * Configuration object defining the attribute.
    */
-  definition: LinidAttributeConfiguration<T>;
+  definition: LinPulsarAttributeConfiguration<T>;
   /**
    * The entity object containing current attribute values.
    * Used for binding and updating the form fields.

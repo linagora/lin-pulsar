@@ -35,7 +35,7 @@ const mockUi = vi.fn((namespace, type) => {
   return { persistent: true, namespace, type };
 });
 
-vi.mock('@linagora/linid-im-front-corelib', () => {
+vi.mock('@linagora/lin-pulsar-core', () => {
   return {
     loadAsyncComponent: () => 'div',
     useDialog: (_key) => {

@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import type { LinidAttributeConfiguration } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarAttributeConfiguration } from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 import type { AvatarOptions } from './diceBear';
 import type { FieldFormatter } from './ModuleGenericDetailsPageOptions';
@@ -150,11 +150,11 @@ export interface EntityProfilePanelProps extends CommonComponentProps {
   enableTitles?: boolean;
   /**
    * Form fields rendered in the edition form dialog, defined as an array of
-   * LinidAttributeConfiguration objects (see FormDialog).
+   * LinPulsarAttributeConfiguration objects (see FormDialog).
    * Only used when `updateEndpoint` is set.
    * @default []
    */
-  formFields?: LinidAttributeConfiguration[];
+  formFields?: LinPulsarAttributeConfiguration[];
   /**
    * Endpoint used to update detail attributes.
    * The endpoint is a Nunjucks template rendered with a context containing `entity`, the entity

@@ -58,10 +58,10 @@
 
 <script setup lang="ts">
 import type {
-  LinidQRouteTabProps,
-  LinidQTabsProps,
-} from '@linagora/linid-im-front-corelib';
-import { useUiDesign } from '@linagora/linid-im-front-corelib';
+  LinPulsarQRouteTabProps,
+  LinPulsarQTabsProps,
+} from '@linagora/lin-pulsar-core';
+import { useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -96,11 +96,11 @@ const activeTabPath = computed(() => {
 });
 
 const uiProps: NavigationMenuUIProps = {
-  tabs: ui<LinidQTabsProps>(localUiNamespace, 'q-tabs'),
+  tabs: ui<LinPulsarQTabsProps>(localUiNamespace, 'q-tabs'),
   routes: props.items.reduce((acc, item) => {
     return {
       ...acc,
-      [item.id]: ui<LinidQRouteTabProps>(
+      [item.id]: ui<LinPulsarQRouteTabProps>(
         `${localUiNamespace}.route-${item.id}`,
         'q-route-tab'
       ),

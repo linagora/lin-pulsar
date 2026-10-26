@@ -27,13 +27,13 @@
 import { shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('@linagora/linid-im-front-corelib', async () => {
-  const actual = await vi.importActual('@linagora/linid-im-front-corelib');
+vi.mock('@linagora/lin-pulsar-core', async () => {
+  const actual = await vi.importActual('@linagora/lin-pulsar-core');
   return {
     ...actual,
     useScopedI18n: vi.fn(() => ({ t: (key) => key })),
     useUiDesign: () => ({ ui: vi.fn(() => ({})) }),
-    LinidFilterValue: class {
+    LinPulsarFilterValue: class {
       constructor(isNegation, operator, value) {
         this.isNegation = isNegation;
         this.operator = operator;
@@ -79,7 +79,7 @@ describe('ListSearchFilterPanel', () => {
       ]);
     });
 
-    it('should emit search event with LinidFilterValue structure', async () => {
+    it('should emit search event with LinPulsarFilterValue structure', async () => {
       wrapper.vm.tickedItems = ['item1'];
       await wrapper.vm.onSearch();
 

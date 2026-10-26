@@ -61,13 +61,13 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { embedDashboard } from '@superset-ui/embedded-sdk';
 import {
   getHttpClient,
-  type LinidQCardProps,
-  type LinidQCardSectionProps,
+  type LinPulsarQCardProps,
+  type LinPulsarQCardSectionProps,
   useNotify,
   useNunjucks,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { SupersetWidgetCardProps } from '../../types/supersetWidgetCard';
 
 const props = defineProps<SupersetWidgetCardProps>();
@@ -89,12 +89,12 @@ const { ui } = useUiDesign();
 const localUiNamespace = `${props.uiNamespace}.superset-widget-card`;
 
 const uiProps = {
-  card: ui<LinidQCardProps>(localUiNamespace, 'q-card'),
-  titleSection: ui<LinidQCardSectionProps>(
+  card: ui<LinPulsarQCardProps>(localUiNamespace, 'q-card'),
+  titleSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace}.title-section`,
     'q-card-section'
   ),
-  contentSection: ui<LinidQCardSectionProps>(
+  contentSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace}.content-section`,
     'q-card-section'
   ),

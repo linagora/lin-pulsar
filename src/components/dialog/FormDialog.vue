@@ -97,17 +97,17 @@
 
 <script setup lang="ts">
 import type {
-  LinidAttributeConfiguration,
-  LinidQCardActionsProps,
-  LinidQCardProps,
-  LinidQCardSectionProps,
-  LinidQDialogProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarAttributeConfiguration,
+  LinPulsarQCardActionsProps,
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
+  LinPulsarQDialogProps,
+} from '@linagora/lin-pulsar-core';
 import {
   loadAsyncComponent,
   useDialog,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed, ref } from 'vue';
 import type { FormDialogEvent } from '../../types/dialog';
 import { DialogKey } from '../../types/dialog';
@@ -119,7 +119,7 @@ const content = ref<string>('');
 const uiNamespace = ref<string>('');
 const i18nScope = ref<string>('');
 const instanceId = ref<string>('');
-const formFields = ref<LinidAttributeConfiguration[]>([]);
+const formFields = ref<LinPulsarAttributeConfiguration[]>([]);
 const isLoading = ref(false);
 const formData = ref<Record<string, unknown>>({});
 let onSubmit: (formData: Record<string, unknown>) => Promise<void>;
@@ -130,21 +130,21 @@ const { ui } = useUiDesign();
 const localUiNamespace = computed(() => `${uiNamespace.value}.form-dialog`);
 
 const uiProps = computed(() => ({
-  dialog: ui<LinidQDialogProps>(localUiNamespace.value, 'q-dialog'),
-  card: ui<LinidQCardProps>(localUiNamespace.value, 'q-card'),
-  titleSection: ui<LinidQCardSectionProps>(
+  dialog: ui<LinPulsarQDialogProps>(localUiNamespace.value, 'q-dialog'),
+  card: ui<LinPulsarQCardProps>(localUiNamespace.value, 'q-card'),
+  titleSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.title-section`,
     'q-card-section'
   ),
-  contentSection: ui<LinidQCardSectionProps>(
+  contentSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.content-section`,
     'q-card-section'
   ),
-  fieldSection: ui<LinidQCardSectionProps>(
+  fieldSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.field-section`,
     'q-card-section'
   ),
-  cardActions: ui<LinidQCardActionsProps>(
+  cardActions: ui<LinPulsarQCardActionsProps>(
     localUiNamespace.value,
     'q-card-actions'
   ),

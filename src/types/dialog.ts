@@ -26,8 +26,8 @@
 
 import type {
   DialogEvent,
-  LinidAttributeConfiguration,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarAttributeConfiguration,
+} from '@linagora/lin-pulsar-core';
 
 /**
  * Enum used to identify the type of dialog.
@@ -79,9 +79,9 @@ export interface FormDialogEvent extends BaseDialogEvent {
   instanceId?: string;
 
   /**
-   * Form fields to be rendered in the dialog, defined as an array of LinidAttributeConfiguration objects.
+   * Form fields to be rendered in the dialog, defined as an array of LinPulsarAttributeConfiguration objects.
    */
-  formFields?: LinidAttributeConfiguration[];
+  formFields?: LinPulsarAttributeConfiguration[];
 
   /**
    * Initial form data to populate the form fields, defined as a record of key-value pairs where keys are

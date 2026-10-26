@@ -43,7 +43,7 @@ const toQTreeNodesMock = (nodes) =>
     children: toQTreeNodesMock(node.nodes),
   }));
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   useUiDesign: () => ({ ui: uiMock }),
   useScopedI18n: () => ({ t: mockT }),
   useTree: () => ({ toQTreeNodes: toQTreeNodesMock }),

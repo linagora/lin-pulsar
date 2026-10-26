@@ -19,7 +19,7 @@
  * details.
  */
 
-import { saveEntity } from '@linagora/linid-im-front-corelib';
+import { saveEntity } from '@linagora/lin-pulsar-core';
 import { shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import GenericCreationPage from '../../../src/pages/GenericCreationPage.vue';
@@ -68,8 +68,8 @@ function createModuleOptions() {
 
 let mockModuleOptions = createModuleOptions();
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
-  LinidZoneRenderer: {
+vi.mock('@linagora/lin-pulsar-core', () => ({
+  LinPulsarZoneRenderer: {
     template: '<div />',
   },
   saveEntity: vi.fn(() =>

@@ -55,7 +55,7 @@
             v-if="!zone"
             :name="item"
           />
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             v-else
             :zone="`${localUiNamespace}.${item}`"
             :entity="entity"
@@ -73,16 +73,16 @@
 
 <script setup lang="ts">
 import type {
-  LinidQBtnProps,
-  LinidQItemProps,
-  LinidQListProps,
-  LinidQMenuProps,
-} from '@linagora/linid-im-front-corelib';
+  LinPulsarQBtnProps,
+  LinPulsarQItemProps,
+  LinPulsarQListProps,
+  LinPulsarQMenuProps,
+} from '@linagora/lin-pulsar-core';
 import {
-  LinidZoneRenderer,
+  LinPulsarZoneRenderer,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
 import type { MenuButtonProps } from '../../types/menuButton';
 
@@ -101,10 +101,10 @@ const { translateOrDefault } = useScopedI18n(localI18nScope.value);
 const { ui } = useUiDesign();
 
 const uiProps = computed(() => ({
-  button: ui<LinidQBtnProps>(localUiNamespace.value, 'q-btn'),
-  menu: ui<LinidQMenuProps>(localUiNamespace.value, 'q-menu'),
-  list: ui<LinidQListProps>(localUiNamespace.value, 'q-list'),
-  item: ui<LinidQItemProps>(localUiNamespace.value, 'q-item'),
+  button: ui<LinPulsarQBtnProps>(localUiNamespace.value, 'q-btn'),
+  menu: ui<LinPulsarQMenuProps>(localUiNamespace.value, 'q-menu'),
+  list: ui<LinPulsarQListProps>(localUiNamespace.value, 'q-list'),
+  item: ui<LinPulsarQItemProps>(localUiNamespace.value, 'q-item'),
 }));
 </script>
 

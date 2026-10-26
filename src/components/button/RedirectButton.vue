@@ -38,12 +38,12 @@
 </template>
 
 <script setup lang="ts">
-import type { LinidQBtnProps } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarQBtnProps } from '@linagora/lin-pulsar-core';
 import {
   useNunjucks,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
 import type { RedirectButtonProps } from '../../types/redirectButton';
 
@@ -62,7 +62,7 @@ const { renderString } = useNunjucks();
 const { ui } = useUiDesign();
 
 const uiProps = computed(() => ({
-  button: ui<LinidQBtnProps>(localUiNamespace.value, 'q-btn'),
+  button: ui<LinPulsarQBtnProps>(localUiNamespace.value, 'q-btn'),
 }));
 
 /** Nunjucks context shared by the `to` and `disable` templates. */

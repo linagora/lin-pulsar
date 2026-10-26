@@ -28,7 +28,7 @@ import { shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import DropdownButton from '../../../../src/components/button/DropdownButton.vue';
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   useScopedI18n: () => ({
     t: vi.fn((key) => key),
   }),

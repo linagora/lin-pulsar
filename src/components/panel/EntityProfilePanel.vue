@@ -44,7 +44,7 @@
         :show-cancel-button="false"
       >
         <template #prepend-buttons>
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="zoneNames.prependNavigation"
             :entity="entity"
             :instance-id="instanceId"
@@ -62,7 +62,7 @@
             data-cy="entity-profile-panel_back-button"
             :to="backRoute"
           />
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="zoneNames.appendNavigation"
             :entity="entity"
             :instance-id="instanceId"
@@ -73,7 +73,7 @@
       </ButtonsCard>
     </q-card-section>
 
-    <LinidZoneRenderer
+    <LinPulsarZoneRenderer
       :zone="zoneNames.beforeHeader"
       :entity="entity"
       :instance-id="instanceId"
@@ -209,7 +209,7 @@
       </p>
     </q-card-section>
 
-    <LinidZoneRenderer
+    <LinPulsarZoneRenderer
       :zone="zoneNames.afterHeader"
       :entity="entity"
       :instance-id="instanceId"
@@ -230,7 +230,7 @@
         :show-cancel-button="false"
       >
         <template #prepend-buttons>
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="zoneNames.prependActions"
             :entity="entity"
             :instance-id="instanceId"
@@ -256,7 +256,7 @@
             data-cy="entity-profile-panel_edit-button"
             @submitted="onSubmitted"
           />
-          <LinidZoneRenderer
+          <LinPulsarZoneRenderer
             :zone="zoneNames.appendActions"
             :entity="entity"
             :instance-id="instanceId"
@@ -272,7 +272,7 @@
       class="q-pa-none full-width entity-profile-panel--details-section"
       data-cy="entity-profile-panel_details-section"
     >
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="zoneNames.beforeDetails"
         :entity="entity"
         :instance-id="instanceId"
@@ -288,7 +288,7 @@
         :ui-namespace="localUiNamespace"
         :i18n-scope="localI18nScope"
       />
-      <LinidZoneRenderer
+      <LinPulsarZoneRenderer
         :zone="zoneNames.afterDetails"
         :entity="entity"
         :instance-id="instanceId"
@@ -298,7 +298,7 @@
       <slot name="after-details" />
     </q-card-section>
 
-    <LinidZoneRenderer
+    <LinPulsarZoneRenderer
       :zone="zoneNames.footer"
       :entity="entity"
       :instance-id="instanceId"
@@ -312,21 +312,21 @@
 
 <script setup lang="ts">
 import type {
-  LinidAttributeConfiguration,
-  LinidQBtnProps,
-  LinidQCardProps,
-  LinidQCardSectionProps,
-  LinidQIconProps,
-  LinidQImgProps,
+  LinPulsarAttributeConfiguration,
+  LinPulsarQBtnProps,
+  LinPulsarQCardProps,
+  LinPulsarQCardSectionProps,
+  LinPulsarQIconProps,
+  LinPulsarQImgProps,
   UiEvent,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import {
-  LinidZoneRenderer,
+  LinPulsarZoneRenderer,
   uiEventSubject,
   useNunjucks,
   useScopedI18n,
   useUiDesign,
-} from '@linagora/linid-im-front-corelib';
+} from '@linagora/lin-pulsar-core';
 import type { Subscription } from 'rxjs';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
@@ -405,30 +405,30 @@ const computedUiNamespaces = computed(() => ({
 }));
 
 const uiProps = computed(() => ({
-  card: ui<LinidQCardProps>(localUiNamespace.value, 'q-card'),
-  backButton: ui<LinidQBtnProps>(
+  card: ui<LinPulsarQCardProps>(localUiNamespace.value, 'q-card'),
+  backButton: ui<LinPulsarQBtnProps>(
     `${computedUiNamespaces.value.navigationZones}.back-button`,
     'q-btn'
   ),
-  image: ui<LinidQImgProps>(localUiNamespace.value, 'q-img'),
-  avatarIcon: ui<LinidQIconProps>(localUiNamespace.value, 'q-icon'),
-  navigationSection: ui<LinidQCardSectionProps>(
+  image: ui<LinPulsarQImgProps>(localUiNamespace.value, 'q-img'),
+  avatarIcon: ui<LinPulsarQIconProps>(localUiNamespace.value, 'q-icon'),
+  navigationSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.navigation-section`,
     'q-card-section'
   ),
-  avatarSection: ui<LinidQCardSectionProps>(
+  avatarSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.avatar-section`,
     'q-card-section'
   ),
-  titlesSection: ui<LinidQCardSectionProps>(
+  titlesSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.titles-section`,
     'q-card-section'
   ),
-  actionsSection: ui<LinidQCardSectionProps>(
+  actionsSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.actions-section`,
     'q-card-section'
   ),
-  detailsSection: ui<LinidQCardSectionProps>(
+  detailsSection: ui<LinPulsarQCardSectionProps>(
     `${localUiNamespace.value}.details-section`,
     'q-card-section'
   ),
@@ -484,7 +484,7 @@ const avatarMenuItems = computed(() =>
 );
 
 /** Form fields of the image upload dialog: a single required `file` field bound to `importOptions`. */
-const importFormFields = computed<LinidAttributeConfiguration[]>(() => [
+const importFormFields = computed<LinPulsarAttributeConfiguration[]>(() => [
   {
     name: 'file',
     type: 'File',

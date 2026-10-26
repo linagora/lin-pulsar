@@ -28,9 +28,9 @@ import { shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AdvancedSearchCard from '../../../../src/components/card/AdvancedSearchCard.vue';
 
-vi.mock('@linagora/linid-im-front-corelib', async () => {
+vi.mock('@linagora/lin-pulsar-core', async () => {
   const { fromDot, getNestedValue } = await vi.importActual(
-    '@linagora/linid-im-front-corelib'
+    '@linagora/lin-pulsar-core'
   );
   return {
     fromDot,

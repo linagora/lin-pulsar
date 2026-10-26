@@ -27,8 +27,8 @@
 import { shallowMount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('@linagora/linid-im-front-corelib', async () => {
-  const actual = await vi.importActual('@linagora/linid-im-front-corelib');
+vi.mock('@linagora/lin-pulsar-core', async () => {
+  const actual = await vi.importActual('@linagora/lin-pulsar-core');
   return {
     ...actual,
     useUiDesign: () => ({ ui: vi.fn(() => ({})) }),
@@ -40,7 +40,7 @@ vi.mock('@linagora/linid-im-front-corelib', async () => {
 });
 
 import TreeSearchFilterPanel from '../../../../src/components/smart-filter/TreeSearchFilterPanel.vue';
-import { getHttpClient } from '@linagora/linid-im-front-corelib';
+import { getHttpClient } from '@linagora/lin-pulsar-core';
 
 const ROOT_ID = '1';
 const CHILD1_ID = '2';
@@ -137,7 +137,7 @@ describe('TreeSearchFilterPanel', () => {
       ]);
     });
 
-    it('should emit search event with LinidFilterValue structure', async () => {
+    it('should emit search event with LinPulsarFilterValue structure', async () => {
       wrapper.vm.tickedNodeKeys = ['node1'];
       await wrapper.vm.onSearch();
 

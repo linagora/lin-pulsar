@@ -24,7 +24,7 @@
  * LinID Identity Manager software.
  */
 
-import { uiEventSubject } from '@linagora/linid-im-front-corelib';
+import { uiEventSubject } from '@linagora/lin-pulsar-core';
 import { shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ConfirmDialogButton from '../../../../src/components/button/ConfirmDialogButton.vue';
@@ -34,7 +34,7 @@ const mockRequest = vi.fn(() => Promise.resolve({ data: {} }));
 const mockT = vi.fn((key) => key);
 const mockTranslateOrDefault = vi.fn((defaultValue) => defaultValue);
 
-vi.mock('@linagora/linid-im-front-corelib', () => ({
+vi.mock('@linagora/lin-pulsar-core', () => ({
   getHttpClient: () => ({
     request: mockRequest,
   }),
