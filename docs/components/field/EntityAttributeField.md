@@ -22,15 +22,15 @@ It acts as a **dispatcher component** that selects and loads the appropriate att
 
 The component accepts all props defined by `AttributeFieldProps`.
 
-| Prop           | Type                             | Required | Description                                                                                                                              |
-| -------------- | -------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `instanceId`   | `string`                         | Yes      | Identifier used for contextual data                                                                                                      |
-| `i18nScope`    | `string`                         | Yes      | I18n scope for localizing the component                                                                                                  |
-| `uiNamespace`  | `string`                         | Yes      | Base UI design namespace for styling                                                                                                     |
-| `definition`   | `LinidAttributeConfiguration<T>` | Yes      | Attribute definition describing type, input, and configuration                                                                           |
-| `entity`       | `Record<string, unknown>`        | Yes      | Entity object containing the attribute value                                                                                             |
-| `ignoreRules`  | `boolean`                        | No       | Indicates whether to bypass validation rules for this field (default: false)                                                             |
-| `emitOnUpdate` | `string`                         | No       | When set, broadcasts an event on `uiEventSubject` with this value as the key on every entity update. When absent, no event is broadcast. |
+| Prop           | Type                                 | Required | Description                                                                                                                              |
+| -------------- | ------------------------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `instanceId`   | `string`                             | Yes      | Identifier used for contextual data                                                                                                      |
+| `i18nScope`    | `string`                             | Yes      | I18n scope for localizing the component                                                                                                  |
+| `uiNamespace`  | `string`                             | Yes      | Base UI design namespace for styling                                                                                                     |
+| `definition`   | `LinPulsarAttributeConfiguration<T>` | Yes      | Attribute definition describing type, input, and configuration                                                                           |
+| `entity`       | `Record<string, unknown>`            | Yes      | Entity object containing the attribute value                                                                                             |
+| `ignoreRules`  | `boolean`                            | No       | Indicates whether to bypass validation rules for this field (default: false)                                                             |
+| `emitOnUpdate` | `string`                             | No       | When set, broadcasts an event on `uiEventSubject` with this value as the key on every entity update. When absent, no event is broadcast. |
 
 ### AttributeFieldProps Interface
 
@@ -40,7 +40,7 @@ export interface AttributeFieldProps<T = Record<string, unknown>> extends Common
   instanceId: string;
 
   /** Attribute configuration describing how the field should be rendered. */
-  definition: LinidAttributeConfiguration<T>;
+  definition: LinPulsarAttributeConfiguration<T>;
 
   /** Entity object holding the attribute value. */
   entity: Record<string, unknown>;
@@ -128,7 +128,7 @@ The `disable` property in `inputSettings` is **not handled by EntityAttributeFie
 
 ## **🎨 UI Customization**
 
-The component integrates with the LinID design system via `uiNamespace`.
+The component integrates with the LinPulsar design system via `uiNamespace`.
 
 ### Namespace Resolution
 
@@ -190,7 +190,7 @@ Multiple nesting levels are supported (e.g. `address.company.name`).
 2. The field component manages its own local value
 3. On change, the field emits `update:entity`
 4. `EntityAttributeField` re-emits the event to the parent
-5. If `emitOnUpdate` is set, it also publishes the updated entity to the `uiEventSubject` UI event bus from corelib, using `emitOnUpdate` as the event key
+5. If `emitOnUpdate` is set, it also publishes the updated entity to the `uiEventSubject` UI event bus from lin-pulsar-core, using `emitOnUpdate` as the event key
 6. The parent component updates the source of truth
 
 ```text

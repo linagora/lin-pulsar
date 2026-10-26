@@ -49,7 +49,7 @@ The component determines which fields to display as follows:
 ### Value resolution
 
 - Each field value is resolved from the `entity` object
-- Field names support **dot notation** to target values located inside sub-objects of the entity (e.g. `extraParameters.login`, resolved with `getNestedValue` from corelib)
+- Field names support **dot notation** to target values located inside sub-objects of the entity (e.g. `extraParameters.login`, resolved with `getNestedValue` from lin-pulsar-core)
 - Missing or `null` values, including unresolvable nested paths, are coerced to an empty string
 - All values are rendered as strings
 
@@ -138,7 +138,7 @@ Displays loading placeholders for all attributes.
 
 ## **🎨 UI Customization**
 
-The component uses the LinID design system through `useUiDesign()`. You can customize:
+The component uses the LinPulsar design system through `useUiDesign()`. You can customize:
 
 - **Card container**: `{uiNamespace}.entity-details-card` → applies to `q-card`
 - **Title section**: `{uiNamespace}.entity-details-card.title-section` → applies to the title `q-card-section`

@@ -113,7 +113,7 @@ interface ModulePageOptions extends ModulePageLifecycleHostOptions {
   pagePath: string; // route path inside the module
 }
 
-// from @linagora/linid-im-front-corelib
+// from @linagora/lin-pulsar-core
 interface ModulePageLifecycleHostOptions {
   addNavigationMenu?: boolean; // default false
 }

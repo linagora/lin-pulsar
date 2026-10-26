@@ -1,7 +1,7 @@
 # **AdvancedSearchCard**
 
 The **AdvancedSearchCard** component provides a reusable filter interface with two sections: default filters (always visible) and advanced filters (expandable).
-It dynamically renders filter fields based on `LinidAttributeConfiguration` definitions and supports two-way binding with the parent component.
+It dynamically renders filter fields based on `LinPulsarAttributeConfiguration` definitions and supports two-way binding with the parent component.
 
 ---
 
@@ -11,29 +11,29 @@ It dynamically renders filter fields based on `LinidAttributeConfiguration` defi
 - Separates commonly used filters from advanced filters for better UX
 - Dynamically renders appropriate input fields based on attribute configuration
 - Provides two-way binding for filter values through v-model pattern
-- Integrates with the LinID design system for consistent styling
+- Integrates with the LinPulsar design system for consistent styling
 - Supports smooth expand/collapse animations for the advanced section
 
 ---
 
 ## **Props**
 
-| Prop                  | Type                            | Required | Default | Description                                       |
-| --------------------- | ------------------------------- | -------- | ------- | ------------------------------------------------- |
-| `uiNamespace`         | `string`                        | Yes      | -       | UI design namespace for custom styling            |
-| `i18nScope`           | `string`                        | No       | -       | i18n scope for translations                       |
-| `instanceId`          | `string`                        | Yes      | -       | Instance identifier for scoped translations       |
-| `fields`              | `LinidAttributeConfiguration[]` | Yes      | -       | List of field definitions available for filtering |
-| `defaultFieldsNames`  | `string[]`                      | Yes      | -       | Field names to display in the default section     |
-| `advancedFieldsNames` | `string[]`                      | Yes      | -       | Field names to display in the advanced section    |
-| `filters`             | `Record<string, unknown>`       | Yes      | -       | Current filter values                             |
+| Prop                  | Type                                | Required | Default | Description                                       |
+| --------------------- | ----------------------------------- | -------- | ------- | ------------------------------------------------- |
+| `uiNamespace`         | `string`                            | Yes      | -       | UI design namespace for custom styling            |
+| `i18nScope`           | `string`                            | No       | -       | i18n scope for translations                       |
+| `instanceId`          | `string`                            | Yes      | -       | Instance identifier for scoped translations       |
+| `fields`              | `LinPulsarAttributeConfiguration[]` | Yes      | -       | List of field definitions available for filtering |
+| `defaultFieldsNames`  | `string[]`                          | Yes      | -       | Field names to display in the default section     |
+| `advancedFieldsNames` | `string[]`                          | Yes      | -       | Field names to display in the advanced section    |
+| `filters`             | `Record<string, unknown>`           | Yes      | -       | Current filter values                             |
 
 ### AdvancedSearchCardProps Interface
 
 ```typescript
 export interface AdvancedSearchCardProps extends CommonComponentProps {
   instanceId: string;
-  fields: LinidAttributeConfiguration[];
+  fields: LinPulsarAttributeConfiguration[];
   defaultFieldsNames: string[];
   advancedFieldsNames: string[];
   filters: Record<string, unknown>;
@@ -56,7 +56,7 @@ export interface AdvancedSearchCardProps extends CommonComponentProps {
 
 Field names support **dot notation** to target values located inside sub-objects of the entity (e.g. `extraParameters.login`). The `filters` contract stays **flat**, keyed by field name:
 
-- Incoming `filters` keys in dot notation are expanded to the nested structure expected by the field components (`fromDot` from corelib)
+- Incoming `filters` keys in dot notation are expanded to the nested structure expected by the field components (`fromDot` from lin-pulsar-core)
 - The emitted `update:filters` object is keyed by the dotted field name (e.g. `{ "extraParameters.login": "jdoe" }`), ready to be used as query filter keys
 - A nested field with no value does not produce a key in the emitted object
 
@@ -64,7 +64,7 @@ Field names support **dot notation** to target values located inside sub-objects
 
 ## **UI Customization**
 
-The component uses the LinID design system through `useUiDesign()`. You can customize:
+The component uses the LinPulsar design system through `useUiDesign()`. You can customize:
 
 - **Card container**: `{uiNamespace}.advanced-search-card` → applies to `q-card`
 - **Card icon**: `{uiNamespace}.advanced-search-card` → applies to `q-icon`
@@ -190,9 +190,9 @@ Example:
 <script setup lang="ts">
 import { ref } from 'vue';
 import AdvancedSearchCard from '@/components/card/AdvancedSearchCard.vue';
-import type { LinidAttributeConfiguration } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarAttributeConfiguration } from '@linagora/lin-pulsar-core';
 
-const fields: LinidAttributeConfiguration[] = [
+const fields: LinPulsarAttributeConfiguration[] = [
   { name: 'firstName', type: 'String', required: false, hasValidations: false, input: 'Text', inputSettings: {} },
   { name: 'lastName', type: 'String', required: false, hasValidations: false, input: 'Text', inputSettings: {} },
   { name: 'email', type: 'String', required: false, hasValidations: false, input: 'Text', inputSettings: {} },
@@ -232,9 +232,9 @@ function onFiltersChange(newFilters: Record<string, unknown>) {
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import AdvancedSearchCard from '@/components/card/AdvancedSearchCard.vue';
-import type { LinidAttributeConfiguration } from '@linagora/linid-im-front-corelib';
+import type { LinPulsarAttributeConfiguration } from '@linagora/lin-pulsar-core';
 
-const fields: LinidAttributeConfiguration[] = [/* ... */];
+const fields: LinPulsarAttributeConfiguration[] = [/* ... */];
 const defaultFieldsNames = ['firstName', 'lastName'];
 const advancedFieldsNames = ['email', 'isActive'];
 
@@ -333,7 +333,7 @@ These classes can be targeted in your global or scoped styles for additional cus
 
 ## **Field Types Support**
 
-The component supports all field types defined in `LinidAttributeConfiguration`:
+The component supports all field types defined in `LinPulsarAttributeConfiguration`:
 
 | Input Type | Component Rendered            | Description           |
 | ---------- | ----------------------------- | --------------------- |

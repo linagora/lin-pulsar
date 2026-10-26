@@ -2,7 +2,7 @@
 
 This document describes the design configuration keys available for CatalogUI components. These keys are used in the `design.json` file to customize the visual appearance of components.
 
-> For detailed Quasar component props, see the [corelib design documentation](https://github.com/linagora/linid-im-front-corelib/blob/main/docs/ui-design.md).
+> For detailed Quasar component props, see the [lin-pulsar-core design documentation](https://github.com/linagora/lin-pulsar-core/blob/main/docs/ui-design.md).
 
 ---
 
@@ -18,23 +18,23 @@ CatalogUI components use a namespace-based design system. Each component appends
 
 The examples in this document use placeholders that should be replaced with actual values:
 
-| Placeholder                       | Description                                               | Example                                                 |
-| --------------------------------- | --------------------------------------------------------- | ------------------------------------------------------- |
-| `[INSTANCE_ID]`                   | The module instance identifier (same level as `default`)  | `moduleUsers`                                           |
-| `[PAGE_NAME]`                     | The page or view name within the module                   | `homepage`, `details-page`                              |
-| `[ROUTE_ID]`                      | The route identifier for navigation menu tabs             | `moduleUsers`, `moduleGroups`                           |
-| `[FIELD_NAME]`                    | The entity attribute field name                           | `uid`, `mail`, `displayName`                            |
-| `[ITEM_KEY]`                      | The root dropdown action key                              | `edit`, `export`, `archive`                             |
-| `[CHILD_KEY]`                     | The nested dropdown action key                            | `csv`, `pdf`, `json`                                    |
-| `[PARENT_NAMESPACE]`              | The full namespace path passed by the parent component    | `moduleUsers.homepage`                                  |
-| `[TYPE]`                          | The node type for tree components                         | `structure`, `establishment`                            |
-| `[ACTION]`                        | The node action name for menu in tree nodes               | `edit`, `create`                                        |
-| `[CONFIRMATION_DIALOG_NAMESPACE]` | The namespace for a specific confirmation dialog instance | `delete-user-confirmation`, `archive-user-confirmation` |
-| `[FORM_DIALOG_NAMESPACE]`         | The namespace for a specific form dialog instance         | `create-user-dialog`, `edit-user-dialog`                |
-| `[FILTER]`                        | The filter name for LinidSmartFilter instance             | `insertDate`, `email`                                   |
-| `[FILTER_TYPE]`                   | The filter type for LinidFilterPanel icon configuration   | `text`, `date`, `number`, `list`, `tree`                |
-| `[SECTION_KEY]`                   | The section key of a generic details page                 | `identity`, `audit`                                     |
-| `[STATUS]`                        | The row import status of a generic import page            | `READY`, `ERROR`                                        |
+| Placeholder                       | Description                                                 | Example                                                 |
+| --------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------- |
+| `[INSTANCE_ID]`                   | The module instance identifier (same level as `default`)    | `moduleUsers`                                           |
+| `[PAGE_NAME]`                     | The page or view name within the module                     | `homepage`, `details-page`                              |
+| `[ROUTE_ID]`                      | The route identifier for navigation menu tabs               | `moduleUsers`, `moduleGroups`                           |
+| `[FIELD_NAME]`                    | The entity attribute field name                             | `uid`, `mail`, `displayName`                            |
+| `[ITEM_KEY]`                      | The root dropdown action key                                | `edit`, `export`, `archive`                             |
+| `[CHILD_KEY]`                     | The nested dropdown action key                              | `csv`, `pdf`, `json`                                    |
+| `[PARENT_NAMESPACE]`              | The full namespace path passed by the parent component      | `moduleUsers.homepage`                                  |
+| `[TYPE]`                          | The node type for tree components                           | `structure`, `establishment`                            |
+| `[ACTION]`                        | The node action name for menu in tree nodes                 | `edit`, `create`                                        |
+| `[CONFIRMATION_DIALOG_NAMESPACE]` | The namespace for a specific confirmation dialog instance   | `delete-user-confirmation`, `archive-user-confirmation` |
+| `[FORM_DIALOG_NAMESPACE]`         | The namespace for a specific form dialog instance           | `create-user-dialog`, `edit-user-dialog`                |
+| `[FILTER]`                        | The filter name for LinPulsarSmartFilter instance           | `insertDate`, `email`                                   |
+| `[FILTER_TYPE]`                   | The filter type for LinPulsarFilterPanel icon configuration | `text`, `date`, `number`, `list`, `tree`                |
+| `[SECTION_KEY]`                   | The section key of a generic details page                   | `identity`, `audit`                                     |
+| `[STATUS]`                        | The row import status of a generic import page              | `READY`, `ERROR`                                        |
 
 ---
 
@@ -836,16 +836,16 @@ Expandable search card with default and advanced filters.
 
 ---
 
-### LinidSmartFilter
+### LinPulsarSmartFilter
 
 Smart filtering component with toggle-able menu for managing active filters and saved filter configurations.
 
-**Namespace:** `{uiNamespace}.linid-smart-filter`
+**Namespace:** `{uiNamespace}.lin-pulsar-smart-filter`
 
 ```json
 {
   "[PARENT_NAMESPACE]": {
-    "linid-smart-filter": {
+    "lin-pulsar-smart-filter": {
       "q-field": {
         "outlined": true,
         "dense": true
@@ -869,7 +869,7 @@ Smart filtering component with toggle-able menu for managing active filters and 
           "name": "arrow_drop_down"
         }
       },
-      "linid-filter-chip": {
+      "lin-pulsar-filter-chip": {
         "[FILTER]": {
           "q-chip": {
             "square": true
@@ -883,7 +883,7 @@ Smart filtering component with toggle-able menu for managing active filters and 
           }
         }
       },
-      "linid-filter-panel": {
+      "lin-pulsar-filter-panel": {
         "header": {
           "q-icon": { "name": "filter_alt" },
           "q-separator": { "inset": false }
@@ -929,7 +929,7 @@ Smart filtering component with toggle-able menu for managing active filters and 
         },
         "q-btn": { "color": "primary", "unelevated": true }
       },
-      "linid-favorite-panel": {
+      "lin-pulsar-favorite-panel": {
         "header": {
           "q-icon": { "name": "filter_alt" },
           "q-separator": { "inset": false }
@@ -1427,7 +1427,7 @@ Page that contain table with search and filtering capabilities.
 ```json
 {
   "[NAMESPACE]": {
-    "linid-smart-filter": {
+    "lin-pulsar-smart-filter": {
       "q-field": {
         "outlined": true,
         "dense": true
@@ -1451,7 +1451,7 @@ Page that contain table with search and filtering capabilities.
           "name": "arrow_drop_down"
         }
       },
-      "linid-filter-chip": {
+      "lin-pulsar-filter-chip": {
         "[FILTER]": {
           "q-chip": {
             "square": true
@@ -1465,7 +1465,7 @@ Page that contain table with search and filtering capabilities.
           }
         }
       },
-      "linid-filter-panel": {
+      "lin-pulsar-filter-panel": {
         "header": {
           "q-icon": {
             "name": "filter_alt"
@@ -1559,7 +1559,7 @@ Page that contain table with search and filtering capabilities.
           "unelevated": true
         }
       },
-      "linid-favorite-panel": {
+      "lin-pulsar-favorite-panel": {
         "header": {
           "q-icon": {
             "name": "filter_alt"
@@ -1957,7 +1957,7 @@ A full example showing all CatalogUI components configured together:
           }
         }
       },
-      "linid-smart-filter": {
+      "lin-pulsar-smart-filter": {
         "q-field": { "outlined": true, "dense": true },
         "q-menu": { "autoClose": true },
         "q-separator": {},
@@ -1970,7 +1970,7 @@ A full example showing all CatalogUI components configured together:
         "iconMenuOpen": {
           "q-icon": { "name": "arrow_drop_down" }
         },
-        "linid-filter-chip": {
+        "lin-pulsar-filter-chip": {
           "[FILTER]": {
             "q-chip": {
               "square": true
@@ -2039,7 +2039,7 @@ A full example showing all CatalogUI components configured together:
             }
           }
         },
-        "linid-filter-panel": {
+        "lin-pulsar-filter-panel": {
           "header": {
             "q-icon": { "name": "filter_alt" },
             "q-separator": { "inset": false }
@@ -2085,7 +2085,7 @@ A full example showing all CatalogUI components configured together:
           },
           "q-btn": { "color": "primary", "unelevated": true }
         },
-        "linid-favorite-panel": {
+        "lin-pulsar-favorite-panel": {
           "header": {
             "q-icon": { "name": "filter_alt" },
             "q-separator": { "inset": false }
@@ -2503,5 +2503,5 @@ A full example showing all CatalogUI components configured together:
 
 ## **📚 Related Documentation**
 
-- **Quasar Component Props:** See corelib documentation for detailed props of each Quasar component (q-btn, q-card, q-input, etc.)
-- **useUiDesign Composable:** Available from `@linagora/linid-im-front-corelib`
+- **Quasar Component Props:** See lin-pulsar-core documentation for detailed props of each Quasar component (q-btn, q-card, q-input, etc.)
+- **useUiDesign Composable:** Available from `@linagora/lin-pulsar-core`

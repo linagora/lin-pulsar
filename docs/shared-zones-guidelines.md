@@ -1,7 +1,7 @@
 # **Shared Zone Guidelines 🔌**
 
 This document describes the conventions for **declaring, naming and documenting plugin zones**
-in shared components. Zones are injection points rendered by `LinidZoneRenderer` into which any
+in shared components. Zones are injection points rendered by `LinPulsarZoneRenderer` into which any
 module can register a federated plugin or a local component.
 
 > See [shared-ui-guidelines.md](./shared-ui-guidelines.md) for general component conventions,
@@ -76,10 +76,10 @@ const zoneNames = computed(() => ({
 }));
 ```
 
-### 2. Render zones with `LinidZoneRenderer`
+### 2. Render zones with `LinPulsarZoneRenderer`
 
 ```vue
-<LinidZoneRenderer :zone="zoneNames.prependActions" :entity="entity" :instance-id="instanceId" :ui-namespace="uiNamespace" :i18n-scope="i18nScope" />
+<LinPulsarZoneRenderer :zone="zoneNames.prependActions" :entity="entity" :instance-id="instanceId" :ui-namespace="uiNamespace" :i18n-scope="i18nScope" />
 ```
 
 ### 3. Forward relevant props
@@ -148,11 +148,11 @@ Declarative, for federated plugins:
 For local components or dynamic registration:
 
 ```ts
-import { useLinidZoneStore, registerLocalComponent } from '@linagora/linid-im-front-corelib';
+import { useLinPulsarZoneStore, registerLocalComponent } from '@linagora/lin-pulsar-core';
 import MyComponent from './MyComponent.vue';
 
 export function postInit(config: ModuleHostConfig<unknown>) {
-  const store = useLinidZoneStore();
+  const store = useLinPulsarZoneStore();
   const zone = `${config.instanceId}.header.actions`;
 
   store.registerPluginOnce(zone, 'myModule/ExportButton');
@@ -201,7 +201,7 @@ export function postInit(config: ModuleHostConfig<unknown>) {
 - **Zones are declared by components, consumed by modules.** A component only exposes the injection point;
   it never registers anything into its own zones. The host module or the application configuration
   decides what to render there.
-- **Zone names are opaque to the renderer.** `LinidZoneRenderer` does not interpret the name;
+- **Zone names are opaque to the renderer.** `LinPulsarZoneRenderer` does not interpret the name;
   it simply queries the zone store. As long as the consumer registers under the same string,
   any name is valid.
 - **Nesting is supported.** A zone rendered inside a component hosted by another zone inherits the

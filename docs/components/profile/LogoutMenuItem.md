@@ -12,7 +12,7 @@ It is rendered by default as the last entry of [HeaderProfile](./HeaderProfile.m
 - Provides a consistent logout entry at the end of the profile menu, shared by every host
 - Asks the user for a confirmation before leaving the application
 - Delegates the logout itself to a host route, so the component stays agnostic of the authentication mechanism (OIDC, SAML, …)
-- Integrates with the LinID design system and i18n for consistent styling and wording
+- Integrates with the LinPulsar design system and i18n for consistent styling and wording
 
 ---
 
@@ -43,7 +43,7 @@ This component emits no events. The navigation to `path` is performed through th
 
 ## **How it works**
 
-1. The item closes the profile menu (`v-close-popup`) and opens the shared confirmation dialog through the corelib `uiEventSubject` (`confirmation` key), with the title and content resolved from the i18n scope.
+1. The item closes the profile menu (`v-close-popup`) and opens the shared confirmation dialog through the lin-pulsar-core `uiEventSubject` (`confirmation` key), with the title and content resolved from the i18n scope.
 2. On confirm, the component checks that `path` matches a route of the host router, then calls `router.push(path)`. The host route is responsible for the actual logout (for instance ending the OIDC session). When no route matches, or when the navigation fails, the user stays on the page and a negative notification (`error` key) is displayed.
 3. On cancel, the dialog closes and nothing else happens.
 
@@ -57,7 +57,7 @@ This component emits no events. The navigation to `path` is performed through th
 
 ## **UI Customization**
 
-The component uses the LinID design system through `useUiDesign()`. The local namespace is built as `{uiNamespace}.logout-menu-item`. You can customize:
+The component uses the LinPulsar design system through `useUiDesign()`. The local namespace is built as `{uiNamespace}.logout-menu-item`. You can customize:
 
 - **Separator**: `{uiNamespace}.logout-menu-item` → applies to `q-separator`
 - **Item**: `{uiNamespace}.logout-menu-item` → applies to `q-item`

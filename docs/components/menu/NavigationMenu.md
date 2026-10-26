@@ -1,6 +1,6 @@
 # **NavigationMenu 🧭**
 
-The **NavigationMenu** component provides a tab-based navigation system for module pages in LinID.
+The **NavigationMenu** component provides a tab-based navigation system for module pages in LinPulsar.
 It leverages Quasar's `QTabs` and `QTab`, each tab being wrapped in a Vue Router link, to enable seamless navigation between different views.
 
 ---
@@ -51,7 +51,7 @@ The component resolves `item.labelKey` through `vue-i18n`'s `t()` to produce the
 
 ## **🎨 UI Customization**
 
-The component uses the LinID design system through `useUiDesign()`. You can customize:
+The component uses the LinPulsar design system through `useUiDesign()`. You can customize:
 
 - **Tabs container**: `{uiNamespace}.navigation-menu` → applies to `q-tabs`
 - **Individual routes**: `{uiNamespace}.navigation-menu.route-{itemId}` → applies to each tab (`q-tab`, configured under the `q-route-tab` key)
@@ -86,7 +86,7 @@ Example:
 ```vue
 <script setup lang="ts">
 import NavigationMenu from '@/components/menu/NavigationMenu.vue';
-import type { NavigationMenuItem } from '@linagora/linid-im-front-corelib';
+import type { NavigationMenuItem } from '@linagora/lin-pulsar-core';
 
 const navigationItems: NavigationMenuItem[] = [
   { id: '1', labelKey: 'nav.home', path: '/home' },

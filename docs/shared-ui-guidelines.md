@@ -1,6 +1,6 @@
 # **Shared UI Guidelines 🛠️**
 
-This document provides guidelines for developing **reusable UI components** in the LinID frontend ecosystem.
+This document provides guidelines for developing **reusable UI components** in the LinPulsar frontend ecosystem.
 These rules ensure components are **consistent, accessible, and compatible** across modules while integrating with the **Catalog UI** and **Module Federation architecture**.
 
 ---

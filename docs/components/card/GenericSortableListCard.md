@@ -31,7 +31,7 @@ list, action buttons, dialogs, and save flows.
 
 | Prop name            | Type                                                         | Default  | Description                                                                                                                                                                                                  |
 | -------------------- | ------------------------------------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `formFields`         | `LinidAttributeConfiguration[]`                              | —        | Form fields rendered in the create and edit form dialogs (see `FormDialog`). Also drives the initial data of the create form                                                                                 |
+| `formFields`         | `LinPulsarAttributeConfiguration[]`                          | —        | Form fields rendered in the create and edit form dialogs (see `FormDialog`). Also drives the initial data of the create form                                                                                 |
 | `endpoints`          | `GenericSortableListCardEndpoints`                           | —        | Nunjucks templates of the `find`, `create`, `update` and `delete` endpoints                                                                                                                                  |
 | `orderKey`           | `string`                                                     | —        | Name of the item property that stores the sort order index (1-based integer)                                                                                                                                 |
 | `fields`             | `GenericListField[]`                                         | —        | Fields rendered for each item and in the header row (see [Fields](#fields))                                                                                                                                  |
@@ -94,10 +94,10 @@ Points to keep in mind:
 - **`label` is an i18n key**, resolved under `${i18nScope}.GenericSortableListCard` — never a literal string
 - **`name` is the item property key**: the cell value is read from the item. There is no separate `field`
   property. `name` supports **dot notation** to target values located inside sub-objects of the item
-  (e.g. `extraParameters.login`, resolved with `getNestedValue` from corelib); an unresolvable path renders
+  (e.g. `extraParameters.login`, resolved with `getNestedValue` from lin-pulsar-core); an unresolvable path renders
   an empty cell. Default values of nested form fields (`inputSettings.defaultValue`) are prefilled under
   their nested path in the create form
-- **Formatting** is delegated to corelib's `useValueFormatter`. See [Value Formatting](../../value-formatting.md)
+- **Formatting** is delegated to lin-pulsar-core's `useValueFormatter`. See [Value Formatting](../../value-formatting.md)
 - **A nullish formatted value becomes an empty string.** A missing property and an explicit `null` both render as
   an empty cell rather than as `"null"`. The test is nullish, so `0` and `false` are kept and displayed
 - Values are rendered through `TruncatedItemLabel`, which shows a tooltip with the full text when the cell

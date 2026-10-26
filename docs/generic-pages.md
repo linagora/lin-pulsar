@@ -26,7 +26,7 @@ These pages are used together with the generic page modules documented in
 
 ## **🧩 Zones**
 
-Zones are injection points rendered by `LinidZoneRenderer`. The host application or any other module can register components into them, either as federated plugins (`registerPlugin`) or as local Vue components (`registerComponent`).
+Zones are injection points rendered by `LinPulsarZoneRenderer`. The host application or any other module can register components into them, either as federated plugins (`registerPlugin`) or as local Vue components (`registerComponent`).
 
 All zone names are prefixed by the `instanceId` of the module instance rendering the page, ensuring that multiple instances of the same generic page expose distinct zone namespaces.
 
@@ -100,7 +100,7 @@ Module Federation — a local component of the module itself — register it pro
 with `registerComponent`:
 
 ```typescript
-import { useLinidZoneStore } from '@linagora/linid-im-front-corelib';
+import { useLinPulsarZoneStore } from '@linagora/lin-pulsar-core';
 import ApplicationStatusBadge from './components/ApplicationStatusBadge.vue';
 
 /**
@@ -108,10 +108,10 @@ import ApplicationStatusBadge from './components/ApplicationStatusBadge.vue';
  * @param config - The host configuration associated with this module instance.
  */
 export function postInit(config: ModuleHostConfig<unknown>) {
-  const linidZoneStore = useLinidZoneStore();
+  const linPulsarZoneStore = useLinPulsarZoneStore();
   const zone = `${config.instanceId}.header.suffix`;
 
-  linidZoneStore.registerComponent(zone, ApplicationStatusBadge, {
+  linPulsarZoneStore.registerComponent(zone, ApplicationStatusBadge, {
     instanceId: config.instanceId,
   });
 }

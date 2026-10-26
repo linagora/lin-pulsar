@@ -5,7 +5,7 @@
 `catalogUI` is a **shared UI component library** for the LinID Identity Manager frontend.
 It provides **reusable visual components** that can be consumed by multiple modules across the application, ensuring consistency in design, accessibility, and functionality.
 
-> This library is part of the LinID plugin ecosystem and integrates seamlessly with the Module Federation architecture used in the front-end.
+> This library is part of the LinPulsar plugin ecosystem and integrates seamlessly with the Module Federation architecture used in the front-end.
 
 ---
 
@@ -111,7 +111,7 @@ The library organizes components by category. For each component, documentation 
 
 ### **Profile Components**
 
-- 👤 **HeaderProfile** — User profile button for the application header, displaying the authenticated user's name and email from the LinID user store
+- 👤 **HeaderProfile** — User profile button for the application header, displaying the authenticated user's name and email from the LinPulsar user store
   → Documentation is inside: [`HeaderProfile.md`](./docs/components/profile/HeaderProfile.md)
 - 🚪 **LogoutMenuItem** — Logout entry rendered by HeaderProfile, with a confirmation dialog before navigating to the host logout route
   → Documentation is inside: [`LogoutMenuItem.md`](./docs/components/profile/LogoutMenuItem.md)
@@ -187,10 +187,10 @@ The library organizes components by category. For each component, documentation 
 
 ### **Filtering Components**
 
-- 🔎 **LinidSmartFilter** — Filter field with a toggle-able menu managing active filters, typed filter panels and saved filter favorites
-  → Documentation is inside: [`LinidSmartFilter.md`](./docs/components/smart-filter/LinidSmartFilter.md)
+- 🔎 **LinPulsarSmartFilter** — Filter field with a toggle-able menu managing active filters, typed filter panels and saved filter favorites
+  → Documentation is inside: [`LinPulsarSmartFilter.md`](docs/components/smart-filter/LinPulsarSmartFilter.md)
 
-  Its panels (`LinidFilterPanel`, `LinidFavoritePanel`, `TextSearchFilterPanel`, `NumberSearchFilterPanel`, `DateSearchFilterPanel`, `ListSearchFilterPanel`, `TreeSearchFilterPanel`) and the `LinidFilterChip` are internal to the smart filter and documented in the same file.
+  Its panels (`LinPulsarFilterPanel`, `LinPulsarFavoritePanel`, `TextSearchFilterPanel`, `NumberSearchFilterPanel`, `DateSearchFilterPanel`, `ListSearchFilterPanel`, `TreeSearchFilterPanel`) and the `LinPulsarFilterChip` are internal to the smart filter and documented in the same file.
 
 ### **Dialog Components**
 

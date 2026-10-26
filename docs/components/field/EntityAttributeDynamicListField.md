@@ -2,7 +2,7 @@
 
 The **EntityAttributeDynamicListField** component is a specialized attribute field designed to handle **dynamic list-based attributes** within an entity.
 
-It relies on Quasar's `QSelect` component with **lazy loading** (dynamic loading on virtual scroll) and integrates with the LinID design system and scoped i18n to provide a fully customizable, localized, and reactive select input for structured `{ label, value }` elements fetched from a backend endpoint. The dropdown displays **labels** while the entity stores only the **value**.
+It relies on Quasar's `QSelect` component with **lazy loading** (dynamic loading on virtual scroll) and integrates with the LinPulsar design system and scoped i18n to provide a fully customizable, localized, and reactive select input for structured `{ label, value }` elements fetched from a backend endpoint. The dropdown displays **labels** while the entity stores only the **value**.
 
 The route itself is a **Nunjucks template** rendered against the edited entity, so the endpoint can depend on other attribute values (e.g. `/api/organizations/{{ entity.organizationId }}/units`). Options are reloaded automatically whenever the rendered route changes.
 
@@ -38,14 +38,14 @@ Unlike `EntityAttributeListField`, which uses a static predefined list, this com
 
 The component uses the shared `AttributeFieldProps` interface with `FieldDynamicListSettings`.
 
-| Prop          | Type                                                    | Required | Description                                                                  |
-| ------------- | ------------------------------------------------------- | -------- | ---------------------------------------------------------------------------- |
-| `instanceId`  | `string`                                                | Yes      | Identifier used for contextual data                                          |
-| `i18nScope`   | `string`                                                | Yes      | I18n scope for localizing the component                                      |
-| `uiNamespace` | `string`                                                | Yes      | Base UI design namespace for styling                                         |
-| `definition`  | `LinidAttributeConfiguration<FieldDynamicListSettings>` | Yes      | Attribute definition (name, type, input configuration)                       |
-| `entity`      | `Record<string, unknown>`                               | Yes      | Entity object containing the dynamic list attribute value                    |
-| `ignoreRules` | `boolean`                                               | No       | Indicates whether to bypass validation rules for this field (default: false) |
+| Prop          | Type                                                        | Required | Description                                                                  |
+| ------------- | ----------------------------------------------------------- | -------- | ---------------------------------------------------------------------------- |
+| `instanceId`  | `string`                                                    | Yes      | Identifier used for contextual data                                          |
+| `i18nScope`   | `string`                                                    | Yes      | I18n scope for localizing the component                                      |
+| `uiNamespace` | `string`                                                    | Yes      | Base UI design namespace for styling                                         |
+| `definition`  | `LinPulsarAttributeConfiguration<FieldDynamicListSettings>` | Yes      | Attribute definition (name, type, input configuration)                       |
+| `entity`      | `Record<string, unknown>`                                   | Yes      | Entity object containing the dynamic list attribute value                    |
+| `ignoreRules` | `boolean`                                                   | No       | Indicates whether to bypass validation rules for this field (default: false) |
 
 ### AttributeFieldProps Interface
 
@@ -55,7 +55,7 @@ export interface AttributeFieldProps<T = Record<string, unknown>> extends Common
   instanceId: string;
 
   /** Attribute configuration describing how the field should be rendered. */
-  definition: LinidAttributeConfiguration<T>;
+  definition: LinPulsarAttributeConfiguration<T>;
 
   /** Entity object holding the attribute value. */
   entity: Record<string, unknown>;
@@ -214,7 +214,7 @@ translateOrDefault('', 'label');
 
 ## **🎨 UI Customization**
 
-UI customization is handled via the LinID design system using `useUiDesign()`.
+UI customization is handled via the LinPulsar design system using `useUiDesign()`.
 
 ### Namespace Resolution
 
@@ -224,13 +224,13 @@ UI customization is handled via the LinID design system using `useUiDesign()`.
 
 ### Applied Components
 
-| Sub-namespace      | Quasar component | Props type               | Usage                                                     |
-| ------------------ | ---------------- | ------------------------ | --------------------------------------------------------- |
-| _(none)_           | `q-select`       | `LinidQSelectProps`      | The select itself                                         |
-| _(none)_           | `q-item`         | `LinidQItemProps`        | Each option, when the two-line layout applies (see below) |
-| _(none)_           | `q-item-section` | `LinidQItemSectionProps` | The section holding the option label and caption          |
-| _(none)_           | `q-item-label`   | `LinidQItemLabelProps`   | The option label                                          |
-| `disabled-caption` | `q-item-label`   | `LinidQItemLabelProps`   | The `disabledText` caption of each disabled option        |
+| Sub-namespace      | Quasar component | Props type                   | Usage                                                     |
+| ------------------ | ---------------- | ---------------------------- | --------------------------------------------------------- |
+| _(none)_           | `q-select`       | `LinPulsarQSelectProps`      | The select itself                                         |
+| _(none)_           | `q-item`         | `LinPulsarQItemProps`        | Each option, when the two-line layout applies (see below) |
+| _(none)_           | `q-item-section` | `LinPulsarQItemSectionProps` | The section holding the option label and caption          |
+| _(none)_           | `q-item-label`   | `LinPulsarQItemLabelProps`   | The option label                                          |
+| `disabled-caption` | `q-item-label`   | `LinPulsarQItemLabelProps`   | The `disabledText` caption of each disabled option        |
 
 The option elements are only rendered when the field has a `disabledText` translation: without it, Quasar renders the options itself and these keys have no effect. The props Quasar computes for an option (`clickable`, `active`, `disable`, `focused`...) win over the `q-item` design entry.
 
@@ -337,8 +337,8 @@ const enrichedDefinition = {
 
 The attribute `name` supports **dot notation** to target values located inside sub-objects of the entity (e.g. `extraParameters.login`):
 
-- The initial value is read from the nested path (`getNestedValue` from corelib)
-- Updates rewrite only the targeted nested property, preserving the rest of the entity structure (`setNestedValue` from corelib)
+- The initial value is read from the nested path (`getNestedValue` from lin-pulsar-core)
+- Updates rewrite only the targeted nested property, preserving the rest of the entity structure (`setNestedValue` from lin-pulsar-core)
 - Missing intermediate objects are created when updating; intermediate values that are not objects are replaced by objects
 - The `update:entity` event still emits the **complete** updated entity object
 

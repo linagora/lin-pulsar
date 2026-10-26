@@ -3,7 +3,7 @@
 The **EntityAttributeDateField** component is a specialized attribute field designed to handle **date-based attributes**
 within an entity.
 
-It relies on Quasar’s `QInput` and `QDate` component and integrates with the LinID design system and scoped i18n to provide a fully
+It relies on Quasar’s `QInput` and `QDate` component and integrates with the LinPulsar design system and scoped i18n to provide a fully
 customizable, localized, and reactive date input.
 
 ---
@@ -24,14 +24,14 @@ customizable, localized, and reactive date input.
 
 The component uses the shared `AttributeFieldProps` interface with `FieldDateSettings`.
 
-| Prop          | Type                                             | Required | Description                                                                  |
-| ------------- | ------------------------------------------------ | -------- | ---------------------------------------------------------------------------- |
-| `instanceId`  | `string`                                         | Yes      | Identifier used for contextual data                                          |
-| `i18nScope`   | `string`                                         | Yes      | I18n scope for localizing the component                                      |
-| `uiNamespace` | `string`                                         | Yes      | Base UI design namespace for styling                                         |
-| `definition`  | `LinidAttributeConfiguration<FieldDateSettings>` | Yes      | Attribute definition (name, type, input configuration)                       |
-| `entity`      | `Record<string, unknown>`                        | Yes      | Entity object containing the date attribute value                            |
-| `ignoreRules` | `boolean`                                        | No       | Indicates whether to bypass validation rules for this field (default: false) |
+| Prop          | Type                                                 | Required | Description                                                                  |
+| ------------- | ---------------------------------------------------- | -------- | ---------------------------------------------------------------------------- |
+| `instanceId`  | `string`                                             | Yes      | Identifier used for contextual data                                          |
+| `i18nScope`   | `string`                                             | Yes      | I18n scope for localizing the component                                      |
+| `uiNamespace` | `string`                                             | Yes      | Base UI design namespace for styling                                         |
+| `definition`  | `LinPulsarAttributeConfiguration<FieldDateSettings>` | Yes      | Attribute definition (name, type, input configuration)                       |
+| `entity`      | `Record<string, unknown>`                            | Yes      | Entity object containing the date attribute value                            |
+| `ignoreRules` | `boolean`                                            | No       | Indicates whether to bypass validation rules for this field (default: false) |
 
 ### AttributeFieldProps Interface
 
@@ -41,7 +41,7 @@ export interface AttributeFieldProps<T = Record<string, unknown>> extends Common
   instanceId: string;
 
   /** Attribute configuration describing how the field should be rendered. */
-  definition: LinidAttributeConfiguration<T>;
+  definition: LinPulsarAttributeConfiguration<T>;
 
   /** Entity object holding the attribute value. */
   entity: Record<string, unknown>;
@@ -157,13 +157,13 @@ The component supports two distinct date format masks:
 The **internal mask** is used for:
 
 - Storage of date values in the parent entity
-- Aggregating date constraint values (`afterDate`/`beforeDate`/`fromDate`/`upToDate`), which are then normalized either to the display mask (for validation rules) or to the corelib's `QDATE_DEFAULT_MASK` (for the date-picker's available `options` predicate — see below)
+- Aggregating date constraint values (`afterDate`/`beforeDate`/`fromDate`/`upToDate`), which are then normalized either to the display mask (for validation rules) or to lin-pulsar-core's `QDATE_DEFAULT_MASK` (for the date-picker's available `options` predicate — see below)
 
 Resolution order:
 
 1. If `inputSettings.valueFormatI18NKey` is set and the **global** i18n instance has a translation for it (checked via `te`), the globally translated value is used — enabling locale-specific storage formats.
 2. Otherwise, falls back to the static `inputSettings.valueFormat`
-3. If `inputSettings.valueFormat` is also falsy (`undefined`, `null`, or `''`), falls back to the corelib's `QDATE_DEFAULT_MASK` constant
+3. If `inputSettings.valueFormat` is also falsy (`undefined`, `null`, or `''`), falls back to lin-pulsar-core's `QDATE_DEFAULT_MASK` constant
 
 #### 2. Display Mask (`mask` / `maskI18NKey`)
 
@@ -180,14 +180,14 @@ its `options`/`events` predicate with dates in its own internal `QDATE_DEFAULT_M
 `QDATE_DEFAULT_MASK` (not `mask`) before being compared against the dates `q-date` passes in.
 
 Every conversion between the two masks (reading the stored entity value, writing back a user edit, or converting a
-date constraint) goes through the corelib's `formatDate(date, outputFormat, inputFormat)` helper (from
+date constraint) goes through lin-pulsar-core's `formatDate(date, outputFormat, inputFormat)` helper (from
 `useCommonMapper()`), which parses `date` against `inputFormat` and formats it as `outputFormat` in a single call.
 
 Resolution order:
 
 1. If `inputSettings.maskI18NKey` is set and the **global** i18n instance has a translation for it (checked via `te`), the globally translated value is used — enabling locale-specific display formats (e.g. `DD/MM/YYYY` for `fr`, `MM/DD/YYYY` for `en`).
 2. Otherwise, falls back to the static `inputSettings.mask`
-3. If `inputSettings.mask` is also falsy (`undefined`, `null`, or `''`), falls back to the corelib's `QDATE_DEFAULT_MASK` constant
+3. If `inputSettings.mask` is also falsy (`undefined`, `null`, or `''`), falls back to lin-pulsar-core's `QDATE_DEFAULT_MASK` constant
 
 ### Fallback Behavior
 
@@ -203,7 +203,7 @@ translateOrDefault('', 'label');
 
 ## **🎨 UI Customization**
 
-UI customization is handled via the LinID design system using `useUiDesign()`.
+UI customization is handled via the LinPulsar design system using `useUiDesign()`.
 
 ### Namespace Resolution
 
@@ -214,7 +214,7 @@ UI customization is handled via the LinID design system using `useUiDesign()`.
 ### Applied Component
 
 - Quasar component: `q-input`, `q-btn`, `q-icon` and `q-date`
-- Props type: `LinidQInputProps`, `LinidQBtnProps`, `LinidQInputProps` and `LinidQDateProps`
+- Props type: `LinPulsarQInputProps`, `LinPulsarQBtnProps`, `LinPulsarQInputProps` and `LinPulsarQDateProps`
 
 Example:
 
@@ -288,8 +288,8 @@ const rules = computed(() => {
 
 The attribute `name` supports **dot notation** to target values located inside sub-objects of the entity (e.g. `extraParameters.login`):
 
-- The initial value is read from the nested path (`getNestedValue` from corelib)
-- Updates rewrite only the targeted nested property, preserving the rest of the entity structure (`setNestedValue` from corelib)
+- The initial value is read from the nested path (`getNestedValue` from lin-pulsar-core)
+- Updates rewrite only the targeted nested property, preserving the rest of the entity structure (`setNestedValue` from lin-pulsar-core)
 - Missing intermediate objects are created when updating; intermediate values that are not objects are replaced by objects
 - The `update:entity` event still emits the **complete** updated entity object
 
@@ -411,9 +411,9 @@ In this example:
 - The component assumes `definition.input === 'Date'`
 - Uses `FieldDateSettings` for `inputSettings`, which supports `valueFormat`, `valueFormatI18NKey`, `mask`, `maskI18NKey`, `options`, `ignoreRules`, and `disable`
 - The date format masks are resolved via the **global** i18n instance, not the component's scoped i18n:
-  - `valueFormatI18NKey` (internal mask used for storage and constraint aggregation) is checked against the global instance first (as an **absolute** key) and translated via global `t` if found; otherwise falls back to the static `valueFormat`, and finally to the corelib's `QDATE_DEFAULT_MASK` constant
-  - `maskI18NKey` (display mask used by the date-picker, the input field and validation) is checked against the global instance first (as an **absolute** key) and translated via global `t` if found; otherwise falls back to the static `mask`, and finally to the corelib's `QDATE_DEFAULT_MASK` constant
-- Conversions between `valueFormat` and `mask` are delegated to the corelib's `formatDate` (`useCommonMapper()`), which replaces the previous `useQuasarDate()` (`toQDateFormat`/`formatQDate`) helpers
+  - `valueFormatI18NKey` (internal mask used for storage and constraint aggregation) is checked against the global instance first (as an **absolute** key) and translated via global `t` if found; otherwise falls back to the static `valueFormat`, and finally to lin-pulsar-core's `QDATE_DEFAULT_MASK` constant
+  - `maskI18NKey` (display mask used by the date-picker, the input field and validation) is checked against the global instance first (as an **absolute** key) and translated via global `t` if found; otherwise falls back to the static `mask`, and finally to lin-pulsar-core's `QDATE_DEFAULT_MASK` constant
+- Conversions between `valueFormat` and `mask` are delegated to lin-pulsar-core's `formatDate` (`useCommonMapper()`), which replaces the previous `useQuasarDate()` (`toQDateFormat`/`formatQDate`) helpers
 - Validation is handled internally using `useQuasarFieldValidation` with support for `required`, date constraints, and API-backed validation (`validateFromApi` when `hasValidations` is `true`)
 - The field is rendered as non-interactive when `definition.inputSettings.disable` is `true`
 - Missing translations safely fall back to default values

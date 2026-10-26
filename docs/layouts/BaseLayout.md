@@ -1,6 +1,6 @@
 # **BaseLayout 🏗️**
 
-The **BaseLayout** component is a foundational layout for all module pages in LinID.
+The **BaseLayout** component is a foundational layout for all module pages in LinPulsar.
 It provides a **standard page structure** using Quasar's `QLayout`, a header with application info and navigation, and a `router-view` for dynamic content.
 
 ---
@@ -11,7 +11,7 @@ It provides a **standard page structure** using Quasar's `QLayout`, a header wit
 - Handles the main page container for rendering module views
 - Integrates a header with application branding, version info and navigation menu
 - Serves as the base for more complex layouts in the future
-- Leverages the LinID UI design system for consistent theming
+- Leverages the LinPulsar UI design system for consistent theming
 
 ---
 
@@ -38,14 +38,14 @@ The header contains two toolbars:
 
 ### **Zone Renderer**
 
-- **LinidZoneRenderer:** Renders components registered in the `base-layout.dialogComponent` zone
+- **LinPulsarZoneRenderer:** Renders components registered in the `base-layout.dialogComponent` zone
 - Used to display dialogs at the layout level, such as the confirmation dialog from `ConfirmationDialog.vue`
 
 ---
 
 ## **⚙️ Route meta**
 
-The layout has no props. The logout settings of the header profile menu are read from the `meta` of the current route, which Vue Router merges from the layout route down to its children, so they can be declared on the route mounting the layout (through Vue Router directly or through a `LinidRoute` exposed by a module):
+The layout has no props. The logout settings of the header profile menu are read from the `meta` of the current route, which Vue Router merges from the layout route down to its children, so they can be declared on the route mounting the layout (through Vue Router directly or through a `LinPulsarRoute` exposed by a module):
 
 | Meta key     | Type      | Default     | Description                                                                 |
 | ------------ | --------- | ----------- | --------------------------------------------------------------------------- |
@@ -88,10 +88,10 @@ ui('base-layout.header', 'q-avatar'); // Customize logo
 
 ## **📊 Data Flow**
 
-1. **UI Store:** `useLinidUiStore()` provides `mainNavigationItems` for navigation
+1. **UI Store:** `useLinPulsarUiStore()` provides `mainNavigationItems` for navigation
 2. **i18n:** `useScopedI18n('application')` provides translated text for title and version
 3. **Navigation:** `NavigationMenu` receives items and namespace, handles routing; the logo and the title are Vue Router links to `/`, so the browser link controls keep working (open in a new tab, copy the link address)
-4. **Zone Renderer:** `LinidZoneRenderer` allows dynamic component injection via the zone system
+4. **Zone Renderer:** `LinPulsarZoneRenderer` allows dynamic component injection via the zone system
 
 ---
 
@@ -102,7 +102,7 @@ ui('base-layout.header', 'q-avatar'); // Customize logo
 - **Type-Safe:** Full TypeScript support with typed UI props
 - **Scalable:** Can be extended with slots or additional features
 - **Framework-Friendly:** Fully compatible with Vue 3, Quasar, and Vue Router
-- **Design System Integration:** Uses LinID's UI design system for theming
+- **Design System Integration:** Uses LinPulsar's UI design system for theming
 - **i18n Ready:** Supports internationalization for application info
 
 ---

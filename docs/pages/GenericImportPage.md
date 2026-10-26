@@ -246,7 +246,7 @@ of the defaults.
 
 ## **UI Customization**
 
-The page uses the LinID design system through `useUiDesign()`, with the `instanceId` as namespace.
+The page uses the LinPulsar design system through `useUiDesign()`, with the `instanceId` as namespace.
 
 | Namespace                                              | Type             | Description                                                  |
 | ------------------------------------------------------ | ---------------- | ------------------------------------------------------------ |
@@ -267,12 +267,12 @@ The page uses the LinID design system through `useUiDesign()`, with the `instanc
 
 ## **Dependencies**
 
-- `LinidZoneRenderer` (zone injection points)
+- `LinPulsarZoneRenderer` (zone injection points)
 - `ButtonsCard` (navigation and import actions)
 - `DropdownButton` (clear actions)
 - `LoadFilesField` (internal, file loading and mapping)
 - `ImportedDataTable` (internal, rows preview)
-- `saveEntity` / `getModuleHostConfiguration` from `@linagora/linid-im-front-corelib`
+- `saveEntity` / `getModuleHostConfiguration` from `@linagora/lin-pulsar-core`
 - `useNunjucks` (row mapping and `parentPath` rendering)
 - `useScopedI18n` (translations)
 - `useUiDesign` (UI customization)

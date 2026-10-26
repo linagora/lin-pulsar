@@ -38,7 +38,7 @@ The component accepts the following props:
 </template>
 
 <script setup lang="ts">
-import { loadAsyncComponent } from '@linagora/linid-im-front-corelib';
+import { loadAsyncComponent } from '@linagora/lin-pulsar-core';
 
 const StatusBadge = loadAsyncComponent('catalogUI/StatusBadge');
 const user = {
@@ -100,7 +100,7 @@ The component resolves the status value using the following logic:
 const statusValue = getNestedValue(entity, valueKey) || defaultValue;
 ```
 
-`valueKey` supports **dot notation** to target values located inside sub-objects of the entity (e.g. `extraParameters.status`, resolved with `getNestedValue` from corelib).
+`valueKey` supports **dot notation** to target values located inside sub-objects of the entity (e.g. `extraParameters.status`, resolved with `getNestedValue` from lin-pulsar-core).
 
 If the resolved value is `undefined`, `null`, or any falsy value — including an unresolvable nested path — the component will use the `defaultValue` prop instead.
 This ensures the badge always has a value to display, preventing empty or broken UI states.

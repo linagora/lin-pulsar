@@ -3,7 +3,7 @@
 The **EntityAttributeBooleanField** component is a specialized attribute field responsible for rendering and managing
 boolean values within an entity.
 
-It uses Quasar’s `QToggle` component and integrates seamlessly with the LinID design system and scoped i18n to provide a
+It uses Quasar’s `QToggle` component and integrates seamlessly with the LinPulsar design system and scoped i18n to provide a
 consistent, configurable, and localized boolean input.
 
 ---
@@ -26,14 +26,14 @@ consistent, configurable, and localized boolean input.
 
 The component relies on the shared `AttributeFieldProps` interface with `FieldBooleanSettings`.
 
-| Prop          | Type                                                | Required | Description                                                                  |
-| ------------- | --------------------------------------------------- | -------- | ---------------------------------------------------------------------------- |
-| `instanceId`  | `string`                                            | Yes      | Identifier used for contextual data                                          |
-| `i18nScope`   | `string`                                            | Yes      | I18n scope for localizing the component                                      |
-| `uiNamespace` | `string`                                            | Yes      | Base UI design namespace for styling                                         |
-| `definition`  | `LinidAttributeConfiguration<FieldBooleanSettings>` | Yes      | Attribute definition (name, type, input configuration)                       |
-| `entity`      | `Record<string, unknown>`                           | Yes      | Entity object containing the boolean attribute value                         |
-| `ignoreRules` | `boolean`                                           | No       | Indicates whether to bypass validation rules for this field (default: false) |
+| Prop          | Type                                                    | Required | Description                                                                  |
+| ------------- | ------------------------------------------------------- | -------- | ---------------------------------------------------------------------------- |
+| `instanceId`  | `string`                                                | Yes      | Identifier used for contextual data                                          |
+| `i18nScope`   | `string`                                                | Yes      | I18n scope for localizing the component                                      |
+| `uiNamespace` | `string`                                                | Yes      | Base UI design namespace for styling                                         |
+| `definition`  | `LinPulsarAttributeConfiguration<FieldBooleanSettings>` | Yes      | Attribute definition (name, type, input configuration)                       |
+| `entity`      | `Record<string, unknown>`                               | Yes      | Entity object containing the boolean attribute value                         |
+| `ignoreRules` | `boolean`                                               | No       | Indicates whether to bypass validation rules for this field (default: false) |
 
 ### AttributeFieldProps Interface
 
@@ -43,7 +43,7 @@ export interface AttributeFieldProps<T = Record<string, unknown>> extends Common
   instanceId: string;
 
   /** Attribute configuration describing how the field should be rendered. */
-  definition: LinidAttributeConfiguration<T>;
+  definition: LinPulsarAttributeConfiguration<T>;
 
   /** Entity object holding the attribute value. */
   entity: Record<string, unknown>;
@@ -132,7 +132,7 @@ The component uses `useScopedI18n` to resolve translations for the attribute lab
 
 ## **🎨 UI Customization**
 
-UI customization is handled via the LinID design system and `useUiDesign()`.
+UI customization is handled via the LinPulsar design system and `useUiDesign()`.
 
 ### Namespace Resolution
 
@@ -143,7 +143,7 @@ UI customization is handled via the LinID design system and `useUiDesign()`.
 ### Applied Component
 
 - Quasar component: `q-toggle`
-- Props resolved as `LinidQToggleProps`
+- Props resolved as `LinPulsarQToggleProps`
 
 Example:
 
@@ -162,8 +162,8 @@ This allows fine-grained styling and behavior customization per attribute.
 
 The attribute `name` supports **dot notation** to target values located inside sub-objects of the entity (e.g. `extraParameters.login`):
 
-- The initial value is read from the nested path (`getNestedValue` from corelib)
-- Updates rewrite only the targeted nested property, preserving the rest of the entity structure (`setNestedValue` from corelib)
+- The initial value is read from the nested path (`getNestedValue` from lin-pulsar-core)
+- Updates rewrite only the targeted nested property, preserving the rest of the entity structure (`setNestedValue` from lin-pulsar-core)
 - Missing intermediate objects are created when updating; intermediate values that are not objects are replaced by objects
 - The `update:entity` event still emits the **complete** updated entity object
 
@@ -233,7 +233,7 @@ when the value equals `trueValue`.
 Points to keep in mind:
 
 - **They are data semantics, not styling.** Unlike the other toggle options, they are not part of
-  `LinidQToggleProps` and therefore **cannot** be set from `design.json` — only from the attribute
+  `LinPulsarQToggleProps` and therefore **cannot** be set from `design.json` — only from the attribute
   configuration
 - **Omitting them is safe.** The bindings pass `undefined`, and Vue then applies Quasar's own
   defaults: `trueValue: true`, `falseValue: false`. Setting them explicitly to `null` in the JSON is

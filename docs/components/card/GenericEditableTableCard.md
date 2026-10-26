@@ -26,8 +26,8 @@ action buttons, dialogs, and confirmation flows.
 | Prop name          | Type                                | Default    | Description                                                                                                                                                                       |
 | ------------------ | ----------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `columns`          | `QTableColumn[]`                    | —          | Columns of the table. Labels are translated through the component i18n scope                                                                                                      |
-| `formFields`       | `LinidAttributeConfiguration[]`     | `[]`       | Form fields rendered in the creation and edition form dialogs (see `FormDialog`). Optional when `readOnly` is `true` or when neither `create` nor `update` endpoint is configured |
-| `editFormFields`   | `LinidAttributeConfiguration[]`     | —          | Form fields rendered in the edition form dialog instead of `formFields` when configured                                                                                           |
+| `formFields`       | `LinPulsarAttributeConfiguration[]` | `[]`       | Form fields rendered in the creation and edition form dialogs (see `FormDialog`). Optional when `readOnly` is `true` or when neither `create` nor `update` endpoint is configured |
+| `editFormFields`   | `LinPulsarAttributeConfiguration[]` | —          | Form fields rendered in the edition form dialog instead of `formFields` when configured                                                                                           |
 | `updateBody`       | `Record<string, unknown>`           | `formData` | Nunjucks template replacing the update request body, rendered with `entity`, `item` and `formData`                                                                                |
 | `endpoints`        | `GenericEditableTableCardEndpoints` | —          | Nunjucks templates of the `find`, `create`, `update` and `delete` endpoints                                                                                                       |
 | `entity`           | `Record<string, unknown>`           | `{}`       | Entity owning the collection, provided to the Nunjucks context. Injected by the hosting zone                                                                                      |
@@ -174,7 +174,7 @@ See [Generic Pages](../../generic-pages.md) for how to register a component in a
   This lets the card be rendered by a zone before the hosting page has resolved its entity
 - No request is sent while the `entity` prop is provided but empty, as the endpoints would render with
   a missing identifier. A card configured without an `entity` prop loads its static endpoint as usual
-- The table is paginated on the server side through the corelib `usePagination` composable: each
+- The table is paginated on the server side through the lin-pulsar-core `usePagination` composable: each
   request sends the current page and sort converted by `toPagination` (10 rows per page by default,
   sorted by `updateDate` descending until a sortable column is selected). Query parameters already
   present in the `find` endpoint are preserved
