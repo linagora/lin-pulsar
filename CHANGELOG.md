@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/linagora/lin-pulsar/compare/v0.2.149...v0.3.0) (2026-10-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* bump minor version to 0.3.0, see migration guide.
+
+* release 0.3.0 ([955f5d5](https://github.com/linagora/lin-pulsar/commit/955f5d5969b2e5ea1772550ab16554b2138c72ca))
+
 ### [0.2.149](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.148...v0.2.149) (2026-10-27)
 
 

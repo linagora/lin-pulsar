@@ -1,6 +1,6 @@
 {
   "name": "@linagora/lin-pulsar",
-  "version": "0.2.149",
+  "version": "0.3.0",
   "private": true,
   "packageManager": "pnpm@11.10.0",
   "scripts": {
