@@ -716,6 +716,83 @@ describe('Test component: GenericSortableListCard', () => {
       expect(wrapper.emitted('created')).toBeUndefined();
       expect(mockHttpGet).not.toHaveBeenCalled();
     });
+
+    it('should not emit any event on uiEventSubject when emitOnCreate is not configured', async () => {
+      mockHttpPost.mockResolvedValueOnce({
+        data: { id: 'new-id', name: 'new item' },
+      });
+      uiEventSubject.next.mockClear();
+
+      await wrapper.vm.createItem({ name: 'new item' });
+
+      expect(uiEventSubject.next).not.toHaveBeenCalled();
+    });
+
+    it('should emit the configured event on uiEventSubject with the created item after a successful creation', async () => {
+      wrapper = mountComponent({
+        emitOnCreate: 'rules:created',
+        itemMapperFn: (item) => ({ ...item, mapped: true }),
+      });
+      await flushPromises();
+      mockHttpPost.mockResolvedValueOnce({
+        data: { id: 'new-id', name: 'new item' },
+      });
+      uiEventSubject.next.mockClear();
+
+      await wrapper.vm.createItem({ name: 'new item' });
+
+      expect(uiEventSubject.next).toHaveBeenCalledWith({
+        key: 'rules:created',
+        data: { id: 'new-id', name: 'new item', mapped: true },
+      });
+    });
+
+    it('should run the success steps in the right order', async () => {
+      const steps = [];
+      wrapper = mountComponent({
+        emitOnCreate: 'rules:created',
+        onCreated: () => steps.push('created'),
+      });
+      await flushPromises();
+      mockHttpPost.mockResolvedValueOnce({
+        data: { id: 'new-id', name: 'new item' },
+      });
+      mockNotify.mockImplementationOnce(() => steps.push('notify'));
+      mockHttpGet.mockImplementationOnce(() =>
+        Promise.resolve().then(() => {
+          steps.push('reload');
+          return singlePageResponse([]);
+        })
+      );
+      uiEventSubject.next.mockImplementationOnce(() =>
+        steps.push('emitOnCreate')
+      );
+
+      await wrapper.vm
+        .createItem({ name: 'new item' })
+        .then(() => steps.push('dialog closes'));
+
+      expect(steps).toEqual([
+        'notify',
+        'created',
+        'reload',
+        'emitOnCreate',
+        'dialog closes',
+      ]);
+    });
+
+    it('should not emit the configured event when the creation fails', async () => {
+      wrapper = mountComponent({ emitOnCreate: 'rules:created' });
+      await flushPromises();
+      mockHttpPost.mockRejectedValueOnce(new Error('create failed'));
+      uiEventSubject.next.mockClear();
+
+      await expect(wrapper.vm.createItem({ name: 'new item' })).rejects.toThrow(
+        'create failed'
+      );
+
+      expect(uiEventSubject.next).not.toHaveBeenCalled();
+    });
   });
 
   describe('Test function: deleteItemLocally', () => {

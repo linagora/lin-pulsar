@@ -584,7 +584,8 @@ function openCreateDialog(): void {
 
 /**
  * Creates a new item by posting the submitted form data to the create endpoint, then notifies
- * the user, emits the `created` event and reloads the items.
+ * the user, emits the `created` event, reloads the items, and publishes `emitOnCreate` if
+ * configured.
  * @param formData - The submitted form data, sent as the request body.
  * @returns A promise that resolves when the creation handling is complete. The promise rejects
  * when the creation fails, so the form dialog stays open for correction.
@@ -595,10 +596,15 @@ async function createItem(formData: Record<string, unknown>): Promise<void> {
       renderString(props.endpoints.create, nunjucksContext.value),
       formData
     );
+    const createdItem = props.itemMapperFn(data);
 
     Notify({ type: 'positive', message: t('createSuccess') });
-    emits('created', props.itemMapperFn(data));
+    emits('created', createdItem);
     await loadData();
+
+    if (props.emitOnCreate) {
+      uiEventSubject.next({ key: props.emitOnCreate, data: createdItem });
+    }
   } catch (error) {
     Notify({ type: 'negative', message: t('createError') });
     throw error;
