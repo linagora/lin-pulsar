@@ -212,7 +212,7 @@ Data is fetched using:
 When `reloadTableOn` is configured, the page subscribes to `uiEventSubject` on mount and calls `loadData()`
 again every time an event with one of the configured keys is emitted, keeping the current pagination and
 active filters. This lets a zone-injected action (e.g. a [`FormDialogButton`](../components/button/FormDialogButton.md)
-with `emitOnSubmit`, or a `GenericSortableListCard` with `emitOnSave`) refresh the table after it succeeds.
+with `emitOnSubmit`, or a `GenericSortableListCard` with `emitOnSave` or `emitOnCreate`) refresh the table after it succeeds.
 The subscription is released when the page unmounts.
 
 ---
