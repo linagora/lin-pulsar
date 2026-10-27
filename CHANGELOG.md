@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.149](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.148...v0.2.149) (2026-10-27)
+
+
+### Features
+
+* renaming linid-im-front-community-plugin to lin-pulsar ([0bfd2d4](https://github.com/linagora/linid-im-front-community-plugins/commit/0bfd2d4ef48ae393a53402df87c46f3f24392241))
+
+
+### Bug Fixes
+
+* apply review fixes to release workflow, action pins, filter panel and README ([2b25c89](https://github.com/linagora/linid-im-front-community-plugins/commit/2b25c89dae6f8589bb4a4f0a379fa3881b9bbc7f))
+
 ### [0.2.148](https://github.com/linagora/linid-im-front-community-plugins/compare/v0.2.147...v0.2.148) (2026-10-22)
 
 
