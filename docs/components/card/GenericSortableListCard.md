@@ -22,8 +22,8 @@ list, action buttons, dialogs, and save flows.
 - Resolves API endpoints from Nunjucks templates rendered with the entity owning the collection
 - Renders configurable fields per item, as a column layout with a header row above the list
 - Exposes plugin zones around the fields and inside the item actions for custom UI injection
-- Can notify a hosting page after a save through `emitOnSave`, so it can react (e.g. reload its
-  own entity)
+- Can notify a hosting page after a save through `emitOnSave`, or after a creation through
+  `emitOnCreate`, so it can react (e.g. reload its own entity)
 
 ---
 
@@ -44,6 +44,7 @@ list, action buttons, dialogs, and save flows.
 | `i18nScope`          | `string`                                                     | —        | Identifier used to scope translations. Falls back to `instanceId` when not provided                                                                                                                          |
 | `listenToItemUpdate` | `string`                                                     | —        | When set, the card subscribes to `uiEventSubject` and applies local item updates for events matching this key. When absent, no subscription is created (see [Local item updates](#local-item-updates))       |
 | `emitOnSave`         | `string`                                                     | —        | When set, the card emits an event with this key on `uiEventSubject` after a batch of pending changes has been saved, fully or partially. When absent, nothing is emitted (see [Save changes](#save-changes)) |
+| `emitOnCreate`       | `string`                                                     | —        | When set, the card emits an event with this key on `uiEventSubject` after an item has been successfully created, with the created item as data. When absent, nothing is emitted (see [Add item](#add-item))  |
 
 ### Endpoints
 
@@ -173,8 +174,11 @@ reserves the section on both rows — the header and the items never drift out o
   `orderKey` is skipped by the walk, so **its `defaultValue` never overrides the computed position**
 - The presence test is `!== undefined`, so `false`, `0` and `""` are valid defaults and are kept
 - On submit, the form data is posted to the rendered `create` endpoint
-- On success: positive notification, `created` event with the server response (transformed by `itemMapperFn` if provided), items reload, dialog closes
-- On failure: negative notification, the dialog stays open for correction
+- On success, in order: positive notification, `created` event with the server response
+  (transformed by `itemMapperFn` if provided), items reload, the event configured through
+  `emitOnCreate` (if any) is published on `uiEventSubject` with the same created item as data,
+  dialog closes
+- On failure: negative notification, no event emitted, the dialog stays open for correction
 
 ### Edit item
 
