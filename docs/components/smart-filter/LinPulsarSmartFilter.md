@@ -261,7 +261,7 @@ All types are exported from the component's type definition file:
 
 ### `LinPulsarSmartFilterProps`
 
-Extends `CommonComponentProps` from the lin-pulsar-core:
+Extends `CommonComponentProps` from `lin-pulsar-core`:
 
 ```typescript
 export interface LinPulsarSmartFilterProps extends CommonComponentProps {
@@ -377,7 +377,7 @@ The component uses the `lin-pulsar-core` design system through `useUiDesign()` a
 | `{uiNamespace}.lin-pulsar-smart-filter.date-search-filter-panel`                                | `q-btn`          | Search button styling                                                                                       |
 | `{uiNamespace}.lin-pulsar-smart-filter.date-search-filter-panel.close`                          | `q-btn`          | Date picker close button styling                                                                            |
 
-- **Design Configuration Example:** See [design.md](../../design.md#LinPulsarSmartFilter).
+- **Design Configuration Example:** See [design.md](../../design.md#linpulsarsmartfilter).
 
 ---
 

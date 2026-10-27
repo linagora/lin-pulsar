@@ -241,6 +241,15 @@ The library organizes components by category. For each component, documentation 
 
 ---
 
+## **🧭 Migrations**
+
+Breaking changes come with a migration guide:
+
+- [`0.2.x` → `0.3.0`](./docs/migrations/0.2.X-0.3.0.md): renaming from `linid-catalog-ui` (`catalogUI`) to
+  `@linagora/lin-pulsar` (`LinPulsar`)
+
+---
+
 ## **🤝 Contributing**
 
 We welcome contributions to improve and extend LinPulsar.
