@@ -121,6 +121,14 @@ export interface GenericSortableListCardProps extends CommonComponentProps {
    * reloading its entity through the `reloadDetailsOn` option of a details page.
    */
   emitOnSave?: string;
+
+  /**
+   * When set, the card emits an event with this key on `uiEventSubject` after an item has been
+   * successfully created, with the created item (transformed by `itemMapperFn`) as data. Lets a
+   * hosting page react to a creation, for example reloading its entity through the
+   * `reloadDetailsOn` option of a details page.
+   */
+  emitOnCreate?: string;
 }
 
 /**
