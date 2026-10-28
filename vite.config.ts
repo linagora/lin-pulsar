@@ -126,6 +126,10 @@ export default defineConfig({
           __dirname,
           'src/federation/import-page-i18n.ts'
         ),
+        './DetailsPageI18n': resolve(
+          __dirname,
+          'src/federation/details-page-i18n.ts'
+        ),
         './PageRoutes': resolve(
           __dirname,
           'src/federation/module-page-route.ts'
