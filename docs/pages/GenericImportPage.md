@@ -208,7 +208,8 @@ Default `fr-FR` and `en-US` translations for this page are available through the
 custom i18n module: the remote namespaces its translations under the `{{ config.instanceId }}` placeholder
 key, which the module host replaces with the actual `instanceId` of the configuration. Business column
 headers (`{instanceId}.ImportedDataTable.headers.{column}`) are still module-specific and can be added on top
-of the defaults.
+of the defaults. The remote also ships the default labels of the
+[`LifecycleButtonsCard`](../components/card/LifecycleButtonsCard.md) under `{instanceId}.LifecycleButtonsCard`.
 
 | Key                                                | Description                                      |
 | -------------------------------------------------- | ------------------------------------------------ |
