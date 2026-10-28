@@ -269,6 +269,56 @@ Card with confirm/cancel action buttons.
 
 ---
 
+### LifecycleButtonsCard
+
+Card grouping the lifecycle dropdowns: the card is rendered through a nested `ButtonsCard`, each dropdown is a nested
+`DropdownButton` under its lifecycle type (`activation`, `suspension` or `deactivation`), the dialogs of the actions
+are the shared `FormDialog` and `ConfirmationDialog` under this namespace, and the components hosted by the `prepend`
+and `append` zones inherit this namespace.
+
+**Namespace:** `{uiNamespace}.lifecycle-buttons-card`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "lifecycle-buttons-card": {
+      "buttons-card": {
+        "q-card": { "flat": true },
+        "q-card-actions": { "align": "left" }
+      },
+      "activation": {
+        "dropdown-button": {
+          "q-btn-dropdown": { "color": "positive" }
+        }
+      },
+      "suspension": {
+        "dropdown-button": {
+          "q-btn-dropdown": { "color": "warning" }
+        }
+      },
+      "deactivation": {
+        "dropdown-button": {
+          "q-btn-dropdown": { "color": "negative" }
+        }
+      },
+      "form-dialog": {
+        "q-dialog": { "persistent": true },
+        "buttons-card": {
+          "q-card-actions": { "align": "right" }
+        }
+      },
+      "confirmation-dialog": {
+        "buttons-card": {
+          "q-card-actions": { "align": "right" }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
 ### StatusBadge
 
 Badge component for displaying entity status with i18n support.
@@ -2379,6 +2429,32 @@ A full example showing all LinPulsar components configured together:
         },
         "cancel-button": {
           "q-btn": { "color": "negative", "outline": true }
+        }
+      },
+      "lifecycle-buttons-card": {
+        "buttons-card": {
+          "q-card": { "flat": true }
+        },
+        "activation": {
+          "dropdown-button": {
+            "q-btn-dropdown": { "color": "positive" }
+          }
+        },
+        "suspension": {
+          "dropdown-button": {
+            "q-btn-dropdown": { "color": "warning" }
+          }
+        },
+        "deactivation": {
+          "dropdown-button": {
+            "q-btn-dropdown": { "color": "negative" }
+          }
+        },
+        "form-dialog": {
+          "q-dialog": { "persistent": true }
+        },
+        "confirmation-dialog": {
+          "q-dialog": { "persistent": false }
         }
       },
       "dropdown-button": {

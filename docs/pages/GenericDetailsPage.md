@@ -158,6 +158,15 @@ Every zone additionally receives the loaded `entity` and the configured `parentP
 | `{instanceId}.sections.{key}.EntityDetailsCard.title`              | Section title                     |
 | `{instanceId}.sections.{key}.EntityDetailsCard.attributes.{field}` | Attribute label                   |
 
+Default `fr-FR` and `en-US` translations for the components hosted by the zones of the page are available through the
+federated remote `LinPulsar/DetailsPageI18n` (implemented in `src/federation/details-page-i18n.ts`). Setting it as the
+`i18nRemote` of the module configuration, instead of `LinPulsar/EmptyI18n`, provides them under the
+`{{ config.instanceId }}` placeholder key, which the module host replaces with the actual `instanceId` of the
+configuration. The components placed directly in a zone of the page receive this `instanceId` as `i18nScope`, so they
+use these defaults, and the translations of the host always take precedence over them. The remote currently ships the
+default labels of the [`LifecycleButtonsCard`](../components/card/LifecycleButtonsCard.md), under
+`{instanceId}.LifecycleButtonsCard`.
+
 ---
 
 ## **UI Customization**
