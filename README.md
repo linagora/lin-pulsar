@@ -73,6 +73,9 @@ These implementations are intended to simplify module configuration when no cust
 - 🌐 **ImportPageI18n** — Default i18n configuration for Import page
   → Exposed as: `LinPulsar/ImportPageI18n`
 
+- 🌐 **DetailsPageI18n** — Default i18n configuration for the components of a details page, such as the `LifecycleButtonsCard`
+  → Exposed as: `LinPulsar/DetailsPageI18n`
+
 ### **Generic Page Modules**
 
 `LinPulsar` also provides generic page module building blocks used to structure page-based federated modules.
@@ -141,6 +144,9 @@ The library organizes components by category. For each component, documentation 
 
 - ✨ **ButtonsCard** — A card component with action buttons
   → Documentation is inside: [`ButtonsCard.md`](./docs/components/card/ButtonsCard.md)
+
+- 🔄 **LifecycleButtonsCard** — Card grouping the activation, suspension and deactivation dropdowns, with configurable displayed buttons, order and disabled state, running a configurable dialog and request for each menu item
+  → Documentation is inside: [`LifecycleButtonsCard.md`](./docs/components/card/LifecycleButtonsCard.md)
 
 - 🔍 **AdvancedSearchCard** — Generic search card with default and expandable advanced filters sections
   → Documentation is inside: [`AdvancedSearchCard.md`](./docs/components/card/AdvancedSearchCard.md)
