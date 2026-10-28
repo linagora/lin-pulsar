@@ -52,6 +52,10 @@ export default defineConfig({
           __dirname,
           'src/components/card/ButtonsCard.vue'
         ),
+        './LifecycleButtonsCard': resolve(
+          __dirname,
+          'src/components/card/LifecycleButtonsCard.vue'
+        ),
         './EntityAttributeField': resolve(
           __dirname,
           'src/components/field/EntityAttributeField.vue'
