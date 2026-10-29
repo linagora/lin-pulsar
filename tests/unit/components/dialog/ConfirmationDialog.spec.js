@@ -30,6 +30,7 @@ import { ref } from 'vue';
 import ConfirmationDialog from '../../../../src/components/dialog/ConfirmationDialog.vue';
 
 const mockShowRef = ref(false);
+const mockDialogRef = ref(null);
 
 const mockUi = vi.fn((namespace, type) => {
   return { persistent: true, namespace, type };
@@ -39,7 +40,7 @@ vi.mock('@linagora/lin-pulsar-core', () => {
   return {
     loadAsyncComponent: () => 'div',
     useDialog: (_key) => {
-      return { show: mockShowRef };
+      return { show: mockShowRef, dialogRef: mockDialogRef };
     },
     useUiDesign: () => ({
       ui: mockUi,
