@@ -206,15 +206,15 @@ export default defineConfig({
       shared: {
         vue: {
           singleton: true,
-          requiredVersion: '3.5.39',
+          requiredVersion: '3.5.44',
         },
         quasar: {
           singleton: true,
-          requiredVersion: '2.21.1',
+          requiredVersion: '2.32.2',
         },
         axios: {
           singleton: true,
-          requiredVersion: '1.18.1',
+          requiredVersion: '1.20.0',
         },
         '@linagora/lin-pulsar-core': {
           singleton: true,

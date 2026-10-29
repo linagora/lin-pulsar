@@ -1,4 +1,4 @@
 allowBuilds:
   '@parcel/watcher': true
 minimumReleaseAgeExclude:
-  - '@linagora/lin-pulsar-core@0.1.1'
+  - '@linagora/lin-pulsar-core@0.1.5'
