@@ -234,7 +234,7 @@ export default defineConfig({
         },
         '@vueuse/core': {
           singleton: true,
-          requiredVersion: '14.3.0',
+          requiredVersion: '15.0.0',
         },
         '@superset-ui/embedded-sdk': {
           singleton: true,
