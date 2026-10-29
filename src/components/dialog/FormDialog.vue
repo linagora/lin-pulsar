@@ -113,7 +113,7 @@ import type { FormDialogEvent } from '../../types/dialog';
 import { DialogKey } from '../../types/dialog';
 
 const { show, dialogRef } = useDialog<FormDialogEvent>(DialogKey.Form, onOpen);
-void dialogRef;
+void dialogRef.value;
 const title = ref<string>('');
 const content = ref<string>('');
 const uiNamespace = ref<string>('');

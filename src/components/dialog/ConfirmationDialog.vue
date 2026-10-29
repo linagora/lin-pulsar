@@ -87,7 +87,7 @@ const { show, dialogRef } = useDialog<ConfirmationDialogEvent>(
   DialogKey.Confirmation,
   onOpen
 );
-void dialogRef;
+void dialogRef.value;
 const title = ref<string>('');
 const content = ref<string>('');
 const uiNamespace = ref<string>('');
