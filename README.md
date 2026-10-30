@@ -148,6 +148,9 @@ The library organizes components by category. For each component, documentation 
 - 🔄 **LifecycleButtonsCard** — Card grouping the activation, suspension and deactivation dropdowns, with configurable displayed buttons, order and disabled state, running a configurable dialog and request for each menu item
   → Documentation is inside: [`LifecycleButtonsCard.md`](./docs/components/card/LifecycleButtonsCard.md)
 
+- 🚩 **LifecycleBannersCard** — Presentational card stacking the lifecycle banners of an entity, with translated contents and buttons emitting their action
+  → Documentation is inside: [`LifecycleBannersCard.md`](./docs/components/card/LifecycleBannersCard.md)
+
 - 🔍 **AdvancedSearchCard** — Generic search card with default and expandable advanced filters sections
   → Documentation is inside: [`AdvancedSearchCard.md`](./docs/components/card/AdvancedSearchCard.md)
 
