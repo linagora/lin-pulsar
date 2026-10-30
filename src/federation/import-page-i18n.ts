@@ -39,6 +39,95 @@ export default {
         clearError: 'Lignes avec erreurs',
         clearImported: 'Lignes importées',
       },
+      LifecycleButtonsCard: {
+        submitSuccess: 'Action effectuée avec succès',
+        submitError: "Erreur lors de l'action",
+        activation: {
+          DropdownButton: {
+            title: 'Activation',
+            activation: {
+              immediate: 'Immédiate',
+              scheduled: 'Planifiée',
+            },
+          },
+        },
+        suspension: {
+          DropdownButton: {
+            title: 'Suspension',
+            suspension: {
+              immediate: 'Immédiate',
+              scheduled: 'Planifiée',
+              modify: 'Modifier',
+            },
+          },
+        },
+        deactivation: {
+          DropdownButton: {
+            title: 'Désactivation',
+            deactivation: {
+              immediate: 'Immédiate',
+              scheduled: 'Planifiée',
+              modify: 'Modifier',
+            },
+          },
+        },
+        actions: {
+          activation: {
+            immediate: {
+              ConfirmationDialog: {
+                title: 'Activation immédiate',
+                ButtonsCard: { confirm: 'Activer', cancel: 'Annuler' },
+              },
+            },
+            scheduled: {
+              FormDialog: {
+                title: "Planifier l'activation",
+                ButtonsCard: { confirm: 'Planifier', cancel: 'Annuler' },
+              },
+            },
+          },
+          suspension: {
+            immediate: {
+              FormDialog: {
+                title: 'Suspension immédiate',
+                ButtonsCard: { confirm: 'Suspendre', cancel: 'Annuler' },
+              },
+            },
+            scheduled: {
+              FormDialog: {
+                title: 'Planifier la suspension',
+                ButtonsCard: { confirm: 'Planifier', cancel: 'Annuler' },
+              },
+            },
+            modify: {
+              FormDialog: {
+                title: 'Modifier la suspension',
+                ButtonsCard: { confirm: 'Modifier', cancel: 'Annuler' },
+              },
+            },
+          },
+          deactivation: {
+            immediate: {
+              FormDialog: {
+                title: 'Désactivation immédiate',
+                ButtonsCard: { confirm: 'Désactiver', cancel: 'Annuler' },
+              },
+            },
+            scheduled: {
+              FormDialog: {
+                title: 'Planifier la désactivation',
+                ButtonsCard: { confirm: 'Planifier', cancel: 'Annuler' },
+              },
+            },
+            modify: {
+              FormDialog: {
+                title: 'Modifier la désactivation',
+                ButtonsCard: { confirm: 'Modifier', cancel: 'Annuler' },
+              },
+            },
+          },
+        },
+      },
       LoadFilesField: {
         label: 'Fichiers à importer',
         loadSuccess: 'Fichier(s) chargé(s) avec succès',
@@ -85,6 +174,95 @@ export default {
         clearAll: 'All rows',
         clearError: 'Rows with errors',
         clearImported: 'Imported rows',
+      },
+      LifecycleButtonsCard: {
+        submitSuccess: 'Action completed successfully',
+        submitError: 'Error while running the action',
+        activation: {
+          DropdownButton: {
+            title: 'Activation',
+            activation: {
+              immediate: 'Immediate',
+              scheduled: 'Scheduled',
+            },
+          },
+        },
+        suspension: {
+          DropdownButton: {
+            title: 'Suspension',
+            suspension: {
+              immediate: 'Immediate',
+              scheduled: 'Scheduled',
+              modify: 'Modify',
+            },
+          },
+        },
+        deactivation: {
+          DropdownButton: {
+            title: 'Deactivation',
+            deactivation: {
+              immediate: 'Immediate',
+              scheduled: 'Scheduled',
+              modify: 'Modify',
+            },
+          },
+        },
+        actions: {
+          activation: {
+            immediate: {
+              ConfirmationDialog: {
+                title: 'Immediate activation',
+                ButtonsCard: { confirm: 'Activate', cancel: 'Cancel' },
+              },
+            },
+            scheduled: {
+              FormDialog: {
+                title: 'Schedule the activation',
+                ButtonsCard: { confirm: 'Schedule', cancel: 'Cancel' },
+              },
+            },
+          },
+          suspension: {
+            immediate: {
+              FormDialog: {
+                title: 'Immediate suspension',
+                ButtonsCard: { confirm: 'Suspend', cancel: 'Cancel' },
+              },
+            },
+            scheduled: {
+              FormDialog: {
+                title: 'Schedule the suspension',
+                ButtonsCard: { confirm: 'Schedule', cancel: 'Cancel' },
+              },
+            },
+            modify: {
+              FormDialog: {
+                title: 'Modify the suspension',
+                ButtonsCard: { confirm: 'Modify', cancel: 'Cancel' },
+              },
+            },
+          },
+          deactivation: {
+            immediate: {
+              FormDialog: {
+                title: 'Immediate deactivation',
+                ButtonsCard: { confirm: 'Deactivate', cancel: 'Cancel' },
+              },
+            },
+            scheduled: {
+              FormDialog: {
+                title: 'Schedule the deactivation',
+                ButtonsCard: { confirm: 'Schedule', cancel: 'Cancel' },
+              },
+            },
+            modify: {
+              FormDialog: {
+                title: 'Modify the deactivation',
+                ButtonsCard: { confirm: 'Modify', cancel: 'Cancel' },
+              },
+            },
+          },
+        },
       },
       LoadFilesField: {
         label: 'Files to import',
