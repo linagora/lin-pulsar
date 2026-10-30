@@ -17,7 +17,8 @@ Formatters are referenced by name, never by function reference, so definitions s
 
 ## **Where it applies**
 
-Two definition types mix `FormatterConfiguration` in, depending on whether the component renders a table or a list:
+Three definition types mix `FormatterConfiguration` in, depending on whether the component renders a table, a list or
+entity fields:
 
 ```ts
 // src/types/ModuleGenericTablePageOptions.ts — table columns
@@ -28,17 +29,24 @@ interface GenericListField extends FormatterConfiguration {
   name: string;
   label: string;
 }
+
+// src/types/ModuleGenericDetailsPageOptions.ts — entity fields
+interface FieldFormatter extends FormatterConfiguration {
+  field: string;
+}
 ```
 
-| Component                  | Prop      | Definition type      | Formats through                        |
-| -------------------------- | --------- | -------------------- | -------------------------------------- |
-| `GenericEntityTable`       | `columns` | `GenericTableColumn` | Quasar's native `format` on the column |
-| `GenericEditableTableCard` | `columns` | `GenericTableColumn` | Forwarded to `GenericEntityTable`      |
-| `GenericTablePage`         | options   | `GenericTableColumn` | Forwarded to `GenericEntityTable`      |
-| `GenericSortableListCard`  | `fields`  | `GenericListField`   | Applied directly when rendering a cell |
+| Component                  | Prop               | Definition type      | Formats through                                       |
+| -------------------------- | ------------------ | -------------------- | ----------------------------------------------------- |
+| `GenericEntityTable`       | `columns`          | `GenericTableColumn` | Quasar's native `format` on the column                |
+| `GenericEditableTableCard` | `columns`          | `GenericTableColumn` | Forwarded to `GenericEntityTable`                     |
+| `GenericTablePage`         | options            | `GenericTableColumn` | Forwarded to `GenericEntityTable`                     |
+| `GenericSortableListCard`  | `fields`           | `GenericListField`   | Applied directly when rendering a cell                |
+| `EntityDetailsCard`        | `formatters`       | `FieldFormatter`     | Applied to the displayed attribute                    |
+| `LifecycleBannersCard`     | `banners[].params` | `FieldFormatter`     | Applied to the named parameters of the banner content |
 
 The value being formatted is read from the row or item under the column `field` (table) or the field `name`
-(sortable list).
+(sortable list), or from the entity under the `field` path (entity fields).
 
 ## **Date Formatting**
 

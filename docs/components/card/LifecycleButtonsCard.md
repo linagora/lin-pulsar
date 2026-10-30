@@ -294,6 +294,9 @@ the suspension, with its dialog, request and notifications:
 uiEventSubject.next({ key: 'account-lifecycle-action', data: { key: 'suspension.modify' } });
 ```
 
+A [LifecycleBannersCard](./LifecycleBannersCard.md) publishes this event from its buttons when its `emitOnClick` is the
+same key.
+
 ### Zone configuration
 
 ```json

@@ -319,6 +319,42 @@ and `append` zones inherit this namespace.
 
 ---
 
+### LifecycleBannersCard
+
+Card stacking the lifecycle banners: each banner is a `q-banner` under its key, with an optional `q-icon`, rendered
+when the design defines its `name`, and one `q-btn` per action under `[KEY].actions.[ACTION_KEY]`. The colors of a
+banner are set through its `class`.
+
+**Namespace:** `{uiNamespace}.lifecycle-banners-card`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "lifecycle-banners-card": {
+      "q-card": { "flat": true },
+      "suspended": {
+        "q-banner": { "class": "bg-warning text-white" },
+        "q-icon": { "name": "warning", "color": "white" },
+        "actions": {
+          "reactivation": {
+            "immediate": {
+              "q-btn": { "color": "white", "textColor": "warning", "icon": "error" }
+            }
+          },
+          "suspension": {
+            "modify": {
+              "q-btn": { "color": "white", "outline": true }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
 ### StatusBadge
 
 Badge component for displaying entity status with i18n support.
@@ -2436,6 +2472,20 @@ A full example showing all LinPulsar components configured together:
           "q-card": { "flat": true }
         },
         "activation": {
+          "lifecycle-banners-card": {
+            "q-card": { "flat": true },
+            "suspended": {
+              "q-banner": { "class": "bg-warning text-white" },
+              "q-icon": { "name": "warning", "color": "white" },
+              "actions": {
+                "suspension": {
+                  "modify": {
+                    "q-btn": { "color": "white", "outline": true }
+                  }
+                }
+              }
+            }
+          },
           "dropdown-button": {
             "q-btn-dropdown": { "color": "positive" }
           }
