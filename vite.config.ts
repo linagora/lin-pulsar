@@ -56,6 +56,10 @@ export default defineConfig({
           __dirname,
           'src/components/card/LifecycleButtonsCard.vue'
         ),
+        './LifecycleBannersCard': resolve(
+          __dirname,
+          'src/components/card/LifecycleBannersCard.vue'
+        ),
         './EntityAttributeField': resolve(
           __dirname,
           'src/components/field/EntityAttributeField.vue'
