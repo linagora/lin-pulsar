@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/linagora/lin-pulsar/compare/v0.3.0...v0.3.1) (2026-10-30)
+
+
+### Features
+
+* add emitOnCreate to GenericSortableListCard ([78a16b2](https://github.com/linagora/lin-pulsar/commit/78a16b29896bf9d2a9020f1d9a4418a126ea18ca))
+
 ## [0.3.0](https://github.com/linagora/lin-pulsar/compare/v0.2.149...v0.3.0) (2026-10-27)
 
 
