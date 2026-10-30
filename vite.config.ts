@@ -218,11 +218,11 @@ export default defineConfig({
         },
         quasar: {
           singleton: true,
-          requiredVersion: '2.32.2',
+          requiredVersion: '2.35.2',
         },
         axios: {
           singleton: true,
-          requiredVersion: '1.20.0',
+          requiredVersion: '1.21.0',
         },
         '@linagora/lin-pulsar-core': {
           singleton: true,
@@ -230,15 +230,15 @@ export default defineConfig({
         },
         'vue-router': {
           singleton: true,
-          requiredVersion: '5.1.0',
+          requiredVersion: '5.4.0',
         },
         'vue-i18n': {
           singleton: true,
-          requiredVersion: '11.4.6',
+          requiredVersion: '11.4.16',
         },
         pinia: {
           singleton: true,
-          requiredVersion: '3.0.4',
+          requiredVersion: '4.1.0',
         },
         '@vueuse/core': {
           singleton: true,
