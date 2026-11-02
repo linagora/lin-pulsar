@@ -22,7 +22,7 @@
   "dependencies": {
     "@dicebear/core": "10.7.0",
     "@dicebear/styles": "10.6.0",
-    "@linagora/lin-pulsar-core": "0.1.5",
+    "@linagora/lin-pulsar-core": "0.1.6",
     "@superset-ui/embedded-sdk": "0.4.0",
     "@vueuse/core": "15.0.0",
     "axios": "1.21.0",
