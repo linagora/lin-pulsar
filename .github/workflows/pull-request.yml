@@ -19,7 +19,7 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: izhangzhihao/delete-comment@d075704468e1cf74e60944d9f335351213c34d85 # master
+      - uses: izhangzhihao/delete-comment@7050665614ab9f357e88e5b53ad7f9ceac575dc2 # master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           delete_user_name: github-actions[bot]
