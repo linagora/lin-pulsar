@@ -117,7 +117,8 @@ export interface FieldDynamicListSettings extends FieldSettings {
   /**
    * Nunjucks template rendered with each fetched element as context, the edited entity being
    * available as `entity`, to build the option value (e.g. "{{ id }}"). When omitted, the element
-   * `value` property is used.
+   * `value` property is used. The rendered value is a string: an entity value given as a number,
+   * such as an integer identifier, is read as a string to match its option.
    */
   optionValue?: string;
 
@@ -347,7 +348,8 @@ The attribute `name` supports **dot notation** to target values located inside s
 ## **🔁 Data Flow**
 
 1. Initial value is resolved from:
-   - the entity value at `definition.name` (existing value string in entity)
+   - the entity value at `definition.name` (existing value string in entity, a number such as an integer identifier
+     being read as a string, like the option values)
    - `null` (fallback if no entity value exists)
 
 2. The `route` template is rendered against the entity; as soon as it resolves **and** every declared `routeDependencies` value is non-empty, the first page of `{ label, value }` elements is fetched from the backend
@@ -566,7 +568,7 @@ option.disable = option.value !== presetValue && renderString(optionDisabled, co
 - A Nunjucks template renders to a **string**, so only the literal `true` disables: `"yes"`, `1`, an empty render or a missing property all keep the option selectable
 - The three templates share one context: the element itself, with the edited entity exposed as `entity` — e.g. `{{ hasItem(entity.members, 'id', id) }}` disables the members already assigned. An element carrying its own `entity` property shadows it
 - A disabled option stays listed but cannot be selected: Quasar skips it on click and keyboard navigation
-- `optionLabel` and `optionValue` are not required: `optionDisabled` alone switches the element to the rendered form, keeping its `label` and `value` as they are
+- `optionLabel` and `optionValue` are not required: `optionDisabled` alone switches the element to the rendered form, keeping its `label` and `value`
 - The **preset option is never disabled**: the value the entity holds from outside the field — the one loaded with it, as opposed to one picked in the dropdown — stays selectable whatever its template says, so the user can always come back to it after choosing another option. A route change drops it along with the selection
 - The options **follow the entity**: whenever it changes, the loaded elements are rendered again, so a template reading another form field, such as a member added in the same form, disables or re-enables options already loaded. The pagination is untouched
 - A template that **fails to render** is reported through `validation.dynamicList.fetchError`, like a failed request: the page is not appended and the next scroll requests it again. A failure while rendering the loaded elements again keeps the options as they were
@@ -582,12 +584,14 @@ Reaching the end of the loaded options fetches the next page, until the backend 
 ### Selected Value Management
 
 ```ts
-const localValue = ref(getNestedValue(props.entity, props.definition.name) ?? null);
+const localValue = ref(toOptionValue(getNestedValue(props.entity, props.definition.name)));
 ```
 
 - Uses a local reactive reference to isolate UI interaction
 - Stores the **value string** (not the full `{ label, value }` object), thanks to Quasar's `emit-value` prop
 - Falls back to `null` if the entity has no existing value
+- Reads a number as a string (`toOptionValue`), in the entity as in the option values fetched from the backend: a
+  rendered template is always a string, and Quasar matches the stored value with the options strictly
 - A `watch` on `() => getNestedValue(props.entity, props.definition.name)` keeps `localValue` in sync when the parent updates the entity — it only triggers when the **specific attribute value** changes, not when other fields of the entity change
 - Quasar's `map-options` resolves the stored value to its corresponding `{ label, value }` object for display
 
@@ -825,6 +829,9 @@ Several dependencies can be declared, and they do not have to appear in the rout
 - Verify a placeholder is added when the entity's preset value is not in the loaded options
 - Verify no placeholder is added when the preset value is found in the options
 - Verify no placeholder is added when the entity has no value
+- Verify `toOptionValue` converts a number to a string, keeps a string and reads an unset value as `null`
+- Verify a numeric entity value, given initially or set from outside the field, is read as a string and matches its
+  option without placeholder, whether the option value is rendered or a number from the backend
 - Verify the placeholder is removed when the real option is loaded on a subsequent page
 - Assert `update:entity` emission stores the `value` string (not the full object) on selection changes
 - Verify `ignoreRules` prop bypasses validation rules
@@ -836,7 +843,7 @@ Several dependencies can be declared, and they do not have to appear in the rout
 - Verify an option is disabled when `optionDisabled` renders to `true`, and stays enabled for `false`, any other string or a missing property
 - Verify `optionDisabled` reads the edited entity as `entity`, and that an element property of the same name wins over it
 - Verify the options carry no `disable` flag when `optionDisabled` is not configured
-- Verify the option holding the preset value is never disabled, and that a value picked in the field does not become the preset
+- Verify the option holding the preset value is never disabled, a numeric one included, and that a value picked in the field does not become the preset
 - Verify the loaded options are rendered again when the entity changes, without any request, and that the placeholder survives it
 - Verify a template that fails to render sets the fetch error, appends nothing and leaves the page to be requested again
 - Verify `disabledText` is empty without the translation and holds it otherwise

@@ -150,8 +150,18 @@ let loadedElements: DynamicListElement[] = [];
 
 const pageSize = computed(() => props.definition.inputSettings?.size ?? 20);
 
+/**
+ * Converts a number to a string: q-select compares the model with the option values strictly, and a rendered template
+ * is always a string.
+ * @param value - The value of the entity or of a fetched element.
+ * @returns The value, a number as a string, `null` when unset.
+ */
+function toOptionValue(value: unknown): unknown {
+  return typeof value === 'number' ? String(value) : (value ?? null);
+}
+
 const localValue = ref(
-  getNestedValue(props.entity, props.definition.name) ?? null
+  toOptionValue(getNestedValue(props.entity, props.definition.name))
 );
 /**
  * The value the entity holds from outside the field, as opposed to one picked in it: its option is
@@ -224,7 +234,7 @@ const isDisabled = computed(
 watch(
   () => getNestedValue(props.entity, props.definition.name),
   (newValue) => {
-    const value = newValue ?? null;
+    const value = toOptionValue(newValue);
     // A selection made here comes back through the parent already equal to `localValue`: only a
     // value set from outside, such as the entity once loaded, becomes the preset.
     if (value !== localValue.value) {
@@ -392,7 +402,7 @@ function refreshOptions() {
  * Maps a fetched element to a dropdown option. When the `optionLabel`, `optionValue` or
  * `optionDisabled` settings are configured, they are rendered as Nunjucks templates with the
  * element as context and the edited entity as `entity`, allowing the field to consume any
- * paginated entity endpoint. Otherwise the element is used as-is.
+ * paginated entity endpoint. Otherwise the element is used as-is, its numeric value read as a string.
  * @param element - The element fetched from the backend.
  * @returns The dropdown option.
  */
@@ -401,14 +411,16 @@ function toOption(element: DynamicListElement): DynamicListElement {
     props.definition.inputSettings ?? {};
 
   if (!optionLabel && !optionValue && !optionDisabled) {
-    return element;
+    return { ...element, value: toOptionValue(element.value) as string };
   }
 
   // The element wins over `entity`: an element carrying an `entity` property keeps its own.
   const context = { entity: props.entity, ...element };
   const option: DynamicListElement = {
     label: optionLabel ? renderString(optionLabel, context) : element.label,
-    value: optionValue ? renderString(optionValue, context) : element.value,
+    value: optionValue
+      ? renderString(optionValue, context)
+      : (toOptionValue(element.value) as string),
   };
 
   if (optionDisabled) {
