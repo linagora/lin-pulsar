@@ -197,6 +197,25 @@ describe('Test component: EntityAttributeDynamicListField', () => {
     });
   });
 
+  describe('Test function: toOptionValue', () => {
+    beforeEach(() => {
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+    });
+
+    it('should convert a number to a string', () => {
+      expect(wrapper.vm.toOptionValue(2)).toBe('2');
+    });
+
+    it('should keep a string as it is', () => {
+      expect(wrapper.vm.toOptionValue('value1')).toBe('value1');
+    });
+
+    it('should read an unset value as null', () => {
+      expect(wrapper.vm.toOptionValue(undefined)).toBeNull();
+      expect(wrapper.vm.toOptionValue(null)).toBeNull();
+    });
+  });
+
   describe('Test computed: pageSize', () => {
     beforeEach(() => {
       wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
@@ -1148,6 +1167,29 @@ describe('Test component: EntityAttributeDynamicListField', () => {
       ]);
     });
 
+    it('should never disable the option holding a numeric preset value', async () => {
+      mountingOptions.props.definition.inputSettings.optionValue = '{{ id }}';
+      mountingOptions.props.definition.inputSettings.optionDisabled =
+        '{{ disabled }}';
+      mountingOptions.props.entity = { name: 'entity-name', type: 2 };
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [
+          { id: 2, label: 'Two', disabled: true },
+          { id: 3, label: 'Three', disabled: true },
+        ],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      wrapper.vm.allOptions = [];
+
+      await wrapper.vm.fetchPage();
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'Two', value: '2', disable: false },
+        { label: 'Three', value: '3', disable: true },
+      ]);
+    });
+
     it('should report a template that fails to render as a fetch error and leave the page to be requested again', async () => {
       mountingOptions.props.definition.inputSettings.optionDisabled =
         '{% broken';
@@ -1246,6 +1288,68 @@ describe('Test component: EntityAttributeDynamicListField', () => {
 
       expect(wrapper.vm.presetValue).toBe('value2');
       expect(wrapper.vm.localValue).toBe('value2');
+    });
+
+    it('should read a numeric entity value as a string, like the rendered option values', () => {
+      mountingOptions.props.entity.type = 2;
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      expect(wrapper.vm.presetValue).toBe('2');
+      expect(wrapper.vm.localValue).toBe('2');
+    });
+
+    it('should read a numeric value set from outside the field as a string', async () => {
+      await wrapper.setProps({
+        entity: { name: 'entity-name', type: 3 },
+      });
+
+      expect(wrapper.vm.presetValue).toBe('3');
+      expect(wrapper.vm.localValue).toBe('3');
+    });
+
+    it('should match a numeric entity value with its rendered option, without placeholder', async () => {
+      mountingOptions.props.entity.type = 2;
+      mountingOptions.props.definition.inputSettings.optionLabel =
+        '{{ label }}';
+      mountingOptions.props.definition.inputSettings.optionValue = '{{ id }}';
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        last: true,
+        content: [
+          { id: 1, label: 'One' },
+          { id: 2, label: 'Two' },
+        ],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+      await nextTick();
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'One', value: '1' },
+        { label: 'Two', value: '2' },
+      ]);
+      expect(wrapper.emitted('update:entity')).toBeUndefined();
+    });
+
+    it('should match a numeric entity value with a numeric option value from the backend, without placeholder', async () => {
+      mountingOptions.props.entity.type = 2;
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        last: true,
+        content: [
+          { label: 'One', value: 1 },
+          { label: 'Two', value: 2 },
+        ],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+      await nextTick();
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'One', value: '1' },
+        { label: 'Two', value: '2' },
+      ]);
+      expect(wrapper.emitted('update:entity')).toBeUndefined();
     });
 
     it('should not follow a value picked in the field once the parent sends it back', async () => {

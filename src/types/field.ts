@@ -342,7 +342,8 @@ export interface FieldDynamicListSettings extends FieldSettings {
   /**
    * Nunjucks template rendered with each fetched element as context, the edited entity being
    * available as `entity`, to build the option value (e.g. "{{ id }}"). When omitted, the element
-   * `value` property is used.
+   * `value` property is used. The rendered value is a string: an entity value given as a number,
+   * such as an integer identifier, is read as a string to match its option.
    */
   optionValue?: string;
 
