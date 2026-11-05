@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.4](https://github.com/linagora/lin-pulsar/compare/v0.3.3...v0.3.4) (2026-11-05)
+
+
+### Bug Fixes
+
+* match the numeric values of the entity with the options of a dynamic list ([47d94b4](https://github.com/linagora/lin-pulsar/commit/47d94b4a6638ff8e0044eb22b3e4ce32f9aecada))
+
 ### [0.3.3](https://github.com/linagora/lin-pulsar/compare/v0.3.2...v0.3.3) (2026-11-02)
 
 
