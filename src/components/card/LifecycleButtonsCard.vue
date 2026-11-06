@@ -55,7 +55,7 @@
       :disable="button.disable"
       :class="`lifecycle-buttons-card--${button.type}`"
       :data-cy="`lifecycle-buttons-card_${button.type}`"
-      @item-click="onItemClick"
+      @item-click="(payload) => emit('itemClick', payload)"
     />
 
     <template #append-buttons>
@@ -72,21 +72,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { DropdownClickPayload, UiEvent } from '@linagora/lin-pulsar-core';
 import {
-  getHttpClient,
   LinPulsarZoneRenderer,
-  uiEventSubject,
   useLinPulsarZoneStore,
-  useNotify,
   useNunjucks,
-  useScopedI18n,
 } from '@linagora/lin-pulsar-core';
-import type { Subscription } from 'rxjs';
-import { computed, onMounted, onUnmounted, toRaw } from 'vue';
-import { DialogKey } from '../../types/dialog';
+import { computed } from 'vue';
 import type {
-  LifecycleAction,
   LifecycleButtonsCardOutputs,
   LifecycleButtonsCardProps,
 } from '../../types/lifecycleButtonsCard';
@@ -100,13 +92,12 @@ const props = withDefaults(defineProps<LifecycleButtonsCardProps>(), {
     { type: 'deactivation' },
   ],
   entity: () => ({}),
-  actions: () => ({}),
-  immediateActionDelay: 5,
 });
 
 const emit = defineEmits<LifecycleButtonsCardOutputs>();
 
 const { hasZoneEntries } = useLinPulsarZoneStore();
+const { renderString } = useNunjucks();
 
 const localUiNamespace = computed(
   () => `${props.uiNamespace}.lifecycle-buttons-card`
@@ -114,12 +105,6 @@ const localUiNamespace = computed(
 const localI18nScope = computed(
   () => `${props.i18nScope}.LifecycleButtonsCard`
 );
-
-const { t, translateOrDefault } = useScopedI18n(localI18nScope.value);
-const { Notify } = useNotify();
-const { render, renderString } = useNunjucks();
-
-let eventSubscription: Subscription;
 
 const zoneNames = computed(() => ({
   prepend: `${localUiNamespace.value}.prepend`,
@@ -165,141 +150,4 @@ function isDisabled(disable: string | boolean | undefined): boolean {
     ? renderString(disable, { entity: props.entity }).trim() === 'true'
     : Boolean(disable);
 }
-
-/**
- * Emits the clicked menu item, then runs the action configured for its key.
- * @param payload - The payload emitted by the dropdown button.
- */
-function onItemClick(payload: DropdownClickPayload): void {
-  emit('itemClick', payload);
-  runAction(payload.key);
-}
-
-/**
- * Opens the dialog of the action configured for the given key: a form dialog sending the request with the submitted
- * data, or a confirmation dialog sending it once confirmed. When `fillFormWithEntity` is enabled, the form is pre-filled
- * with a deep copy of the entity, so that editing a nested field, such as `suspensionPeriod.end`, never changes the
- * entity of the page. The entity properties are available as named parameters in the dialog title and content
- * translations. Does nothing when no action is configured for the key.
- * @param key - The menu item key of the action, for example `suspension.immediate`.
- */
-function runAction(key: string): void {
-  if (!Object.hasOwn(props.actions, key)) {
-    return;
-  }
-
-  const action = props.actions[key];
-  const entity = props.entity;
-  const dialogKey =
-    action.dialog === 'form' ? 'FormDialog' : 'ConfirmationDialog';
-  const dialog = {
-    type: 'open',
-    title: t(`actions.${key}.${dialogKey}.title`, entity),
-    content: translateOrDefault(
-      '',
-      `actions.${key}.${dialogKey}.content`,
-      entity
-    ),
-    uiNamespace: localUiNamespace.value,
-    i18nScope: `${localI18nScope.value}.actions.${key}.${dialogKey}`,
-  };
-
-  if (action.dialog === 'form') {
-    uiEventSubject.next({
-      key: DialogKey.Form,
-      data: {
-        ...dialog,
-        instanceId: props.instanceId,
-        formFields: action.formFields ?? [],
-        initialFormData: action.fillFormWithEntity
-          ? structuredClone(toRaw(entity))
-          : undefined,
-        onSubmit: (formData: Record<string, unknown>) =>
-          submitAction(key, action, formData),
-      },
-    });
-    return;
-  }
-
-  uiEventSubject.next({
-    key: DialogKey.Confirmation,
-    data: {
-      ...dialog,
-      onConfirm: () => submitAction(key, action).catch(() => undefined),
-    },
-  });
-}
-
-/**
- * Sends the request of an action, with the URL and body rendered as Nunjucks templates with `entity`, the entity
- * merged with the submitted form data, and `immediateDate`, the ISO date `immediateActionDelay` minutes after now,
- * computed on submission so that a dialog left open does not send a past date. Then notifies the user, with the entity
- * and form data properties and the delay as `count` for the plural forms, and publishes `emitOnSubmit` if configured.
- * The notifications fall back to the `submitSuccess` and `submitError` keys of the card when the action defines none.
- * The top-level properties of the form data replace those of the entity, so that a scheduled period does not inherit
- * the bounds of the current one.
- * @param key - The menu item key of the action.
- * @param action - The action to send.
- * @param formData - The data submitted through the form dialog, if any.
- * @returns A promise that resolves once the request succeeded, and rejects when the rendering of the templates or the
- * request failed, so that the form dialog stays open for correction.
- */
-async function submitAction(
-  key: string,
-  action: LifecycleAction,
-  formData: Record<string, unknown> = {}
-): Promise<void> {
-  const entity = { ...props.entity, ...formData };
-  const context = {
-    entity,
-    immediateDate: new Date(
-      Date.now() + props.immediateActionDelay * 60_000
-    ).toISOString(),
-  };
-  const messageParams = { ...entity, count: props.immediateActionDelay };
-
-  try {
-    const requestBody = render(action.body ?? {}, context);
-    const { data } = await getHttpClient().request({
-      method: action.method ?? 'POST',
-      url: renderString(action.url, context),
-      data: Object.keys(requestBody).length > 0 ? requestBody : undefined,
-    });
-
-    Notify({
-      type: 'positive',
-      message: translateOrDefault(
-        t('submitSuccess', messageParams),
-        `actions.${key}.submitSuccess`,
-        messageParams
-      ),
-    });
-
-    if (props.emitOnSubmit) {
-      uiEventSubject.next({ key: props.emitOnSubmit, data });
-    }
-  } catch (error) {
-    Notify({
-      type: 'negative',
-      message: translateOrDefault(
-        t('submitError', messageParams),
-        `actions.${key}.submitError`,
-        messageParams
-      ),
-    });
-    throw error;
-  }
-}
-
-onMounted(() => {
-  eventSubscription = uiEventSubject.subscribe((event: UiEvent) => {
-    if (props.triggerActionOn && event.key === props.triggerActionOn) {
-      runAction((event.data as DropdownClickPayload | undefined)?.key ?? '');
-    }
-  });
-});
-
-onUnmounted(() => {
-  eventSubscription?.unsubscribe();
-});
 </script>
