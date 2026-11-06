@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.5](https://github.com/linagora/lin-pulsar/compare/v0.3.4...v0.3.5) (2026-11-06)
+
+
+### Bug Fixes
+
+* import internal components directly instead of using loadAsyncComponent ([9a14abf](https://github.com/linagora/lin-pulsar/commit/9a14abfcff48ac249d222e31fe2c11e53467188f))
+
 ### [0.3.4](https://github.com/linagora/lin-pulsar/compare/v0.3.3...v0.3.4) (2026-11-05)
 
 
