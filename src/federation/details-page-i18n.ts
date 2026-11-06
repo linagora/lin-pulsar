@@ -27,35 +27,74 @@
 export default {
   'fr-FR': {
     '{{ config.instanceId }}': {
-      LifecycleButtonsCard: {
+      LifecyclePanel: {
         submitSuccess: 'Action effectuée avec succès',
         submitError: "Erreur lors de l'action",
-        activation: {
-          DropdownButton: {
-            title: 'Activation',
-            activation: {
-              immediate: 'Immédiate',
-              scheduled: 'Planifiée',
+        LifecycleBannersCard: {
+          suspended: {
+            content: 'Suspension depuis le {date}.',
+            contentWithEndDate: 'Suspension du {date} au {endDate}.',
+            actions: {
+              reactivation: {
+                immediate: 'Réactivation immédiate',
+              },
+              suspension: {
+                modify: 'Modifier la suspension',
+              },
+            },
+          },
+          deactivated: {
+            content: 'Désactivation depuis le {date}.',
+            actions: {
+              revalidation: {
+                immediate: 'Réactivation immédiate',
+                scheduled: 'Planifier la réactivation',
+              },
+            },
+          },
+          deactivationWarning: {
+            content:
+              "Désactivation aujourd'hui (le {date}). | Désactivation demain (le {date}). | Désactivation dans {count} jours (le {date}).",
+            actions: {
+              deactivation: {
+                immediate: 'Désactivation immédiate',
+                modify: 'Modifier la date de désactivation',
+              },
             },
           },
         },
-        suspension: {
-          DropdownButton: {
-            title: 'Suspension',
-            suspension: {
-              immediate: 'Immédiate',
-              scheduled: 'Planifiée',
-              modify: 'Modifier',
+        infoTexts: {
+          willDeactivate: 'Désactivation prévue le {date}.',
+          willSuspend: 'Suspension prévue le {date}.',
+          notActivated: 'Activation pas encore effectuée.',
+        },
+        LifecycleButtonsCard: {
+          activation: {
+            DropdownButton: {
+              title: 'Activation',
+              activation: {
+                immediate: 'Immédiate',
+                scheduled: 'Planifiée',
+              },
             },
           },
-        },
-        deactivation: {
-          DropdownButton: {
-            title: 'Désactivation',
-            deactivation: {
-              immediate: 'Immédiate',
-              scheduled: 'Planifiée',
-              modify: 'Modifier',
+          suspension: {
+            DropdownButton: {
+              title: 'Suspension',
+              suspension: {
+                immediate: 'Immédiate',
+                scheduled: 'Planifiée',
+              },
+            },
+          },
+          deactivation: {
+            DropdownButton: {
+              title: 'Désactivation',
+              deactivation: {
+                immediate: 'Immédiate',
+                scheduled: 'Planifiée',
+                modify: 'Modifier',
+              },
             },
           },
         },
@@ -70,7 +109,11 @@ export default {
             scheduled: {
               FormDialog: {
                 title: "Planifier l'activation",
-                ButtonsCard: { confirm: 'Planifier', cancel: 'Annuler' },
+                ButtonsCard: {
+                  confirm: 'Planifier',
+                  confirmLoading: 'Planification...',
+                  cancel: 'Annuler',
+                },
               },
             },
           },
@@ -78,19 +121,31 @@ export default {
             immediate: {
               FormDialog: {
                 title: 'Suspension immédiate',
-                ButtonsCard: { confirm: 'Suspendre', cancel: 'Annuler' },
+                ButtonsCard: {
+                  confirm: 'Suspendre',
+                  confirmLoading: 'Suspension...',
+                  cancel: 'Annuler',
+                },
               },
             },
             scheduled: {
               FormDialog: {
                 title: 'Planifier la suspension',
-                ButtonsCard: { confirm: 'Planifier', cancel: 'Annuler' },
+                ButtonsCard: {
+                  confirm: 'Planifier',
+                  confirmLoading: 'Planification...',
+                  cancel: 'Annuler',
+                },
               },
             },
             modify: {
               FormDialog: {
                 title: 'Modifier la suspension',
-                ButtonsCard: { confirm: 'Modifier', cancel: 'Annuler' },
+                ButtonsCard: {
+                  confirm: 'Modifier',
+                  confirmLoading: 'Modification...',
+                  cancel: 'Annuler',
+                },
               },
             },
           },
@@ -98,19 +153,65 @@ export default {
             immediate: {
               FormDialog: {
                 title: 'Désactivation immédiate',
-                ButtonsCard: { confirm: 'Désactiver', cancel: 'Annuler' },
+                ButtonsCard: {
+                  confirm: 'Désactiver',
+                  confirmLoading: 'Désactivation...',
+                  cancel: 'Annuler',
+                },
               },
             },
             scheduled: {
               FormDialog: {
                 title: 'Planifier la désactivation',
-                ButtonsCard: { confirm: 'Planifier', cancel: 'Annuler' },
+                ButtonsCard: {
+                  confirm: 'Planifier',
+                  confirmLoading: 'Planification...',
+                  cancel: 'Annuler',
+                },
               },
             },
             modify: {
               FormDialog: {
                 title: 'Modifier la désactivation',
-                ButtonsCard: { confirm: 'Modifier', cancel: 'Annuler' },
+                ButtonsCard: {
+                  confirm: 'Modifier',
+                  confirmLoading: 'Modification...',
+                  cancel: 'Annuler',
+                },
+              },
+            },
+          },
+          reactivation: {
+            immediate: {
+              FormDialog: {
+                title: 'Réactivation immédiate',
+                ButtonsCard: {
+                  confirm: 'Réactiver',
+                  confirmLoading: 'Réactivation...',
+                  cancel: 'Annuler',
+                },
+              },
+            },
+          },
+          revalidation: {
+            immediate: {
+              FormDialog: {
+                title: 'Réactivation immédiate',
+                ButtonsCard: {
+                  confirm: 'Réactiver',
+                  confirmLoading: 'Réactivation...',
+                  cancel: 'Annuler',
+                },
+              },
+            },
+            scheduled: {
+              FormDialog: {
+                title: 'Planifier la réactivation',
+                ButtonsCard: {
+                  confirm: 'Planifier',
+                  confirmLoading: 'Planification...',
+                  cancel: 'Annuler',
+                },
               },
             },
           },
@@ -120,35 +221,74 @@ export default {
   },
   'en-US': {
     '{{ config.instanceId }}': {
-      LifecycleButtonsCard: {
+      LifecyclePanel: {
         submitSuccess: 'Action completed successfully',
         submitError: 'Error while running the action',
-        activation: {
-          DropdownButton: {
-            title: 'Activation',
-            activation: {
-              immediate: 'Immediate',
-              scheduled: 'Scheduled',
+        LifecycleBannersCard: {
+          suspended: {
+            content: 'Suspended since {date}.',
+            contentWithEndDate: 'Suspended from {date} until {endDate}.',
+            actions: {
+              reactivation: {
+                immediate: 'Immediate reactivation',
+              },
+              suspension: {
+                modify: 'Modify the suspension',
+              },
+            },
+          },
+          deactivated: {
+            content: 'Deactivated since {date}.',
+            actions: {
+              revalidation: {
+                immediate: 'Immediate reactivation',
+                scheduled: 'Schedule the reactivation',
+              },
+            },
+          },
+          deactivationWarning: {
+            content:
+              'Deactivated today (on {date}). | Deactivated tomorrow (on {date}). | Deactivated in {count} days (on {date}).',
+            actions: {
+              deactivation: {
+                immediate: 'Immediate deactivation',
+                modify: 'Modify the deactivation date',
+              },
             },
           },
         },
-        suspension: {
-          DropdownButton: {
-            title: 'Suspension',
-            suspension: {
-              immediate: 'Immediate',
-              scheduled: 'Scheduled',
-              modify: 'Modify',
+        infoTexts: {
+          willDeactivate: 'Will be deactivated on {date}.',
+          willSuspend: 'Will be suspended on {date}.',
+          notActivated: 'Not activated yet.',
+        },
+        LifecycleButtonsCard: {
+          activation: {
+            DropdownButton: {
+              title: 'Activation',
+              activation: {
+                immediate: 'Immediate',
+                scheduled: 'Scheduled',
+              },
             },
           },
-        },
-        deactivation: {
-          DropdownButton: {
-            title: 'Deactivation',
-            deactivation: {
-              immediate: 'Immediate',
-              scheduled: 'Scheduled',
-              modify: 'Modify',
+          suspension: {
+            DropdownButton: {
+              title: 'Suspension',
+              suspension: {
+                immediate: 'Immediate',
+                scheduled: 'Scheduled',
+              },
+            },
+          },
+          deactivation: {
+            DropdownButton: {
+              title: 'Deactivation',
+              deactivation: {
+                immediate: 'Immediate',
+                scheduled: 'Scheduled',
+                modify: 'Modify',
+              },
             },
           },
         },
@@ -163,7 +303,11 @@ export default {
             scheduled: {
               FormDialog: {
                 title: 'Schedule the activation',
-                ButtonsCard: { confirm: 'Schedule', cancel: 'Cancel' },
+                ButtonsCard: {
+                  confirm: 'Schedule',
+                  confirmLoading: 'Scheduling...',
+                  cancel: 'Cancel',
+                },
               },
             },
           },
@@ -171,19 +315,31 @@ export default {
             immediate: {
               FormDialog: {
                 title: 'Immediate suspension',
-                ButtonsCard: { confirm: 'Suspend', cancel: 'Cancel' },
+                ButtonsCard: {
+                  confirm: 'Suspend',
+                  confirmLoading: 'Suspending...',
+                  cancel: 'Cancel',
+                },
               },
             },
             scheduled: {
               FormDialog: {
                 title: 'Schedule the suspension',
-                ButtonsCard: { confirm: 'Schedule', cancel: 'Cancel' },
+                ButtonsCard: {
+                  confirm: 'Schedule',
+                  confirmLoading: 'Scheduling...',
+                  cancel: 'Cancel',
+                },
               },
             },
             modify: {
               FormDialog: {
                 title: 'Modify the suspension',
-                ButtonsCard: { confirm: 'Modify', cancel: 'Cancel' },
+                ButtonsCard: {
+                  confirm: 'Modify',
+                  confirmLoading: 'Modifying...',
+                  cancel: 'Cancel',
+                },
               },
             },
           },
@@ -191,19 +347,65 @@ export default {
             immediate: {
               FormDialog: {
                 title: 'Immediate deactivation',
-                ButtonsCard: { confirm: 'Deactivate', cancel: 'Cancel' },
+                ButtonsCard: {
+                  confirm: 'Deactivate',
+                  confirmLoading: 'Deactivating...',
+                  cancel: 'Cancel',
+                },
               },
             },
             scheduled: {
               FormDialog: {
                 title: 'Schedule the deactivation',
-                ButtonsCard: { confirm: 'Schedule', cancel: 'Cancel' },
+                ButtonsCard: {
+                  confirm: 'Schedule',
+                  confirmLoading: 'Scheduling...',
+                  cancel: 'Cancel',
+                },
               },
             },
             modify: {
               FormDialog: {
                 title: 'Modify the deactivation',
-                ButtonsCard: { confirm: 'Modify', cancel: 'Cancel' },
+                ButtonsCard: {
+                  confirm: 'Modify',
+                  confirmLoading: 'Modifying...',
+                  cancel: 'Cancel',
+                },
+              },
+            },
+          },
+          reactivation: {
+            immediate: {
+              FormDialog: {
+                title: 'Immediate reactivation',
+                ButtonsCard: {
+                  confirm: 'Reactivate',
+                  confirmLoading: 'Reactivating...',
+                  cancel: 'Cancel',
+                },
+              },
+            },
+          },
+          revalidation: {
+            immediate: {
+              FormDialog: {
+                title: 'Immediate reactivation',
+                ButtonsCard: {
+                  confirm: 'Reactivate',
+                  confirmLoading: 'Reactivating...',
+                  cancel: 'Cancel',
+                },
+              },
+            },
+            scheduled: {
+              FormDialog: {
+                title: 'Schedule the reactivation',
+                ButtonsCard: {
+                  confirm: 'Schedule',
+                  confirmLoading: 'Scheduling...',
+                  cancel: 'Cancel',
+                },
               },
             },
           },
