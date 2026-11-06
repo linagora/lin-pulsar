@@ -24,11 +24,7 @@
  * LinOpenFactory software.
  */
 
-import type {
-  DropdownClickPayload,
-  LinPulsarAttributeConfiguration,
-  MenuItem,
-} from '@linagora/lin-pulsar-core';
+import type { DropdownClickPayload, MenuItem } from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
 
 /**
@@ -55,49 +51,6 @@ export interface LifecycleButton {
 }
 
 /**
- * Action run when a menu item is clicked: a dialog is opened, then the configured request is sent.
- */
-export interface LifecycleAction {
-  /**
-   * Dialog opened before sending the request: a confirmation dialog, or a form dialog collecting
-   * the `formFields`.
-   */
-  dialog: 'confirmation' | 'form';
-
-  /**
-   * Request URL, defined as a Nunjucks template rendered with `entity`, the entity merged with the
-   * submitted form data, and `immediateDate`, the ISO date `immediateActionDelay` minutes after the
-   * submission.
-   */
-  url: string;
-
-  /**
-   * HTTP method used to send the request.
-   * @default 'POST'
-   */
-  method?: 'DELETE' | 'POST' | 'PUT';
-
-  /**
-   * JSON payload sent as the request body, every nested string property being a Nunjucks template
-   * rendered like `url`. Not sent when empty.
-   * @default {}
-   */
-  body?: Record<string, unknown>;
-
-  /**
-   * Form fields of the form dialog. Ignored by the confirmation dialog.
-   * @default []
-   */
-  formFields?: LinPulsarAttributeConfiguration[];
-
-  /**
-   * Whether the form dialog is pre-filled with the entity values. Ignored by the confirmation dialog.
-   * @default false
-   */
-  fillFormWithEntity?: boolean;
-}
-
-/**
  * Props for the LifecycleButtonsCard component.
  */
 export interface LifecycleButtonsCardProps extends CommonComponentProps {
@@ -112,8 +65,8 @@ export interface LifecycleButtonsCardProps extends CommonComponentProps {
   instanceId?: string;
 
   /**
-   * Entity targeted by the actions, provided to their templates and translations, and to the
-   * `disable` templates of the buttons, and forwarded to the components hosted by the zones.
+   * Entity provided to the `disable` templates of the buttons, and forwarded to the components
+   * hosted by the zones.
    * @default {}
    */
   entity?: Record<string, unknown>;
@@ -128,36 +81,6 @@ export interface LifecycleButtonsCardProps extends CommonComponentProps {
    * @default [{ type: 'activation' }, { type: 'suspension' }, { type: 'deactivation' }]
    */
   buttons?: LifecycleButton[];
-
-  /**
-   * Actions run by the menu items, indexed by menu item key, for example `suspension.immediate`. A
-   * menu item without action only emits `itemClick`.
-   * @default {}
-   */
-  actions?: Record<string, LifecycleAction>;
-
-  /**
-   * When set, the card publishes an event with this key on `uiEventSubject` after a successful
-   * action, with the response body as data, for example to reload the entity of a details page
-   * through its `reloadDetailsOn` option.
-   */
-  emitOnSubmit?: string;
-
-  /**
-   * Delay in minutes between the submission of an action and its `immediateDate`, the start date of
-   * the immediate actions, so that it is not already in the past when the API receives it. Also
-   * provided as `count` to the notifications of the actions.
-   * @default 5
-   */
-  immediateActionDelay?: number;
-
-  /**
-   * When set, the card runs the action whose key is the `key` of the data of the events published
-   * with this key on `uiEventSubject`, so that other components, such as banners, can run the
-   * configured actions. The dropdowns are not involved: the action runs even when its menu item is
-   * not displayed or its dropdown is disabled.
-   */
-  triggerActionOn?: string;
 }
 
 /**
