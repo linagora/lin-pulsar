@@ -272,9 +272,8 @@ Card with confirm/cancel action buttons.
 ### LifecycleButtonsCard
 
 Card grouping the lifecycle dropdowns: the card is rendered through a nested `ButtonsCard`, each dropdown is a nested
-`DropdownButton` under its lifecycle type (`activation`, `suspension` or `deactivation`), the dialogs of the actions
-are the shared `FormDialog` and `ConfirmationDialog` under this namespace, and the components hosted by the `prepend`
-and `append` zones inherit this namespace.
+`DropdownButton` under its lifecycle type (`activation`, `suspension` or `deactivation`), and the components hosted by
+the `prepend` and `append` zones inherit this namespace.
 
 **Namespace:** `{uiNamespace}.lifecycle-buttons-card`
 
@@ -299,17 +298,6 @@ and `append` zones inherit this namespace.
       "deactivation": {
         "dropdown-button": {
           "q-btn-dropdown": { "color": "negative" }
-        }
-      },
-      "form-dialog": {
-        "q-dialog": { "persistent": true },
-        "buttons-card": {
-          "q-card-actions": { "align": "right" }
-        }
-      },
-      "confirmation-dialog": {
-        "buttons-card": {
-          "q-card-actions": { "align": "right" }
         }
       }
     }
@@ -346,6 +334,77 @@ banner are set through its `class`.
               "q-btn": { "color": "white", "outline": true }
             }
           }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### LifecyclePanel
+
+Panel displaying the lifecycle of an entity: the banners are a nested `LifecycleBannersCard` and the dropdowns a nested
+`LifecycleButtonsCard`, both under this namespace. Each info text uses `info-texts.[INFO_TEXT]` for its `q-icon`,
+rendered when the design defines its `name`, and its `q-item-label`, whose `class` sets the color of the message. The
+dialogs of the actions are the shared `FormDialog` and `ConfirmationDialog` under this namespace.
+
+**Namespace:** `{uiNamespace}.lifecycle-panel`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "lifecycle-panel": {
+      "lifecycle-banners-card": {
+        "q-card": { "flat": true, "class": "bg-transparent" },
+        "suspended": {
+          "q-banner": { "class": "bg-warning text-white" },
+          "q-icon": { "name": "warning", "color": "white" }
+        },
+        "deactivated": {
+          "q-banner": { "class": "bg-negative text-white" },
+          "q-icon": { "name": "warning", "color": "white" }
+        },
+        "deactivationWarning": {
+          "q-banner": { "class": "bg-white text-negative" },
+          "q-icon": { "name": "warning", "color": "negative" }
+        }
+      },
+      "info-texts": {
+        "willDeactivate": {
+          "q-icon": { "name": "warning", "size": "xs", "color": "negative" },
+          "q-item-label": { "class": "text-negative" }
+        },
+        "willSuspend": {
+          "q-icon": { "name": "warning", "size": "xs", "color": "warning" },
+          "q-item-label": { "class": "text-warning" }
+        },
+        "notActivated": {
+          "q-icon": { "name": "info", "size": "xs", "color": "grey-8" },
+          "q-item-label": { "class": "text-grey-8" }
+        }
+      },
+      "lifecycle-buttons-card": {
+        "buttons-card": {
+          "q-card": { "flat": true },
+          "q-card-actions": { "align": "left" }
+        },
+        "suspension": {
+          "dropdown-button": {
+            "q-btn-dropdown": { "color": "warning" }
+          }
+        }
+      },
+      "form-dialog": {
+        "q-dialog": { "persistent": true },
+        "buttons-card": {
+          "q-card-actions": { "align": "right" }
+        }
+      },
+      "confirmation-dialog": {
+        "buttons-card": {
+          "q-card-actions": { "align": "right" }
         }
       }
     }
@@ -2484,6 +2543,14 @@ A full example showing all LinPulsar components configured together:
         "deactivation": {
           "dropdown-button": {
             "q-btn-dropdown": { "color": "negative" }
+          }
+        }
+      },
+      "lifecycle-panel": {
+        "info-texts": {
+          "willSuspend": {
+            "q-icon": { "name": "warning", "size": "xs", "color": "warning" },
+            "q-item-label": { "class": "text-warning" }
           }
         },
         "form-dialog": {
