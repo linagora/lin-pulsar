@@ -2,8 +2,9 @@
 
 The **LifecycleBannersCard** component stacks the lifecycle banners of an entity, such as "suspended since" or
 "deactivated in 3 days", in one card. It is a presentational card: it translates the content of each banner with the
-values it receives, renders one button per action and emits the clicked action. Its host selects the banners matching
-the entity status, computes their values and runs the clicked actions.
+values it receives, renders one button per action and emits the clicked action. The
+[LifecyclePanel](../panel/LifecyclePanel.md) selects the banners matching the entity status, computes their values and
+runs the clicked actions.
 
 ---
 
@@ -63,7 +64,10 @@ of one of its actions:
 | `[KEY].[CONTENT]`            | Content selected by the `content` of the banner, same parameters  |
 | `[KEY].actions.[ACTION_KEY]` | Label of the button of the action                                 |
 
-The keys are defined by the host, so the card ships no default label.
+The keys are defined by the host, so the card ships no default label. Inside a
+[LifecyclePanel](../panel/LifecyclePanel.md#-internationalization), `[I18N_SCOPE]` is
+`[PANEL_I18N_SCOPE].LifecyclePanel`, `[PANEL_I18N_SCOPE]` being the i18n scope of the panel, and the default labels are
+shipped by `LinPulsar/DetailsPageI18n`.
 
 ---
 
