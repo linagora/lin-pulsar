@@ -68,9 +68,7 @@
           class="form-dialog--form-section--field"
           :data-cy="`form-dialog_field-container_${field.name}`"
         >
-          <component
-            :is="fieldComponent"
-            v-if="fieldComponent"
+          <EntityAttributeField
             v-model:entity="formData"
             :i18n-scope="i18nScope"
             :ui-namespace="localUiNamespace"
@@ -79,9 +77,7 @@
           />
         </q-card-section>
         <q-card-actions v-bind="uiProps.cardActions">
-          <component
-            :is="buttonsCard"
-            v-if="buttonsCard"
+          <ButtonsCard
             :ui-namespace="localUiNamespace"
             :i18n-scope="i18nScope"
             :is-loading="isLoading"
@@ -103,14 +99,12 @@ import type {
   LinPulsarQCardSectionProps,
   LinPulsarQDialogProps,
 } from '@linagora/lin-pulsar-core';
-import {
-  loadAsyncComponent,
-  useDialog,
-  useUiDesign,
-} from '@linagora/lin-pulsar-core';
+import { useDialog, useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed, ref } from 'vue';
 import type { FormDialogEvent } from '../../types/dialog';
 import { DialogKey } from '../../types/dialog';
+import ButtonsCard from '../card/ButtonsCard.vue';
+import EntityAttributeField from '../field/EntityAttributeField.vue';
 
 const { show, dialogRef } = useDialog<FormDialogEvent>(DialogKey.Form, onOpen);
 void dialogRef.value;
@@ -149,9 +143,6 @@ const uiProps = computed(() => ({
     'q-card-actions'
   ),
 }));
-
-const fieldComponent = loadAsyncComponent('LinPulsar/EntityAttributeField');
-const buttonsCard = loadAsyncComponent('LinPulsar/ButtonsCard');
 
 /**
  * Handles the submit action.

@@ -56,9 +56,7 @@
       />
       <!-- eslint-enable vue/no-v-text-v-html-on-component vue/no-v-html -->
 
-      <component
-        :is="buttonsCard"
-        v-if="buttonsCard"
+      <ButtonsCard
         :ui-namespace="localUiNamespace"
         :i18n-scope="i18nScope"
         @cancel="onClose"
@@ -74,14 +72,11 @@ import type {
   LinPulsarQCardSectionProps,
   LinPulsarQDialogProps,
 } from '@linagora/lin-pulsar-core';
-import {
-  loadAsyncComponent,
-  useDialog,
-  useUiDesign,
-} from '@linagora/lin-pulsar-core';
+import { useDialog, useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed, ref } from 'vue';
 import type { ConfirmationDialogEvent } from '../../types/dialog';
 import { DialogKey } from '../../types/dialog';
+import ButtonsCard from '../card/ButtonsCard.vue';
 
 const { show, dialogRef } = useDialog<ConfirmationDialogEvent>(
   DialogKey.Confirmation,
@@ -110,8 +105,6 @@ const uiProps = computed(() => ({
     'q-card-section'
   ),
 }));
-
-const buttonsCard = loadAsyncComponent('LinPulsar/ButtonsCard');
 
 /**
  * Handles the confirm action.

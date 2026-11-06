@@ -57,9 +57,7 @@
           :key="field.name"
           class="col-auto"
         >
-          <component
-            :is="fieldComponent"
-            v-if="fieldComponent"
+          <EntityAttributeField
             :ui-namespace="`${localUiNamespace}.default-filters.fields.${field.name}`"
             :i18n-scope="localI18n"
             :instance-id="instanceId"
@@ -99,9 +97,7 @@
               :key="field.name"
               class="col-auto"
             >
-              <component
-                :is="fieldComponent"
-                v-if="fieldComponent"
+              <EntityAttributeField
                 :ui-namespace="`${localUiNamespace}.advanced-filters.fields.${field.name}`"
                 :i18n-scope="localI18n"
                 :instance-id="instanceId"
@@ -129,7 +125,6 @@ import type {
 import {
   fromDot,
   getNestedValue,
-  loadAsyncComponent,
   useScopedI18n,
   useUiDesign,
 } from '@linagora/lin-pulsar-core';
@@ -138,6 +133,7 @@ import type {
   AdvancedSearchCardOutputs,
   AdvancedSearchCardProps,
 } from '../../types/advancedSearchCard';
+import EntityAttributeField from '../field/EntityAttributeField.vue';
 
 const props = defineProps<AdvancedSearchCardProps>();
 const emit = defineEmits<AdvancedSearchCardOutputs>();
@@ -167,8 +163,6 @@ const uiProps = {
     'q-btn'
   ),
 };
-
-const fieldComponent = loadAsyncComponent('LinPulsar/EntityAttributeField');
 
 const isExpanded = ref(false);
 const localFilters = ref<Record<string, unknown>>(

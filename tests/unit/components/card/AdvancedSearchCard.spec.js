@@ -42,7 +42,6 @@ vi.mock('@linagora/lin-pulsar-core', async () => {
     useUiDesign: () => ({
       ui: vi.fn(() => ({})),
     }),
-    loadAsyncComponent: vi.fn(() => null),
   };
 });
 

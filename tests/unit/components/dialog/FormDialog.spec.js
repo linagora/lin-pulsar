@@ -38,7 +38,6 @@ const mockUi = vi.fn((namespace, type) => {
 
 vi.mock('@linagora/lin-pulsar-core', () => {
   return {
-    loadAsyncComponent: () => 'div',
     useDialog: (_key) => {
       return { show: mockShowRef, dialogRef: mockDialogRef };
     },
