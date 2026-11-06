@@ -137,8 +137,7 @@ successful submit or cancel, `formData` is reset to `{}`.
 
 ### Field Rendering
 
-Form fields are rendered by iterating over `formFields` and mounting an `EntityAttributeField` (loaded via
-`loadAsyncComponent('LinPulsar/EntityAttributeField')`) for each entry:
+Form fields are rendered by iterating over `formFields` and mounting an `EntityAttributeField` for each entry:
 
 ```html
 <q-card-section
