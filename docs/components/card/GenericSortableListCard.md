@@ -286,11 +286,12 @@ Key highlights:
 
 ## **🔌 Plugin Zones**
 
-The component registers five plugin zones, all prefixed with the **UI namespace**
+The component registers six plugin zones, all prefixed with the **UI namespace**
 (`${uiNamespace}.generic-sortable-list-card`, falling back to `instanceId`) — not with `instanceId` alone:
 
 | Zone name                                 | Rendered in | Description                                     |
 | ----------------------------------------- | ----------- | ----------------------------------------------- |
+| `${localUiNamespace}.actions.prepend`     | Card header | Before the add and save buttons                 |
 | `${localUiNamespace}.field-labels.before` | Header row  | Before the configured field labels              |
 | `${localUiNamespace}.field-labels.after`  | Header row  | After the configured field labels               |
 | `${localUiNamespace}.field-values.before` | Item row    | Row counterpart of `field-labels.before`        |
@@ -300,7 +301,9 @@ The component registers five plugin zones, all prefixed with the **UI namespace*
 Every zone receives `entity`, `instanceId`, `uiNamespace` and `i18nScope` as props. **What `entity` holds depends on
 where the zone is rendered:**
 
-- **Header zones** receive the entity owning the collection — the `entity` prop of the card
+- **Header zones** (card header and header row) receive the entity owning the collection — the `entity` prop of the card
+- The `actions.prepend` zone receives `${localUiNamespace}.buttons-card` as UI namespace and
+  `${localI18nScope}.ButtonsCard` as i18n scope, next to the add and save buttons
 - **Item zones** receive the **item of the row**, not the owning entity
 
 A plugin adding a column should register in **both** the value zone and its label counterpart. Registering in only
@@ -403,4 +406,4 @@ Adding a column to the rows requires adding its header too, otherwise the header
 - **Tabular without a table:** Column layout and header row while remaining a drag-and-drop `q-list`
 - **Auto-paginating:** Transparently fetches all pages before rendering
 - **Zone-ready:** Designed to be rendered through a zone with the page entity injected
-- **Extensible:** Per-field slots, before/after slots and five plugin zones cover custom UI needs
+- **Extensible:** Per-field slots, before/after slots and six plugin zones cover custom UI needs
