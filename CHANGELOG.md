@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.6](https://github.com/linagora/lin-pulsar/compare/v0.3.5...v0.3.6) (2026-11-09)
+
+
+### Features
+
+* add actions.prepend plugin zone in sortable list card header ([025e3e7](https://github.com/linagora/lin-pulsar/commit/025e3e71cba710c793b7a89b2207f61d77fc2206))
+* display jinja templates in information card ([df5390b](https://github.com/linagora/lin-pulsar/commit/df5390bddb0f9a328a78376758c581dcb18a1e4d))
+* display json values with vue-json-pretty in information card ([b9227dc](https://github.com/linagora/lin-pulsar/commit/b9227dc1da115cb983e8fe7fa3e1eea5b9514664))
+
 ### [0.3.5](https://github.com/linagora/lin-pulsar/compare/v0.3.4...v0.3.5) (2026-11-06)
 
 
