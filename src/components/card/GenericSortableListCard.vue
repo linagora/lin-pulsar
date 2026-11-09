@@ -49,6 +49,15 @@
         :show-confirm-button="false"
         :show-cancel-button="false"
       >
+        <template #prepend-buttons>
+          <LinPulsarZoneRenderer
+            :zone="`${localUiNamespace}.actions.prepend`"
+            :entity="entity || {}"
+            :instance-id="instanceId"
+            :ui-namespace="`${localUiNamespace}.buttons-card`"
+            :i18n-scope="`${localI18nScope}.ButtonsCard`"
+          />
+        </template>
         <template #append-buttons>
           <q-btn
             v-bind="uiProps.addButton"
