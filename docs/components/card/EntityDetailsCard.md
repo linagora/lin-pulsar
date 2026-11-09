@@ -51,7 +51,7 @@ The component determines which fields to display as follows:
 - Each field value is resolved from the `entity` object
 - Field names support **dot notation** to target values located inside sub-objects of the entity (e.g. `extraParameters.login`, resolved with `getNestedValue` from lin-pulsar-core)
 - Missing or `null` values, including unresolvable nested paths, are coerced to an empty string
-- All values are rendered as strings
+- Values are rendered as strings, except fields whose formatter has `type: 'json'`: their value is kept raw so that the `InformationCard` can pretty-print it
 
 > `showRemainingFields` only appends **top-level** keys of the entity; nested attributes must be listed explicitly in `fieldOrder`.
 
@@ -183,7 +183,7 @@ Here is a sample JSON configuration for the design system:
 ## **📌 Notes**
 
 - This component is strictly read-only and intended for display purposes
-- Attribute values are stringified before rendering
+- Attribute values are stringified before rendering, except JSON-typed fields
 - All child cards share the same loading state
 - Styling and behavior can be customized via the UI design system namespace
 - Ideal for entity detail pages, summary panels, and administrative views

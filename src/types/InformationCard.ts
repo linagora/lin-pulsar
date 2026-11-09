@@ -30,8 +30,9 @@ import type { CommonComponentProps } from './common';
  * Rendering type of an InformationCard value.
  * - `text`: the value is displayed as is.
  * - `json`: the value (object or JSON string) is pretty-printed with syntax highlighting.
+ * - `jinja`: the value is displayed as a Jinja template in a monospace block, indented when JSON-shaped.
  */
-export type InformationCardType = 'text' | 'json';
+export type InformationCardType = 'text' | 'json' | 'jinja';
 
 /**
  * Props definition for the InformationCard component.
@@ -58,6 +59,7 @@ export interface InformationCardProps extends CommonComponentProps {
    * Rendering type of the value.
    * With `json`, an object or a JSON string is pretty-printed with syntax highlighting; a string
    * that is not valid JSON is displayed as text.
+   * With `jinja`, a Jinja template is displayed in a monospace block, indented when it is JSON-shaped.
    * @default 'text'
    */
   type?: InformationCardType;

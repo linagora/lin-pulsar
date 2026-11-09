@@ -89,7 +89,7 @@ The `formatters` array contains `FieldFormatter` objects that specify:
 - `field` — The attribute name to format
 - `formatter` — The formatter name (e.g., `'toDate'`)
 - `formatOptions` — Configuration options for the formatter
-- `type` — Optional rendering type of the value: `text` (default) or `json`
+- `type` — Optional rendering type of the value: `text` (default), `json` or `jinja` (Jinja template, indented when JSON-shaped)
 
 With `"type": "json"`, the attribute value (object, array or JSON string) is kept raw and rendered as a
 collapsible, highlighted JSON tree by the InformationCard. `formatter` is optional, so a field can be declared as
