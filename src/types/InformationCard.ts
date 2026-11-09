@@ -27,6 +27,13 @@
 import type { CommonComponentProps } from './common';
 
 /**
+ * Rendering type of an InformationCard value.
+ * - `text`: the value is displayed as is.
+ * - `json`: the value (object or JSON string) is pretty-printed with syntax highlighting.
+ */
+export type InformationCardType = 'text' | 'json';
+
+/**
  * Props definition for the InformationCard component.
  *
  * This interface describes the configuration used to display
@@ -43,9 +50,17 @@ export interface InformationCardProps extends CommonComponentProps {
   /**
    * Value to display when the component is not in a loading state.
    * Ignored if custom content is provided via the default slot.
-   * @default '',
+   * A dash is displayed when the value is empty.
    */
-  value?: string;
+  value?: unknown;
+
+  /**
+   * Rendering type of the value.
+   * With `json`, an object or a JSON string is pretty-printed with syntax highlighting; a string
+   * that is not valid JSON is displayed as text.
+   * @default 'text'
+   */
+  type?: InformationCardType;
 
   /**
    * Indicates whether the component is in a loading state.
