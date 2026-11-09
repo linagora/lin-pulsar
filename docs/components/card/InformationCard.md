@@ -17,12 +17,12 @@ It supports optional icons, loading states, and custom content through slots.
 
 ## **⚙️ Props**
 
-| Prop name   | Type                 | Default     | Description                                                                  |
-| ----------- | -------------------- | ----------- | ---------------------------------------------------------------------------- |
-| `label`     | `String`             | `''`        | Text label describing the displayed value                                    |
-| `value`     | `unknown`            | `undefined` | Value to display when not in a loading state; a dash is displayed when empty |
-| `type`      | `'text'` \| `'json'` | `'text'`    | Rendering type of the value (see [JSON values](#json-values))                |
-| `isLoading` | `Boolean`            | `false`     | Enables the loading state and displays a skeleton placeholder                |
+| Prop name   | Type                              | Default     | Description                                                                                           |
+| ----------- | --------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------- |
+| `label`     | `String`                          | `''`        | Text label describing the displayed value                                                             |
+| `value`     | `unknown`                         | `undefined` | Value to display when not in a loading state; a dash is displayed when empty                          |
+| `type`      | `'text'` \| `'json'` \| `'jinja'` | `'text'`    | Rendering type of the value (see [JSON values](#json-values) and [Jinja templates](#jinja-templates)) |
+| `isLoading` | `Boolean`                         | `false`     | Enables the loading state and displays a skeleton placeholder                                         |
 
 ---
 
@@ -38,6 +38,20 @@ syntax highlighting, collapsible nodes and item count of collapsed nodes.
 
 ```vue
 <InformationCard label="Metadata" type="json" :value="{ version: 2, enabled: true }" />
+```
+
+---
+
+## **🧾 Jinja templates**
+
+With `type="jinja"`, the value is rendered as a Jinja template in a monospace block:
+
+- a JSON-shaped template is indented, its `{{ ... }}` expressions being kept as is;
+- a template that is not JSON-shaped (e.g. with `{% ... %}` blocks breaking the JSON structure) is displayed raw;
+- the block scrolls past `400px` of height.
+
+```vue
+<InformationCard label="Claims" type="jinja" value='{ "email": {{ payload.email | tojson }} }' />
 ```
 
 ---

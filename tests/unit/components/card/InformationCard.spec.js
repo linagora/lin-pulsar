@@ -137,4 +137,61 @@ describe('Test component: InformationCard', () => {
       expect(wrapper.vm.jsonData).toEqual([1, 'two']);
     });
   });
+
+  describe('Test computed: jinjaText', () => {
+    it('should be undefined when the type is not jinja', () => {
+      wrapper = shallowMount(InformationCard, {
+        props: { ...defaultProps, value: '{{ a }}' },
+      });
+
+      expect(wrapper.vm.jinjaText).toBeUndefined();
+    });
+
+    it('should be undefined when the value is empty', () => {
+      wrapper = shallowMount(InformationCard, {
+        props: { ...defaultProps, type: 'jinja', value: '' },
+      });
+
+      expect(wrapper.vm.jinjaText).toBeUndefined();
+    });
+
+    it('should indent a JSON-shaped template and keep its expressions', () => {
+      wrapper = shallowMount(InformationCard, {
+        props: {
+          ...defaultProps,
+          type: 'jinja',
+          value:
+            '{ "sub": {{ payload.id | tojson }}, "roles": [{{ roles | tojson }}] }',
+        },
+      });
+
+      expect(wrapper.vm.jinjaText).toEqual(
+        '{\n  "sub": {{ payload.id | tojson }},\n  "roles": [\n    {{ roles | tojson }}\n  ]\n}'
+      );
+    });
+
+    it('should keep expressions located inside JSON strings', () => {
+      wrapper = shallowMount(InformationCard, {
+        props: {
+          ...defaultProps,
+          type: 'jinja',
+          value:
+            '{ "name": "{{ payload.firstname }}", "id": {{ payload.id }} }',
+        },
+      });
+
+      expect(wrapper.vm.jinjaText).toEqual(
+        '{\n  "name": "{{ payload.firstname }}",\n  "id": {{ payload.id }}\n}'
+      );
+    });
+
+    it('should return the raw template when it is not JSON-shaped', () => {
+      const value = '{% for r in roles %}{{ r }}{% endfor %}';
+      wrapper = shallowMount(InformationCard, {
+        props: { ...defaultProps, type: 'jinja', value },
+      });
+
+      expect(wrapper.vm.jinjaText).toEqual(value);
+    });
+  });
 });

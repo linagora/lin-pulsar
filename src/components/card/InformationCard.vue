@@ -66,6 +66,11 @@
           class="information-card--json"
           data-cy="value"
         />
+        <pre
+          v-else-if="jinjaText !== undefined"
+          class="information-card--jinja"
+          data-cy="value"
+          >{{ jinjaText }}</pre>
         <span
           v-else
           class="text-bold information-card--content"
@@ -143,6 +148,40 @@ const jsonData = computed<JSONDataType | undefined>(() => {
   }
 });
 
+/**
+ * JSON strings (kept as is, so expressions inside them are not masked) or Jinja expressions (`{{ ... }}`, masked
+ * to make a JSON-shaped template parsable).
+ */
+const JINJA_EXPRESSION = /"(?:\\.|[^\\"])*"|\{\{[\s\S]*?\}\}/g;
+
+/**
+ * Text rendered when `type` is `jinja`, or `undefined` otherwise (other type or empty value).
+ *
+ * When the template is JSON-shaped, it is indented: each `{{ ... }}` expression is replaced by a placeholder string,
+ * the result is parsed and pretty-printed, then the expressions are restored. Otherwise (e.g. `{% ... %}` blocks
+ * breaking the JSON structure), the raw template is returned.
+ */
+const jinjaText = computed<string | undefined>(() => {
+  if (props.type !== 'jinja' || isEmpty(props.value)) {
+    return undefined;
+  }
+
+  const raw = String(props.value);
+  const expressions: string[] = [];
+  const masked = raw.replace(JINJA_EXPRESSION, (match) =>
+    match.startsWith('"') ? match : `"__jinja_${expressions.push(match) - 1}__"`
+  );
+
+  try {
+    return JSON.stringify(JSON.parse(masked), null, 2).replace(
+      /"__jinja_(\d+)__"/g,
+      (_, index) => expressions[Number(index)]
+    );
+  } catch {
+    return raw;
+  }
+});
+
 const { ui } = useUiDesign();
 const localUiNamespace = `${props.uiNamespace}.information-card`;
 const uiProps = {
@@ -164,8 +203,31 @@ const uiProps = {
   min-width: 350px;
 }
 
-.information-card--json {
+.information-card--json,
+.information-card--jinja {
   max-height: 400px;
   overflow: auto;
+}
+
+.information-card--jinja {
+  margin: 0;
+  font-family: monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Override vue-json-pretty default colors to meet WCAG AA contrast (4.5:1) on a white card. */
+.information-card--json :deep(.vjs-value-string) {
+  color: #1a7f37;
+}
+
+.information-card--json :deep(.vjs-value-number),
+.information-card--json :deep(.vjs-value-boolean) {
+  color: #0b5cad;
+}
+
+.information-card--json :deep(.vjs-value-null),
+.information-card--json :deep(.vjs-value-undefined) {
+  color: #a626a4;
 }
 </style>
