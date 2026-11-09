@@ -69,4 +69,72 @@ describe('Test component: InformationCard', () => {
       expect(wrapper.vm.displayValue).toEqual('-');
     });
   });
+
+  describe('Test computed: jsonData', () => {
+    it('should be undefined when the type is not json', () => {
+      wrapper = shallowMount(InformationCard, {
+        props: { ...defaultProps, value: '{"a":1}' },
+      });
+
+      expect(wrapper.vm.jsonData).toBeUndefined();
+    });
+
+    it('should be undefined when the value is empty', () => {
+      wrapper = shallowMount(InformationCard, {
+        props: { ...defaultProps, type: 'json', value: '' },
+      });
+
+      expect(wrapper.vm.jsonData).toBeUndefined();
+    });
+
+    it('should be undefined when the string is not valid JSON', () => {
+      wrapper = shallowMount(InformationCard, {
+        props: { ...defaultProps, type: 'json', value: 'not json' },
+      });
+
+      expect(wrapper.vm.jsonData).toBeUndefined();
+    });
+
+    it('should be undefined when the value is not serializable', () => {
+      const circular = { name: 'a1' };
+      circular.self = circular;
+
+      wrapper = shallowMount(InformationCard, {
+        props: { ...defaultProps, type: 'json', value: circular },
+      });
+
+      expect(wrapper.vm.jsonData).toBeUndefined();
+
+      wrapper = shallowMount(InformationCard, {
+        props: { ...defaultProps, type: 'json', value: () => 'fn' },
+      });
+
+      expect(wrapper.vm.jsonData).toBeUndefined();
+    });
+
+    it('should return the object as plain JSON data', () => {
+      wrapper = shallowMount(InformationCard, {
+        props: {
+          ...defaultProps,
+          type: 'json',
+          value: { name: 'a1', count: 2, ok: true, none: null },
+        },
+      });
+
+      expect(wrapper.vm.jsonData).toEqual({
+        name: 'a1',
+        count: 2,
+        ok: true,
+        none: null,
+      });
+    });
+
+    it('should parse a JSON string', () => {
+      wrapper = shallowMount(InformationCard, {
+        props: { ...defaultProps, type: 'json', value: '[1,"two"]' },
+      });
+
+      expect(wrapper.vm.jsonData).toEqual([1, 'two']);
+    });
+  });
 });

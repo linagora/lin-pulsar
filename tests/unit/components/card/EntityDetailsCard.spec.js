@@ -27,6 +27,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { shallowMount } from '@vue/test-utils';
 import EntityDetailsCard from '../../../../src/components/card/EntityDetailsCard.vue';
+import InformationCard from '../../../../src/components/card/InformationCard.vue';
 
 const mockFormatValue = vi.fn((value) => value);
 
@@ -215,6 +216,29 @@ describe('Test component: EntityDetailsCard', () => {
 
       expect(testWrapper.vm.values.name).toBe('entity-name');
       expect(mockFormatValue).not.toHaveBeenCalled();
+    });
+
+    it('should keep the raw value of a json field without calling formatValue', async () => {
+      const metadata = { a: 1 };
+      const testWrapper = shallowMount(EntityDetailsCard, {
+        props: {
+          uiNamespace: 'namespace',
+          i18nScope: 'scope',
+          entity: { name: 'entity-name', metadata },
+          fieldOrder: ['name', 'metadata'],
+          formatters: [{ field: 'metadata', type: 'json' }],
+        },
+        global: { renderStubDefaultSlot: true },
+      });
+
+      await testWrapper.vm.$nextTick();
+
+      expect(testWrapper.vm.values.metadata).toEqual(metadata);
+      expect(testWrapper.vm.values.name).toBe('entity-name');
+      expect(mockFormatValue).not.toHaveBeenCalled();
+
+      const cards = testWrapper.findAllComponents(InformationCard);
+      expect(cards.map((card) => card.props('type'))).toEqual(['text', 'json']);
     });
   });
 });

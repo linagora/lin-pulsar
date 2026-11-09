@@ -26,6 +26,7 @@
 
 import type { ModulePageOptions } from './ModulePageOptions';
 import type { FormatterConfiguration } from '@linagora/lin-pulsar-core';
+import type { InformationCardType } from './InformationCard';
 
 /**
  * Configuration for formatting a specific entity attribute field.
@@ -38,6 +39,12 @@ export interface FieldFormatter extends FormatterConfiguration {
    * Name of the entity attribute field to format.
    */
   field: string;
+
+  /**
+   * Rendering type of the field value, forwarded to the InformationCard.
+   * @default 'text'
+   */
+  type?: InformationCardType;
 }
 
 /**

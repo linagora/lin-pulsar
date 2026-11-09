@@ -58,7 +58,16 @@
         <blur-loader width="lg" />
       </slot>
       <slot v-else>
+        <vue-json-pretty
+          v-if="jsonData !== undefined"
+          :data="jsonData"
+          show-length
+          show-icon
+          class="information-card--json"
+          data-cy="value"
+        />
         <span
+          v-else
           class="text-bold information-card--content"
           data-cy="value"
         >
@@ -78,25 +87,60 @@ import type {
 } from '@linagora/lin-pulsar-core';
 import { useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed } from 'vue';
+import VueJsonPretty from 'vue-json-pretty';
+import type { JSONDataType } from 'vue-json-pretty/types/utils';
+import 'vue-json-pretty/lib/styles.css';
 import type { InformationCardProps } from '../../types/InformationCard';
 import BlurLoader from '../loader/BlurLoader.vue';
 
 const props = withDefaults(defineProps<InformationCardProps>(), {
   label: '',
-  value: '',
   isLoading: false,
+  type: 'text',
 });
+
+/**
+ * Whether the value is considered empty and rendered as a dash.
+ * @param value - Value to check.
+ * @returns True when the value is undefined, null or an empty string.
+ */
+function isEmpty(value: unknown): boolean {
+  return value === undefined || value === null || value === '';
+}
 
 /**
  * Value rendered in the content section: falls back to a dash when the value is empty, so empty attributes remain
  * visible.
  */
 const displayValue = computed(() => {
-  if (props.value === undefined || props.value === null || props.value === '') {
+  if (isEmpty(props.value)) {
     return '-';
   }
 
   return props.value;
+});
+
+/**
+ * Data rendered by the JSON viewer when `type` is `json`, or `undefined` when the value must be
+ * rendered as text (other type, empty value, invalid JSON string or non-serializable value).
+ *
+ * The value goes through a JSON round trip so that the viewer only receives plain JSON data:
+ * circular references and BigInt values fall back to text instead of breaking the render.
+ */
+const jsonData = computed<JSONDataType | undefined>(() => {
+  if (props.type !== 'json' || isEmpty(props.value)) {
+    return undefined;
+  }
+
+  try {
+    const json =
+      typeof props.value === 'string'
+        ? props.value
+        : JSON.stringify(props.value);
+    return json === undefined ? undefined : JSON.parse(json);
+  } catch {
+    return undefined;
+  }
 });
 
 const { ui } = useUiDesign();
@@ -118,5 +162,10 @@ const uiProps = {
 <style scoped>
 .information-card {
   min-width: 350px;
+}
+
+.information-card--json {
+  max-height: 400px;
+  overflow: auto;
 }
 </style>

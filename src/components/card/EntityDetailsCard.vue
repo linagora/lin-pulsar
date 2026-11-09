@@ -46,6 +46,7 @@
           :key="field"
           :label="t(`attributes.${field}`)"
           :value="values[field]"
+          :type="formatsByField.get(field)?.type"
           :is-loading="isLoading"
           class="q-ma-sm"
           :ui-namespace="`${localUiNamespace}.${field}`"
@@ -100,16 +101,15 @@ const formatsByField = computed(
   () => new Map((props.formatters ?? []).map((f) => [f.field, f]))
 );
 
-const values = computed<Record<string, string>>(() => {
-  return fieldNames.value.reduce<Record<string, string>>((acc, name) => {
-    const value = getNestedValue(props.entity, name);
+const values = computed<Record<string, unknown>>(() => {
+  return fieldNames.value.reduce<Record<string, unknown>>((acc, name) => {
+    const rawValue = getNestedValue(props.entity, name);
     const format = formatsByField.value.get(name);
-    if (format) {
-      acc[name] =
-        `${formatValue(value, format.formatter, format.formatOptions) ?? ''}`;
-    } else {
-      acc[name] = `${value ?? ''}`;
-    }
+    const value = format?.formatter
+      ? formatValue(rawValue, format.formatter, format.formatOptions)
+      : rawValue;
+    // JSON values are kept raw so that the InformationCard can pretty-print them.
+    acc[name] = format?.type === 'json' ? value : `${value ?? ''}`;
     return acc;
   }, {});
 });

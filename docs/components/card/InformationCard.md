@@ -17,11 +17,28 @@ It supports optional icons, loading states, and custom content through slots.
 
 ## **⚙️ Props**
 
-| Prop name   | Type      | Default | Description                                                   |
-| ----------- | --------- | ------- | ------------------------------------------------------------- |
-| `label`     | `String`  | `''`    | Text label describing the displayed value                     |
-| `value`     | `String`  | `''`    | Value to display when not in a loading state                  |
-| `isLoading` | `Boolean` | `false` | Enables the loading state and displays a skeleton placeholder |
+| Prop name   | Type                 | Default     | Description                                                                  |
+| ----------- | -------------------- | ----------- | ---------------------------------------------------------------------------- |
+| `label`     | `String`             | `''`        | Text label describing the displayed value                                    |
+| `value`     | `unknown`            | `undefined` | Value to display when not in a loading state; a dash is displayed when empty |
+| `type`      | `'text'` \| `'json'` | `'text'`    | Rendering type of the value (see [JSON values](#json-values))                |
+| `isLoading` | `Boolean`            | `false`     | Enables the loading state and displays a skeleton placeholder                |
+
+---
+
+## **🧾 JSON values**
+
+With `type="json"`, the value is rendered with [vue-json-pretty](https://github.com/leezng/vue-json-pretty):
+syntax highlighting, collapsible nodes and item count of collapsed nodes.
+
+- the value can be an object, an array or a JSON string (parsed before display);
+- a string that is not valid JSON, or a value that cannot be serialized (circular reference, BigInt,
+  function), is displayed as plain text;
+- the viewer scrolls past `400px` of height.
+
+```vue
+<InformationCard label="Metadata" type="json" :value="{ version: 2, enabled: true }" />
+```
 
 ---
 
