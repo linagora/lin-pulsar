@@ -116,8 +116,16 @@ interface ModulePageOptions extends ModulePageLifecycleHostOptions {
 // from @linagora/lin-pulsar-core
 interface ModulePageLifecycleHostOptions {
   addNavigationMenu?: boolean; // default false
+  navigationMenuActiveRegex?: string; // regex activating the navigation entry
 }
 ```
+
+`navigationMenuActiveRegex` is only used when `addNavigationMenu` is `true`. It is propagated as the
+`activeRegex` of the navigation entry: the entry is then active when this regular expression matches
+the current route path, instead of on the base path and its sub-paths. For example,
+`"^/(accounts|account-details)(?:/.*)?$"` keeps the entry of a module served on `/accounts` active on
+`/account-details/123`. See [NavigationMenu](../components/menu/NavigationMenu.md) for the matching
+rules.
 
 `parentPath` supports Nunjucks template interpolation with two variables, so the path can be built
 from the current context instead of being hardcoded. Generic pages render it when the user cancels
@@ -144,7 +152,7 @@ per-page contracts.
 ## **🔗 Module Lifecycle Summary**
 
 1. Module is initialized via `BasicRemoteModule`
-2. `postInit` registers navigation entry only if `addNavigationMenu` is set to true.
+2. `postInit` registers navigation entry only if `addNavigationMenu` is set to true, with `navigationMenuActiveRegex` as its activation regex when provided.
 3. Routes are exposed via `PageRoutes`
 4. Lifecycle logic is exposed via `PageLifecycle`
 5. Page is rendered using federated layout + page components

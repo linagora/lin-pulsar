@@ -17,10 +17,10 @@ It leverages Quasar's `QTabs` and `QTab`, each tab being wrapped in a Vue Router
 
 ## **⚙️ Props**
 
-| Prop          | Type                   | Required | Default | Description                                   |
-| ------------- | ---------------------- | -------- | ------- | --------------------------------------------- |
-| `items`       | `NavigationMenuItem[]` | Yes      | -       | List of navigation items (id, labelKey, path) |
-| `uiNamespace` | `string`               | Yes      | -       | UI design namespace for custom styling        |
+| Prop          | Type                   | Required | Default | Description                                                  |
+| ------------- | ---------------------- | -------- | ------- | ------------------------------------------------------------ |
+| `items`       | `NavigationMenuItem[]` | Yes      | -       | List of navigation items (id, labelKey, path, `activeRegex`) |
+| `uiNamespace` | `string`               | Yes      | -       | UI design namespace for custom styling                       |
 
 ### NavigationMenuItem Interface
 
@@ -32,10 +32,18 @@ export interface NavigationMenuItem {
   labelKey: string;
   /** Path/route of the navigation item. */
   path: string;
+  /**
+   * Optional regular expression, evaluated against the current route path,
+   * that defines when the navigation item is active.
+   * When omitted, the item is active on its path and its sub-paths.
+   */
+  activeRegex?: string;
 }
 ```
 
 The component resolves `item.labelKey` through `vue-i18n`'s `t()` to produce the displayed label.
+
+`activeRegex` is tested against the current route path.
 
 ---
 
@@ -92,11 +100,17 @@ const navigationItems: NavigationMenuItem[] = [
   { id: '1', labelKey: 'nav.home', path: '/home' },
   { id: '2', labelKey: 'nav.users', path: '/users' },
   { id: '3', labelKey: 'nav.settings', path: '/settings' },
+  {
+    id: '4',
+    labelKey: 'nav.accounts',
+    path: '/accounts',
+    activeRegex: '^/(accounts|account-details)(?:/.*)?$',
+  },
 ];
 
 const handleItemChange = (item: NavigationMenuItem) => {
   console.log('Selected item:', item);
-  // item contains: { id, labelKey, path }
+  // item contains: { id, labelKey, path, activeRegex? }
 };
 </script>
 
@@ -113,12 +127,13 @@ const handleItemChange = (item: NavigationMenuItem) => {
 
 ## **📌 Notes**
 
-- **Prefix matching:** The active tab is resolved using path prefix matching via `model-value` on `q-tabs`. This ensures tabs remain active for sub-routes handled by separate modules (e.g. `/users/import` keeps the `/users` tab active)
-- **Longest prefix wins:** When multiple items match the current path, the one with the longest path is selected (e.g. `/users/settings/profile` matches `/users/settings` over `/users`)
+- **Prefix matching:** By default, the active tab is resolved using path prefix matching via `model-value` on `q-tabs`. This ensures tabs remain active for sub-routes handled by separate modules (e.g. `/users/import` keeps the `/users` tab active)
+- **Activation regex:** An item with `activeRegex` is active only on the routes matching this regex, instead of its path and its sub-paths (e.g. `^/users$` keeps `/users/import` from activating the `/users` tab)
+- **Invalid regex:** An invalid `activeRegex` is reported with `console.error` and ignored: the item falls back to the prefix matching
+- **Longest path wins:** When multiple items match the current path, the one with the longest path is selected (e.g. `/users/settings/profile` matches `/users/settings` over `/users`)
 - **Route synchronization:** The active tab automatically updates when the route changes
 - **Link wrapping:** Each `q-tab` is wrapped in a `router-link`, which is the focusable element: a click navigates through the router, while the browser keeps its link controls (open in a new tab, copy the link address). `QRouteTab` is not used because it only matches child routes, and would deselect the tab on sibling routes handled by separate modules
 - **Route-only highlight:** The local selection Quasar applies when a tab is clicked is ignored, so the highlight only moves once the route has changed; a tab opened in a new tab through `Ctrl`, `Cmd` or middle click leaves the current one highlighted
-- **Event emission:** `update:activeItem` is emitted when the route path matches a navigation item (exact or prefix), with the full `NavigationMenuItem` object
 - **No emission for unmatched routes:** If the route doesn't match any item in the list, no event is emitted
 - **Event timing:** The event is emitted immediately on mount (with `immediate: true`) and on every route change
 - **Template coverage:** The template section is ignored from code coverage (`v8 ignore`) as it contains only presentation logic
