@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.7](https://github.com/linagora/lin-pulsar/compare/v0.3.6...v0.3.7) (2026-11-10)
+
+
+### Features
+
+* activate navigation menu items through their optional activeRegex ([d5c7801](https://github.com/linagora/lin-pulsar/commit/d5c78011afb3555f257a24ebf17eb1744f63d301))
+
 ### [0.3.6](https://github.com/linagora/lin-pulsar/compare/v0.3.5...v0.3.6) (2026-11-09)
 
 
