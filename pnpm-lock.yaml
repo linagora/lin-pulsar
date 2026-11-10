@@ -18,8 +18,8 @@ importers:
         specifier: 10.6.0
         version: 10.6.0
       '@linagora/lin-pulsar-core':
-        specifier: 0.1.6
-        version: 0.1.6(@module-federation/enhanced@2.9.2(@rspack/core@2.3.0(@module-federation/runtime-tools@2.9.2))(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3)))(axios@1.21.0)(dayjs@1.11.23)(interactjs@1.10.28)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.44(typescript@6.0.3)))(quasar@2.35.2)(rxjs@7.8.2)(vue-i18n@11.4.16(vue@3.5.44(typescript@6.0.3)))(vue-router@5.4.0(@rspack/core@2.3.0(@module-federation/runtime-tools@2.9.2))(@vue/compiler-sfc@3.5.44)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.44(typescript@6.0.3)))(rolldown@1.2.16)(vite@8.3.5(@types/node@26.6.6)(jiti@2.7.0)(sass-embedded@1.107.1)(sass@1.107.1))(vue@3.5.44(typescript@6.0.3)))(vue@3.5.44(typescript@6.0.3))
+        specifier: 0.1.8
+        version: 0.1.8(@module-federation/enhanced@2.9.2(@rspack/core@2.3.0(@module-federation/runtime-tools@2.9.2))(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3)))(axios@1.21.0)(dayjs@1.11.23)(interactjs@1.10.28)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.44(typescript@6.0.3)))(quasar@2.35.2)(rxjs@7.8.2)(vue-i18n@11.4.16(vue@3.5.44(typescript@6.0.3)))(vue-router@5.4.0(@rspack/core@2.3.0(@module-federation/runtime-tools@2.9.2))(@vue/compiler-sfc@3.5.44)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.44(typescript@6.0.3)))(rolldown@1.2.16)(vite@8.3.5(@types/node@26.6.6)(jiti@2.7.0)(sass-embedded@1.107.1)(sass@1.107.1))(vue@3.5.44(typescript@6.0.3)))(vue@3.5.44(typescript@6.0.3))
       '@superset-ui/embedded-sdk':
         specifier: 0.4.0
         version: 0.4.0
@@ -349,8 +349,8 @@ packages:
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
 
-  '@linagora/lin-pulsar-core@0.1.6':
-    resolution: {integrity: sha512-Z71cSdsoRgqo7EaMbNhCP+kGFKQUnOCJJGIyXrVYGK6fSJ4jt8XHxoOkCJwLPyyRNwjdrBrtqc3Lp5DiwTSvdg==}
+  '@linagora/lin-pulsar-core@0.1.8':
+    resolution: {integrity: sha512-g2VyKYMsKotEoffdi6okAU+Mrulnlh/DjKQ0x2wTd9IXIoG4BmnJx13BTtHgW/dUYIa6VZDDSVCZ6nUyAwI4IQ==}
     peerDependencies:
       '@module-federation/enhanced': 2.9.2
       axios: 1.21.0
@@ -3145,7 +3145,7 @@ snapshots:
 
   '@keyv/serialize@1.1.1': {}
 
-  '@linagora/lin-pulsar-core@0.1.6(@module-federation/enhanced@2.9.2(@rspack/core@2.3.0(@module-federation/runtime-tools@2.9.2))(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3)))(axios@1.21.0)(dayjs@1.11.23)(interactjs@1.10.28)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.44(typescript@6.0.3)))(quasar@2.35.2)(rxjs@7.8.2)(vue-i18n@11.4.16(vue@3.5.44(typescript@6.0.3)))(vue-router@5.4.0(@rspack/core@2.3.0(@module-federation/runtime-tools@2.9.2))(@vue/compiler-sfc@3.5.44)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.44(typescript@6.0.3)))(rolldown@1.2.16)(vite@8.3.5(@types/node@26.6.6)(jiti@2.7.0)(sass-embedded@1.107.1)(sass@1.107.1))(vue@3.5.44(typescript@6.0.3)))(vue@3.5.44(typescript@6.0.3))':
+  '@linagora/lin-pulsar-core@0.1.8(@module-federation/enhanced@2.9.2(@rspack/core@2.3.0(@module-federation/runtime-tools@2.9.2))(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3)))(axios@1.21.0)(dayjs@1.11.23)(interactjs@1.10.28)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.44(typescript@6.0.3)))(quasar@2.35.2)(rxjs@7.8.2)(vue-i18n@11.4.16(vue@3.5.44(typescript@6.0.3)))(vue-router@5.4.0(@rspack/core@2.3.0(@module-federation/runtime-tools@2.9.2))(@vue/compiler-sfc@3.5.44)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.44(typescript@6.0.3)))(rolldown@1.2.16)(vite@8.3.5(@types/node@26.6.6)(jiti@2.7.0)(sass-embedded@1.107.1)(sass@1.107.1))(vue@3.5.44(typescript@6.0.3)))(vue@3.5.44(typescript@6.0.3))':
     dependencies:
       '@module-federation/enhanced': 2.9.2(@rspack/core@2.3.0(@module-federation/runtime-tools@2.9.2))(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))
       axios: 1.21.0
