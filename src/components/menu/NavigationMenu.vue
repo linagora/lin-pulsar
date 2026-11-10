@@ -60,6 +60,7 @@
 import type {
   LinPulsarQRouteTabProps,
   LinPulsarQTabsProps,
+  NavigationMenuItem,
 } from '@linagora/lin-pulsar-core';
 import { useUiDesign } from '@linagora/lin-pulsar-core';
 import { computed, watch } from 'vue';
@@ -82,17 +83,57 @@ const route = useRoute();
 const localUiNamespace = `${props.uiNamespace}.navigation-menu`;
 
 /**
- * Resolves the active tab path using prefix matching.
- * This ensures tabs remain active for sub-routes handled by separate modules.
+ * Compiles the activation regex of a navigation item.
+ * @param item - The navigation item.
+ * @returns The compiled regex, or undefined when the item has none or when it is invalid.
+ */
+function compileActiveRegex(item: NavigationMenuItem): RegExp | undefined {
+  if (!item.activeRegex) {
+    return undefined;
+  }
+  try {
+    return new RegExp(item.activeRegex);
+  } catch (e) {
+    console.error(
+      `[NavigationMenu] Invalid active regex for the item "${item.id}"`,
+      e
+    );
+    return undefined;
+  }
+}
+
+/**
+ * Compiled activation regex of each navigation item, indexed by item id.
+ * Computed from the items only, so that an invalid regex is reported once.
+ */
+const activeRegexes = computed(() =>
+  props.items.reduce<Record<string, RegExp | undefined>>(
+    (acc, item) => ({ ...acc, [item.id]: compileActiveRegex(item) }),
+    {}
+  )
+);
+
+/**
+ * Tells whether a navigation item is active for a route path: through its activation regex
+ * when it has a valid one, otherwise on its path and its sub-paths (prefix matching).
+ * @param item - The navigation item.
+ * @param path - The route path.
+ * @returns True when the item is active for the path.
+ */
+function isItemActive(item: NavigationMenuItem, path: string): boolean {
+  const activeRegex = activeRegexes.value[item.id];
+  if (activeRegex) {
+    return activeRegex.test(path);
+  }
+  return path === item.path || path.startsWith(`${item.path}/`);
+}
+
+/**
+ * Resolves the active tab path: the active item with the longest path.
  */
 const activeTabPath = computed(() => {
-  const currentPath = route.path;
   const sorted = [...props.items].sort((a, b) => b.path.length - a.path.length);
-  const match = sorted.find(
-    (item) =>
-      currentPath === item.path || currentPath.startsWith(`${item.path}/`)
-  );
-  return match?.path;
+  return sorted.find((item) => isItemActive(item, route.path))?.path;
 });
 
 const uiProps: NavigationMenuUIProps = {
@@ -109,7 +150,7 @@ const uiProps: NavigationMenuUIProps = {
 };
 
 /**
- * Watches for route changes and emits the active item using prefix matching.
+ * Watches for route changes and emits the active item.
  */
 watch(
   activeTabPath,
