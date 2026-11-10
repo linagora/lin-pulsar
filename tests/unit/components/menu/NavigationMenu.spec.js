@@ -142,4 +142,98 @@ describe('Test component: NavigationMenu', () => {
       expect(lastEmission).toEqual([overlappingItems[1]]);
     });
   });
+
+  describe('Test item option: activeRegex', () => {
+    const mountWithItems = (items) =>
+      shallowMount(NavigationMenu, {
+        props: { items, uiNamespace: 'test-namespace' },
+        global: { stubs: { RouterLink: true } },
+      });
+
+    const lastEmission = () => {
+      const emitted = wrapper.emitted('update:activeItem');
+      return emitted?.[emitted.length - 1];
+    };
+
+    it('should emit "update:activeItem" when the route matches the activeRegex outside of the item path', async () => {
+      const items = [
+        {
+          id: '1',
+          labelKey: 'nav.accounts',
+          path: '/accounts',
+          activeRegex: '^/(accounts|account-details)(?:/.*)?$',
+        },
+        { id: '2', labelKey: 'nav.groups', path: '/groups' },
+      ];
+      mockRoute.path = '/groups';
+      wrapper = mountWithItems(items);
+
+      mockRoute.path = '/account-details/123';
+      await wrapper.vm.$nextTick();
+
+      expect(lastEmission()).toEqual([items[0]]);
+    });
+
+    it('should keep prefix matching for items without activeRegex', async () => {
+      const items = [
+        {
+          id: '1',
+          labelKey: 'nav.users',
+          path: '/users',
+          activeRegex: '^/users$',
+        },
+        { id: '2', labelKey: 'nav.groups', path: '/groups' },
+      ];
+      wrapper = mountWithItems(items);
+
+      mockRoute.path = '/groups/42/edit';
+      await wrapper.vm.$nextTick();
+
+      expect(lastEmission()).toEqual([items[1]]);
+    });
+
+    it('should select the item with the longest path when several items are active', async () => {
+      const items = [
+        {
+          id: '1',
+          labelKey: 'nav.users',
+          path: '/users',
+          activeRegex: '^/users(?:/.*)?$',
+        },
+        { id: '2', labelKey: 'nav.userSettings', path: '/users/settings' },
+      ];
+      wrapper = mountWithItems(items);
+
+      mockRoute.path = '/users/settings/profile';
+      await wrapper.vm.$nextTick();
+
+      expect(lastEmission()).toEqual([items[1]]);
+    });
+
+    it('should report an invalid activeRegex and fall back to prefix matching', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+      const items = [
+        {
+          id: '1',
+          labelKey: 'nav.users',
+          path: '/users',
+          activeRegex: '^/wrongRegex(',
+        },
+      ];
+      wrapper = mountWithItems(items);
+
+      mockRoute.path = '/users/import';
+      await wrapper.vm.$nextTick();
+
+      expect(lastEmission()).toEqual([items[0]]);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[NavigationMenu] Invalid active regex for the item "1"',
+        expect.any(SyntaxError)
+      );
+
+      consoleErrorSpy.mockRestore();
+    });
+  });
 });
