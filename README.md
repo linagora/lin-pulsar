@@ -73,7 +73,7 @@ These implementations are intended to simplify module configuration when no cust
 - 🌐 **ImportPageI18n** — Default i18n configuration for Import page
   → Exposed as: `LinPulsar/ImportPageI18n`
 
-- 🌐 **DetailsPageI18n** — Default i18n configuration for the components of a details page, such as the `LifecycleButtonsCard`
+- 🌐 **DetailsPageI18n** — Default i18n configuration for the components of a details page, such as the `LifecyclePanel`
   → Exposed as: `LinPulsar/DetailsPageI18n`
 
 ### **Generic Page Modules**
@@ -124,6 +124,9 @@ The library organizes components by category. For each component, documentation 
 - 🆔 **EntityProfilePanel** — Vertical profile panel with avatar (stored image or DiceBear, with optional image import), title/subtitle, action slot and entity details
   → Documentation is inside: [`EntityProfilePanel.md`](./docs/components/panel/EntityProfilePanel.md)
 
+- ♻️ **LifecyclePanel** — Configurable lifecycle of an entity on a details page: banners, info texts and dropdowns computed from its lifecycle state, and the configured dialog and request of each action
+  → Documentation is inside: [`LifecyclePanel.md`](./docs/components/panel/LifecyclePanel.md)
+
 ### **Table Components**
 
 - **GenericEntityTable** — Minimal QTable wrapper for simple entity lists
@@ -145,8 +148,11 @@ The library organizes components by category. For each component, documentation 
 - ✨ **ButtonsCard** — A card component with action buttons
   → Documentation is inside: [`ButtonsCard.md`](./docs/components/card/ButtonsCard.md)
 
-- 🔄 **LifecycleButtonsCard** — Card grouping the activation, suspension and deactivation dropdowns, with configurable displayed buttons, order and disabled state, running a configurable dialog and request for each menu item
+- 🔄 **LifecycleButtonsCard** — Card grouping the activation, suspension and deactivation dropdowns, used by the `LifecyclePanel`
   → Documentation is inside: [`LifecycleButtonsCard.md`](./docs/components/card/LifecycleButtonsCard.md)
+
+- 🚩 **LifecycleBannersCard** — Presentational card stacking the lifecycle banners of an entity, with translated contents and buttons emitting their action, used by the `LifecyclePanel`
+  → Documentation is inside: [`LifecycleBannersCard.md`](./docs/components/card/LifecycleBannersCard.md)
 
 - 🔍 **AdvancedSearchCard** — Generic search card with default and expandable advanced filters sections
   → Documentation is inside: [`AdvancedSearchCard.md`](./docs/components/card/AdvancedSearchCard.md)
