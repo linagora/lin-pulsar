@@ -56,6 +56,14 @@ export default defineConfig({
           __dirname,
           'src/components/card/LifecycleButtonsCard.vue'
         ),
+        './LifecycleBannersCard': resolve(
+          __dirname,
+          'src/components/card/LifecycleBannersCard.vue'
+        ),
+        './LifecyclePanel': resolve(
+          __dirname,
+          'src/components/panel/LifecyclePanel.vue'
+        ),
         './EntityAttributeField': resolve(
           __dirname,
           'src/components/field/EntityAttributeField.vue'
@@ -129,6 +137,10 @@ export default defineConfig({
         './DetailsPageI18n': resolve(
           __dirname,
           'src/federation/details-page-i18n.ts'
+        ),
+        './LifecycleI18n': resolve(
+          __dirname,
+          'src/federation/lifecycle-i18n.ts'
         ),
         './PageRoutes': resolve(
           __dirname,
