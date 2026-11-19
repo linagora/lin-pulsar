@@ -21,11 +21,11 @@ It follows the same generic and configurable approach as `GenericTablePage` and 
 
 The page resolves its options from the module host configuration (`getModuleHostConfiguration(instanceId).options`), typed by `ModuleGenericEditionPageOptions`.
 
-| Option         | Type            | Required | Description                                                                                                                                                                                             |
-| -------------- | --------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `formSections` | `FormSection[]` | Yes      | Sections grouping the entity attributes displayed in the edition form                                                                                                                                   |
-| `idKey`        | `string`        | Yes      | Entity attribute used to retrieve the identifier from the entity data                                                                                                                                   |
-| `parentPath`   | `string`        | Yes      | Route path used to navigate back on cancel and after saving the entity. Supports Nunjucks template interpolation with the `entity` and `query` variables (e.g. `"/groups/{{ query.groupId }}/members"`) |
+| Option         | Type            | Required | Description                                                                                                                                                                                                       |
+| -------------- | --------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `formSections` | `FormSection[]` | Yes      | Sections grouping the entity attributes displayed in the edition form                                                                                                                                             |
+| `idKey`        | `string`        | Yes      | Entity attribute used to retrieve the identifier from the entity data                                                                                                                                             |
+| `parentPath`   | `string`        | Yes      | Route path used to navigate back on cancel and after saving the entity. Supports Nunjucks template interpolation with the `entity`, `params` and `query` variables (e.g. `"/groups/{{ query.groupId }}/members"`) |
 
 Each `FormSection` defines a group of fields rendered in the form.
 
@@ -95,7 +95,7 @@ When the page is mounted:
 
 1. The page enters a loading state.
 2. The entity identifier is extracted from the route parameters (`route.params.id`).
-3. The entity data is loaded using `getEntityById(instanceId, entityId)`.
+3. The entity data is loaded using `getEntityById(instanceId, entityId, apiEndpointContext)`.
 4. On success:
 
    - The entity data populates the form fields.
@@ -124,7 +124,7 @@ The edition form is generated from the configured `formSections`.
 When the form is submitted:
 
 1. The page enters a loading state.
-2. The entity is saved using `updateEntity(instanceId, entityId, entity)`.
+2. The entity is saved using `updateEntity(instanceId, entityId, entity, apiEndpointContext)`.
 3. On success:
 
    - A positive notification (`{instanceId}.success`) is displayed.
@@ -139,12 +139,12 @@ Both success and cancel go through the same back navigation: `parentPath` is ren
 template and pushed as-is, with no identifier appended.
 
 ```text
-{renderString(parentPath, { entity, query })}
+{renderString(parentPath, { entity, params, query })}
 ```
 
-`entity` is the edited entity state and `query` the query string of the edition page. Prefer
-`query` for the segments identifying the parent route — it is read from the URL, so it resolves even
-when the entity failed to load.
+`entity` is the edited entity state, `params` the parameters of the route of the edition page and
+`query` its query string. Prefer `params` or `query` for the segments identifying the parent route —
+they are read from the URL, so they resolve even when the entity failed to load.
 
 ---
 

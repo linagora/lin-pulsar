@@ -122,6 +122,43 @@ counterpart: calling it twice for the same zone renders the component twice.
 
 ---
 
+## **🔗 Nested Resources**
+
+The generic pages, and the API validation of their fields, call the entity service of `lin-pulsar-core` with the
+route of the page as context: `{ params: route.params, query: route.query }`, built by the `useApiEndpointContext`
+composable (`apiEndpointContext` in the pages and fields). A module whose resource is nested in
+another one declares a templated `apiEndpoint` that reads the parent identifier from the route, together with a
+`basePath` that declares it:
+
+```json
+{
+  "instanceId": "moduleHierarchyDetailsPage",
+  "remoteName": "LinPulsar",
+  "lifecycleRemote": "LinPulsar/PageLifecycle",
+  "routesRemote": "LinPulsar/PageRoutes",
+  "apiEndpoint": "api/structures/{{ params.structureId }}/hierarchies",
+  "basePath": "/structures/:structureId/hierarchies",
+  "zones": [],
+  "options": {
+    "layout": "LinPulsar/BaseLayout",
+    "page": "LinPulsar/GenericDetailsPage",
+    "pagePath": ":id",
+    "parentPath": "/structures/{{ params.structureId }}/hierarchies",
+    "sections": []
+  }
+}
+```
+
+The page `/structures/7/hierarchies/42` then loads `GET /api/structures/7/hierarchies/42`. The path options of the
+pages (`parentPath`, `successPath`, `editPath`, and `creationPagePath` of a table page) can read the same parameters,
+such as the `parentPath` above. The see button of a table page links to the details
+page under the resolved parent path (`/structures/7/hierarchies/42`). The rendering rules of a
+templated endpoint (encoding of the values) are described in the
+[entity service documentation](https://github.com/linagora/lin-pulsar-core/blob/main/docs/services.md#templated-endpoint)
+of `lin-pulsar-core`. A plain `apiEndpoint` is used as is.
+
+---
+
 ## **📚 Related Documentation**
 
 - [GenericTablePage](./pages/GenericTablePage.md) — table page component
