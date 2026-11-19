@@ -43,16 +43,16 @@ interface ModuleGenericTablePageOptions {
 
 ### **Options**
 
-| Option             | Type                   | Description                                                                                                                       |
-| ------------------ | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `idKey`            | `string`               | Key used to identify each row and build detail routes                                                                             |
-| `columns`          | `GenericTableColumn[]` | Table column definitions (extends Quasar QTableColumn with formatting options)                                                    |
-| `enableActions`    | `boolean`              | Enables or disables the actions card above the table                                                                              |
-| `enableSeeButton`  | `boolean`              | Optional. Shows the per-row "see" button unless explicitly set to `false`                                                         |
-| `creationPagePath` | `string`               | Route path used for the "create" button navigation                                                                                |
-| `keepQueryParams`  | `string[]`             | Optional. URL query parameter keys to preserve as-is when the active filters are synced to the URL                                |
-| `filters`          | `LinPulsarFilter[]`    | Optional. Filter definitions rendered by `LinPulsarSmartFilter`. Omitted or empty disables the smart filter                       |
-| `reloadTableOn`    | `string[]`             | Optional. UI event keys (from the `uiEventSubject` bus) triggering a reload of the table data (see [Data Loading](#data-loading)) |
+| Option             | Type                   | Description                                                                                                                          |
+| ------------------ | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `idKey`            | `string`               | Key used to identify each row and build detail routes                                                                                |
+| `columns`          | `GenericTableColumn[]` | Table column definitions (extends Quasar QTableColumn with formatting options)                                                       |
+| `enableActions`    | `boolean`              | Enables or disables the actions card above the table                                                                                 |
+| `enableSeeButton`  | `boolean`              | Optional. Shows the per-row "see" button unless explicitly set to `false`                                                            |
+| `creationPagePath` | `string`               | Route path used for the "create" button navigation. Supports Nunjucks template interpolation with the `params` and `query` variables |
+| `keepQueryParams`  | `string[]`             | Optional. URL query parameter keys to preserve as-is when the active filters are synced to the URL                                   |
+| `filters`          | `LinPulsarFilter[]`    | Optional. Filter definitions rendered by `LinPulsarSmartFilter`. Omitted or empty disables the smart filter                          |
+| `reloadTableOn`    | `string[]`             | Optional. UI event keys (from the `uiEventSubject` bus) triggering a reload of the table data (see [Data Loading](#data-loading))    |
 
 ---
 
@@ -126,7 +126,8 @@ Includes:
 
 #### **Create button behavior**
 
-- Navigates to `creationPagePath`
+- Navigates to `creationPagePath`, rendered as a Nunjucks template with the route parameters (`params`) and the query
+  string (`query`) as context (e.g. `"/structures/{{ params.structureId }}/hierarchies/new"`)
 - Fully configurable via Module Federation options
 - Styled via design system (`buttons-card.create-button`)
 
@@ -170,10 +171,10 @@ Both buttons are links handled by the Vue Router: a click navigates in the singl
 
 ### **Create Navigation**
 
-The create button links to the configured path:
+The create button links to the rendered path:
 
 ```vue
-<q-btn :to="creationPagePath" />
+<q-btn :to="renderString(creationPagePath, { params, query })" />
 ```
 
 ---
@@ -187,7 +188,12 @@ The "See" button of each row links to the detail page of its item:
 ```
 
 - `idKey` is used to extract the row identifier
-- Navigation is relative to the parent route
+- Navigation is relative to the parent route, whose parameters are filled with those of the current
+  route: on `/structures/7/hierarchies`, a table mounted on the `basePath`
+  `/structures/:structureId/hierarchies` links to `/structures/7/hierarchies/42` (see
+  [Nested Resources](../generic-pages.md#-nested-resources))
+- The parameters of the parent route must be plain `:name` segments: a custom regexp, an optional or a repeatable
+  parameter breaks the link
 
 ---
 
@@ -195,7 +201,7 @@ The "See" button of each row links to the detail page of its item:
 
 Data is fetched using:
 
-- `getEntities(instanceId)`
+- `getEntities(instanceId, filters, pagination, apiEndpointContext)`
 - pagination mapping utilities
 
 ### **Flow**
@@ -379,6 +385,7 @@ Instead, it relies on:
 - `LinPulsarZoneRenderer` from `@linagora/lin-pulsar-core` (renders the zones)
 - `LinPulsar/LinPulsarSmartFilter` (optional)
 - `uiEventSubject` from `@linagora/lin-pulsar-core` (used when `reloadTableOn` is configured)
+- `useNunjucks` from `@linagora/lin-pulsar-core` (renders `creationPagePath`)
 - `@linagora/lin-pulsar-core`
 - Quasar Framework
 
