@@ -257,7 +257,7 @@ const rules = computed(() => {
   const rulesFromConstraints: ValidationRule[] = dateConstraints.value?.map(({ dateRef, validator }) => validator(dateRef as string, mask.value)) ?? [];
 
   if (props.definition.hasValidations) {
-    rulesFromConstraints.push(validateFromApi(props.instanceId, props.definition.name));
+    rulesFromConstraints.push(validateFromApi(props.instanceId, props.definition.name, apiEndpointContext));
   }
   return [...rules, ...rulesFromConstraints];
 });
@@ -399,7 +399,7 @@ In this example:
 - Mock `getI18nInstance` to control the `today`/`entity` context translations used in `renderedDefinition`
 - Mock `useCommonMapper().formatDate` to control the `valueFormat` ↔ `mask` conversions, and assert it is called with the expected `(date, outputFormat, inputFormat)` arguments when `mask` and `valueFormat` differ
 - Shallow mount the component to isolate logic from UI rendering
-- Verify that `validateFromApi` is called with the correct `instanceId` and `definition.name` when `hasValidations` is `true`
+- Verify that `validateFromApi` is called with the correct `instanceId`, `definition.name` and API endpoint context when `hasValidations` is `true`
 - Verify the input is rendered as disabled when `definition.inputSettings.disable` is `true`
 - Verify that the display mask is used for validation rules (e.g. `validDate(mask.value)`)
 - Verify that the internal `valueFormat` is used to aggregate and store date constraint values, and is converted to `mask` before being handed to validators, and to `QDATE_DEFAULT_MASK` (not `mask`) before being handed to the date-picker's `options` predicate

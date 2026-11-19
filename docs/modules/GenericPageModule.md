@@ -127,20 +127,25 @@ the current route path, instead of on the base path and its sub-paths. For examp
 `/account-details/123`. See [NavigationMenu](../components/menu/NavigationMenu.md) for the matching
 rules.
 
-`parentPath` supports Nunjucks template interpolation with two variables, so the path can be built
+`parentPath` supports Nunjucks template interpolation with three variables, so the path can be built
 from the current context instead of being hardcoded. Generic pages render it when the user cancels
 or navigates back.
 
-| Variable | Content                                                     |
-| -------- | ----------------------------------------------------------- |
-| `entity` | Current entity state of the page (`{}` when none is loaded) |
-| `query`  | Query string of the current page (`route.query`)            |
+| Variable | Content                                                                  |
+| -------- | ------------------------------------------------------------------------ |
+| `entity` | Current entity state of the page (`{}` when none is loaded)              |
+| `params` | Parameters of the current route (`route.params`), each value URI-encoded |
+| `query`  | Query string of the current page (`route.query`), each value URI-encoded |
 
-Prefer `query` for the segments identifying the parent route — `"/groups/{{ query.groupId }}/members"`.
-A generic page route is `basePath` + `pagePath` and declares no parent segment, so `route.params`
-holds nothing usable for one: the query string is where such an identifier travels. `entity` is
-empty on a creation page until the form is filled, and on a details page whose entity failed to
-load.
+Prefer `params` or `query` for the segments identifying the parent route: they are read from the
+URL. Use `params` when the `basePath` declares the parent segment, such as
+`"/structures/{{ params.structureId }}/hierarchies"` for a `basePath` of
+`/structures/:structureId/hierarchies` (see [Nested Resources](../generic-pages.md#-nested-resources)),
+and `query` otherwise, such as `"/groups/{{ query.groupId }}/members"`. `entity` is empty on a
+creation page until the form is filled, and on a details page whose entity failed to load.
+
+The router gives `params` and `query` decoded: they are URI-encoded (`encodeURIComponent`) before the rendering, so
+that a value holding `/`, `?` or `#` stays a single path segment. The values of `entity` are rendered as is.
 
 These options are the shared baseline. Each generic page extends `ModulePageOptions` with
 its own type — `ModuleGenericCreationPageOptions`, `ModuleGenericDetailsPageOptions`, and so

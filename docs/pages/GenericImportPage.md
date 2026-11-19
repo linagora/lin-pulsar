@@ -20,14 +20,14 @@ It follows the same generic and configurable approach as `GenericCreationPage`: 
 
 The page resolves its options from the module host configuration (`getModuleHostConfiguration(instanceId).options`), typed by `ModuleGenericImportPageOptions`.
 
-| Option                    | Type                     | Required | Description                                                                                                                                                |
-| ------------------------- | ------------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `parentPath`              | `string`                 | Yes      | Route path used for the cancel redirect. Supports Nunjucks template interpolation with the `query` variable (e.g. `"/groups/{{ query.groupId }}/members"`) |
-| `fieldMappingTemplates`   | `Record<string, string>` | Yes      | Maps each entity field to a Nunjucks template rendered with the CSV row as context. Its keys are also the business columns of the preview table            |
-| `useColumnIndexParsing`   | `boolean`                | Yes      | When enabled, CSV header names are ignored and values are mapped by column index through `expectedCsvHeaders`                                              |
-| `expectedCsvHeaders`      | `string[]`               | No       | Names given to the CSV columns, by index. Used only when `useColumnIndexParsing` is `true`                                                                 |
-| `skipFirstCsvNLines`      | `number`                 | Yes      | Number of lines to skip at the beginning of the file. With header parsing, the header row is counted in this number                                        |
-| `numberOfParallelImports` | `number`                 | Yes      | Maximum number of rows imported concurrently                                                                                                               |
+| Option                    | Type                     | Required | Description                                                                                                                                                              |
+| ------------------------- | ------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `parentPath`              | `string`                 | Yes      | Route path used for the cancel redirect. Supports Nunjucks template interpolation with the `params` and `query` variables (e.g. `"/groups/{{ query.groupId }}/members"`) |
+| `fieldMappingTemplates`   | `Record<string, string>` | Yes      | Maps each entity field to a Nunjucks template rendered with the CSV row as context. Its keys are also the business columns of the preview table                          |
+| `useColumnIndexParsing`   | `boolean`                | Yes      | When enabled, CSV header names are ignored and values are mapped by column index through `expectedCsvHeaders`                                                            |
+| `expectedCsvHeaders`      | `string[]`               | No       | Names given to the CSV columns, by index. Used only when `useColumnIndexParsing` is `true`                                                                               |
+| `skipFirstCsvNLines`      | `number`                 | Yes      | Number of lines to skip at the beginning of the file. With header parsing, the header row is counted in this number                                                      |
+| `numberOfParallelImports` | `number`                 | Yes      | Maximum number of rows imported concurrently                                                                                                                             |
 
 ```ts
 export interface CsvParsingOptions {
@@ -139,7 +139,7 @@ Each row carries an import status:
 When the confirm button is clicked:
 
 1. The page enters a loading state.
-2. Every `READY` row is saved with `saveEntity(instanceId, row)`, at most `numberOfParallelImports` at a time. Internal fields (`__id`, `__file`, `__status`, `__error`) are stripped before sending.
+2. Every `READY` row is saved with `saveEntity(instanceId, row, apiEndpointContext)`, at most `numberOfParallelImports` at a time. Internal fields (`__id`, `__file`, `__status`, `__error`) are stripped before sending.
 3. Each row status is updated as its request settles.
 4. A notification summarizes the result:
    - `positive` (`importSuccess`) — every row was imported;
@@ -167,7 +167,7 @@ A `positive` notification (`clearSuccess`) is displayed when rows were removed, 
 ## **Navigation Behavior**
 
 - The footer `ButtonsCard` provides the cancel action.
-- Cancel redirects to the path produced by rendering `parentPath` as a Nunjucks template, with the query string (`query`) as context. `entity` is always empty on this page.
+- Cancel redirects to the path produced by rendering `parentPath` as a Nunjucks template, with the route parameters (`params`) and the query string (`query`) as context. `entity` is always empty on this page.
 - The import page should generally not be exposed in the main navigation menu (`addNavigationMenu` disabled).
 
 ---
