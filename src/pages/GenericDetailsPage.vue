@@ -200,9 +200,11 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ButtonsCard from '../components/card/ButtonsCard.vue';
 import EntityDetailsCard from '../components/card/EntityDetailsCard.vue';
+import { useApiEndpointContext } from '../composables/useApiEndpointContext';
 import type { ModuleGenericDetailsPageOptions } from '../types/ModuleGenericDetailsPageOptions';
 
 const route = useRoute();
+const apiEndpointContext = useApiEndpointContext();
 const router = useRouter();
 const instanceId = computed<string>(() => route.meta.instanceId as string);
 const entityId = computed(() => route.params.id as string);
@@ -241,7 +243,8 @@ async function loadData() {
   try {
     entity.value = await getEntityById<Record<string, unknown>>(
       instanceId.value,
-      entityId.value
+      entityId.value,
+      apiEndpointContext.value
     );
   } catch {
     Notify({
@@ -256,15 +259,17 @@ async function loadData() {
 
 /**
  * Route of the edit page of the current entity, resolved by rendering the configured `editPath`
- * template with the loaded entity (`entity`) and the current query string (`query`) as context
- * (e.g. `"/applications/{{ entity.id }}/edit"`). Bound to the edit button link so that the router
- * handles a click while the browser keeps its link controls, such as opening the route in a new tab.
+ * template with the loaded entity (`entity`), the parameters of the current route (`params`) and the
+ * current query string (`query`) as context (e.g. `"/applications/{{ entity.id }}/edit"`). Bound to
+ * the edit button link so that the router handles a click while the browser keeps its link
+ * controls, such as opening the route in a new tab.
  * Undefined when no `editPath` is configured, the button not being rendered in that case.
  */
 const editRoute = computed(() =>
   options.value.editPath
     ? renderString(options.value.editPath, {
         entity: entity.value ?? {},
+        params: route.params,
         query: route.query,
       })
     : undefined
@@ -275,8 +280,9 @@ const editRoute = computed(() =>
  * the parent route otherwise.
  *
  * The target path is built by rendering `parentPath` as a Nunjucks template with the loaded entity
- * (`entity`) and the current query string (`query`) as context, so the redirect URL can reference
- * either (e.g. `"/groups/{{ query.groupId }}/members"`).
+ * (`entity`), the parameters of the current route (`params`) and the current query string
+ * (`query`) as context, so the redirect URL can reference any of them (e.g.
+ * `"/groups/{{ query.groupId }}/members"` or `"/structures/{{ params.structureId }}/hierarchies"`).
  *
  * This is also called from `loadData()` when the entity fails to load, with `entity` still empty.
  */
@@ -287,6 +293,7 @@ function goBack() {
     router.push(
       renderString(parentPath.value, {
         entity: entity.value ?? {},
+        params: route.params,
         query: route.query,
       })
     );

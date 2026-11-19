@@ -33,6 +33,9 @@ const mockRoute = {
   meta: {
     instanceId: 'test-instance-id',
   },
+  params: {
+    structureId: 'structure-7',
+  },
   query: {
     groupId: 'group-1',
   },
@@ -110,6 +113,14 @@ vi.mock('vue-router', () => ({
   }),
 }));
 
+const mockApiEndpointContext = vi.hoisted(() => ({
+  params: { parentId: 'parent-1' },
+}));
+
+vi.mock('../../../src/composables/useApiEndpointContext', () => ({
+  useApiEndpointContext: () => ({ value: mockApiEndpointContext }),
+}));
+
 /**
  * Mount the page with every child component stubbed.
  * @returns The mounted wrapper.
@@ -158,10 +169,11 @@ describe('Test component: GenericCreationPage', () => {
 
       await wrapper.vm.save();
 
-      expect(saveEntity).toHaveBeenCalledWith('test-instance-id', {
-        code: 'APP',
-        name: 'Application',
-      });
+      expect(saveEntity).toHaveBeenCalledWith(
+        'test-instance-id',
+        { code: 'APP', name: 'Application' },
+        mockApiEndpointContext
+      );
 
       expect(mockNotify).toHaveBeenCalledWith({
         type: 'positive',
@@ -187,6 +199,7 @@ describe('Test component: GenericCreationPage', () => {
           code: 'APP',
           id: 'created-entity-id',
         },
+        params: { structureId: 'structure-7' },
         query: { groupId: 'group-1' },
       });
     });
@@ -233,6 +246,7 @@ describe('Test component: GenericCreationPage', () => {
             code: 'APP',
             id: 'created-entity-id',
           },
+          params: { structureId: 'structure-7' },
           query: { groupId: 'group-1' },
         }
       );
@@ -316,6 +330,7 @@ describe('Test component: GenericCreationPage', () => {
 
       expect(mockRenderString).toHaveBeenCalledWith('/page', {
         entity: { code: 'APP' },
+        params: { structureId: 'structure-7' },
         query: { groupId: 'group-1' },
       });
       expect(mockRouterPush).toHaveBeenCalledWith('/page');
@@ -341,6 +356,7 @@ describe('Test component: GenericCreationPage', () => {
         '/groups/{{ query.groupId }}/members',
         {
           entity: {},
+          params: { structureId: 'structure-7' },
           query: { groupId: 'group-1' },
         }
       );

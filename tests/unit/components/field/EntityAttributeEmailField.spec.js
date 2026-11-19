@@ -30,6 +30,15 @@ import EntityAttributeEmailField from '../../../../src/components/field/EntityAt
 
 const mockUi = vi.fn(() => ({}));
 
+const mockUseQuasarRules = vi.hoisted(() => vi.fn());
+const mockApiEndpointContext = vi.hoisted(() => ({
+  params: { structureId: 'structure-7' },
+}));
+
+vi.mock('../../../../src/composables/useApiEndpointContext', () => ({
+  useApiEndpointContext: () => ({ value: mockApiEndpointContext }),
+}));
+
 vi.mock('@linagora/lin-pulsar-core', async () => {
   const { getNestedValue, setNestedValue } = await vi.importActual(
     '@linagora/lin-pulsar-core'
@@ -41,14 +50,10 @@ vi.mock('@linagora/lin-pulsar-core', async () => {
       ui: mockUi,
     }),
     useScopedI18n: () => ({ translateOrDefault: vi.fn() }),
-    useQuasarRules: () => [
-      vi.fn(),
-      vi.fn(),
-      vi.fn(),
-      vi.fn(),
-      vi.fn(),
-      vi.fn(),
-    ],
+    useQuasarRules: (...args) => {
+      mockUseQuasarRules(...args);
+      return [vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn(), vi.fn()];
+    },
   };
 });
 
@@ -101,6 +106,17 @@ describe('Test component: EntityAttributeEmailField', () => {
   });
 
   describe('Test computed: rules', () => {
+    it('should pass the context of the route to the API validation rules', () => {
+      expect(wrapper.vm.rules).toBeDefined();
+      expect(mockUseQuasarRules).toHaveBeenLastCalledWith(
+        expect.any(String),
+        expect.any(Object),
+        expect.any(Array),
+        expect.any(String),
+        mockApiEndpointContext
+      );
+    });
+
     it('should return empty array if ignoreRules property is true', async () => {
       await wrapper.setProps({
         ignoreRules: true,

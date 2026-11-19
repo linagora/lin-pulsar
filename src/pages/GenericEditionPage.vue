@@ -208,6 +208,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ButtonsCard from '../components/card/ButtonsCard.vue';
 import EntityAttributeField from '../components/field/EntityAttributeField.vue';
+import { useApiEndpointContext } from '../composables/useApiEndpointContext';
 import type {
   GenericEditionPageUIProps,
   ModuleGenericEditionPageOptions,
@@ -215,6 +216,7 @@ import type {
 
 const router = useRouter();
 const route = useRoute();
+const apiEndpointContext = useApiEndpointContext();
 
 const entityId = computed(() => route.params.id as string);
 const instanceId = computed<string>(() => route.meta.instanceId as string);
@@ -264,7 +266,8 @@ function save(): Promise<void> {
   return updateEntity<Record<string, unknown>, Record<string, unknown>>(
     instanceId.value,
     entityId.value,
-    entity.value
+    entity.value,
+    apiEndpointContext.value
   )
     .then(() => {
       Notify({
@@ -288,8 +291,9 @@ function save(): Promise<void> {
  * Navigates back to the parent path.
  *
  * The target path is built by rendering `parentPath` as a Nunjucks template with the edited entity
- * (`entity`) and the current query string (`query`) as context, so the redirect URL can reference
- * either (e.g. `"/groups/{{ query.groupId }}/members"`).
+ * (`entity`), the parameters of the current route (`params`) and the current query string
+ * (`query`) as context, so the redirect URL can reference any of them (e.g.
+ * `"/groups/{{ query.groupId }}/members"` or `"/structures/{{ params.structureId }}/hierarchies"`).
  *
  * This is also the post-save redirect, and it is reached with `entity` still empty when the initial
  * load failed.
@@ -298,6 +302,7 @@ function goBack() {
   router.push(
     renderString(options.value.parentPath, {
       entity: entity.value ?? {},
+      params: route.params,
       query: route.query,
     })
   );
@@ -311,7 +316,8 @@ async function loadData() {
   try {
     entity.value = await getEntityById<Record<string, unknown>>(
       instanceId.value,
-      entityId.value
+      entityId.value,
+      apiEndpointContext.value
     );
   } catch {
     Notify({

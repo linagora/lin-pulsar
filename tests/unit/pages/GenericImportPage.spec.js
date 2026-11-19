@@ -38,11 +38,20 @@ vi.mock('vue-router', () => ({
     meta: {
       instanceId: 'test-instance-id',
     },
+    params: { structureId: 'structure-7' },
     query: {},
   }),
   useRouter: () => ({
     push: mockRouterPush,
   }),
+}));
+
+const mockApiEndpointContext = vi.hoisted(() => ({
+  params: { parentId: 'parent-1' },
+}));
+
+vi.mock('../../../src/composables/useApiEndpointContext', () => ({
+  useApiEndpointContext: () => ({ value: mockApiEndpointContext }),
 }));
 
 vi.mock('@linagora/lin-pulsar-core', () => ({
@@ -97,6 +106,7 @@ describe('Test component: GenericImportPage', () => {
       wrapper.vm.cancel();
       expect(mockRenderString).toHaveBeenCalledWith('/parent', {
         entity: {},
+        params: { structureId: 'structure-7' },
         query: {},
       });
       expect(mockRouterPush).toHaveBeenCalledWith('/parent');
@@ -170,9 +180,11 @@ describe('Test component: GenericImportPage', () => {
         name: 'John',
       };
       const result = await wrapper.vm.importData(data);
-      expect(saveEntity).toHaveBeenCalledWith('test-instance-id', {
-        name: 'John',
-      });
+      expect(saveEntity).toHaveBeenCalledWith(
+        'test-instance-id',
+        { name: 'John' },
+        mockApiEndpointContext
+      );
       expect(result).toBe(true);
       expect(data.__status).toBe('IMPORTED');
     });

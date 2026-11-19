@@ -116,6 +116,14 @@ vi.mock('vue-router', () => ({
   }),
 }));
 
+const mockApiEndpointContext = vi.hoisted(() => ({
+  params: { parentId: 'parent-1' },
+}));
+
+vi.mock('../../../src/composables/useApiEndpointContext', () => ({
+  useApiEndpointContext: () => ({ value: mockApiEndpointContext }),
+}));
+
 function mountPage() {
   return shallowMount(GenericEditionPage, {
     global: {
@@ -165,7 +173,8 @@ describe('Test component: GenericEditionPage', () => {
 
       expect(getEntityById).toHaveBeenCalledWith(
         'test-instance-id',
-        'entity-123'
+        'entity-123',
+        mockApiEndpointContext
       );
       expect(wrapper.vm.entity).toEqual(mockEntity);
       expect(wrapper.vm.isLoading).toBe(false);
@@ -227,7 +236,8 @@ describe('Test component: GenericEditionPage', () => {
           id: 'entity-123',
           code: 'APP-UPDATED',
           name: 'Application Updated',
-        }
+        },
+        mockApiEndpointContext
       );
 
       expect(mockNotify).toHaveBeenCalledWith({
@@ -296,6 +306,7 @@ describe('Test component: GenericEditionPage', () => {
 
       expect(mockRenderString).toHaveBeenCalledWith('/page/{{ entity.id }}', {
         entity: mockEntity,
+        params: { id: 'entity-123' },
         query: { groupId: 'group-1' },
       });
     });

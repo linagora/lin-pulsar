@@ -80,8 +80,10 @@ export interface EntityProfilePanelProps extends CommonComponentProps {
   entity?: Record<string, unknown>;
   /**
    * Path used by the back button to navigate to the parent page.
-   * Passed through Nunjucks with a context containing `entity`, so it may contain template
-   * expressions such as `{{ entity.groupId }}`; a plain string with no variables is also valid.
+   * Passed through Nunjucks with a context containing `entity`, `params` (the parameters of the
+   * current route) and `query` (the current query string), so it may contain template expressions
+   * such as `{{ entity.groupId }}` or `{{ params.structureId }}`; a plain string with no variables
+   * is also valid.
    * When unset, the back button is not rendered.
    */
   parentPath?: string;
