@@ -32,6 +32,14 @@ const mockUi = vi.fn(() => ({}));
 const mockRules = [vi.fn(), vi.fn(), vi.fn()];
 const mockUseQuasarRules = vi.fn(() => mockRules);
 
+const mockApiEndpointContext = vi.hoisted(() => ({
+  value: { params: { structureId: 'structure-7' } },
+}));
+
+vi.mock('../../../../src/composables/useApiEndpointContext', () => ({
+  useApiEndpointContext: () => mockApiEndpointContext,
+}));
+
 vi.mock('@linagora/lin-pulsar-core', async () => {
   const { getNestedValue, setNestedValue } = await vi.importActual(
     '@linagora/lin-pulsar-core'
@@ -142,7 +150,8 @@ describe('Test component: EntityAttributeFileField', () => {
         'id',
         wrapper.vm.definition,
         ['maxFileSize', 'allowedExtensions'],
-        'scope.fields.file'
+        'scope.fields.file',
+        mockApiEndpointContext
       );
     });
   });

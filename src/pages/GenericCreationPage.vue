@@ -221,6 +221,8 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ButtonsCard from '../components/card/ButtonsCard.vue';
 import EntityAttributeField from '../components/field/EntityAttributeField.vue';
+import { useApiEndpointContext } from '../composables/useApiEndpointContext';
+import { useRoutePathContext } from '../composables/useRoutePathContext';
 import type {
   GenericCreationPageUIProps,
   ModuleGenericCreationPageOptions,
@@ -228,6 +230,8 @@ import type {
 
 const router = useRouter();
 const route = useRoute();
+const apiEndpointContext = useApiEndpointContext();
+const routePathContext = useRoutePathContext();
 
 const instanceId = computed<string>(() => route.meta.instanceId as string);
 const i18nScope = computed<string>(() => `${instanceId.value}`);
@@ -293,10 +297,11 @@ onUnmounted(() => {
  * The target path is `successPath` when configured, otherwise the details page
  * of the created entity (`parentPath` joined with the identifier returned by the
  * backend). Both options are rendered as Nunjucks templates with a context
- * holding the submitted values merged with the backend response (`entity`) and
- * the current query string (`query`), so the path can reference server-generated
- * fields as well as the parent identifiers carried by the URL
- * (e.g. `"/groups/{{ query.groupId }}/members"`).
+ * holding the submitted values merged with the backend response (`entity`), the
+ * parameters of the current route (`params`) and the current query string (`query`),
+ * so the path can reference server-generated fields as well as the parent
+ * identifiers carried by the URL (e.g. `"/groups/{{ query.groupId }}/members"` or
+ * `"/structures/{{ params.structureId }}/hierarchies"`).
  *
  * The appended identifier is read from that same merged context, exactly like a
  * `{{ entity[idKey] }}` interpolation would be, so it resolves whether the
@@ -315,7 +320,8 @@ function save(): Promise<void> {
   isLoading.value = true;
   return saveEntity<Record<string, unknown>, Record<string, unknown>>(
     instanceId.value,
-    entity.value
+    entity.value,
+    apiEndpointContext.value
   )
     .then((data) => {
       Notify({
@@ -325,7 +331,7 @@ function save(): Promise<void> {
 
       const context = {
         entity: { ...entity.value, ...data },
-        query: route.query,
+        ...routePathContext.value,
       };
       const redirectPath = successPath.value
         ? renderString(successPath.value, context)
@@ -348,8 +354,10 @@ function save(): Promise<void> {
  * Cancel the entity creation and navigate back to the parent route.
  *
  * The target path is built by rendering `parentPath` as a Nunjucks template with
- * the current entity state (`entity`) and the current query string (`query`), so
- * the redirect URL can reference either (e.g. `"/groups/{{ query.groupId }}/members"`).
+ * the current entity state (`entity`), the parameters of the current route
+ * (`params`) and the current query string (`query`), so the redirect URL can
+ * reference any of them (e.g. `"/groups/{{ query.groupId }}/members"` or
+ * `"/structures/{{ params.structureId }}/hierarchies"`).
  *
  * Cancel can fire before the form is touched, with `entity` still empty.
  *
@@ -360,7 +368,7 @@ function cancel() {
   router.push(
     renderString(parentPath.value, {
       entity: entity.value,
-      query: route.query,
+      ...routePathContext.value,
     })
   );
 }

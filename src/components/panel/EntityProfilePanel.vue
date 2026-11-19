@@ -329,8 +329,8 @@ import {
 } from '@linagora/lin-pulsar-core';
 import type { Subscription } from 'rxjs';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
 import { useDiceBearAvatar } from '../../composables/useDiceBearAvatar';
+import { useRoutePathContext } from '../../composables/useRoutePathContext';
 import type {
   EntityProfilePanelOutputs,
   EntityProfilePanelProps,
@@ -354,7 +354,7 @@ const props = withDefaults(defineProps<EntityProfilePanelProps>(), {
 
 const emit = defineEmits<EntityProfilePanelOutputs>();
 
-const route = useRoute();
+const routePathContext = useRoutePathContext();
 
 const localUiNamespace = computed(() => {
   const prefix = props.uiNamespace || props.instanceId;
@@ -546,14 +546,14 @@ function refreshAvatar(): void {
  * click while the browser keeps its link controls, such as opening the route in a new tab. The back
  * button is only rendered when `parentPath` is set, the route being undefined otherwise.
  *
- * The path is rendered with the same Nunjucks context as the generic pages (`entity` and `query`),
- * so a `parentPath` templated on the query string resolves identically here and in the page.
+ * The path is rendered with the same Nunjucks context as the generic pages (`entity`, `params` and
+ * `query`), so a `parentPath` templated on the route resolves identically here and in the page.
  */
 const backRoute = computed(() =>
   props.parentPath
     ? renderString(props.parentPath, {
         entity: props.entity,
-        query: route.query,
+        ...routePathContext.value,
       })
     : undefined
 );

@@ -34,6 +34,7 @@ const mockRoute = {
     instanceId: 'test-instance-id',
   },
   matched: [{ path: '/page' }],
+  params: {},
   query: {},
 };
 
@@ -117,6 +118,13 @@ vi.mock('@linagora/lin-pulsar-core', () => ({
     toPagination: (pagination) => pagination,
     toQuasarPagination: mockToQuasarPagination,
   }),
+  useNunjucks: () => ({
+    renderString: (template, context) =>
+      template.replace(
+        /\{\{ params\.(\w+) \}\}/g,
+        (_, name) => context.params[name]
+      ),
+  }),
   useUiDesign: () => ({ ui: () => ({}) }),
   useLinPulsarUserPreference: vi.fn(() => ({
     userPreferenceStore: {
@@ -143,6 +151,14 @@ vi.mock('@linagora/lin-pulsar-core', () => ({
 vi.mock('vue-router', () => ({
   useRoute: () => mockRoute,
   useRouter: () => ({}),
+}));
+
+const mockApiEndpointContext = vi.hoisted(() => ({
+  params: { parentId: 'parent-1' },
+}));
+
+vi.mock('../../../src/composables/useApiEndpointContext', () => ({
+  useApiEndpointContext: () => ({ value: mockApiEndpointContext }),
 }));
 
 describe('Test component: GenericTablePage', () => {
@@ -333,6 +349,63 @@ describe('Test component: GenericTablePage', () => {
       expect(wrapper.vm.detailPagePaths.get('abc')).toBe('/page/abc');
       expect(wrapper.vm.detailPagePaths.has('42')).toBe(false);
     });
+
+    it('should fill with the parameters of the current route', async () => {
+      const { matched, params } = mockRoute;
+      mockRoute.matched = [{ path: '/structures/:structureId/hierarchies' }];
+      mockRoute.params = { structureId: 'a b' };
+      const nestedWrapper = shallowMount(GenericTablePage, {
+        global: { stubs: ['GenericEntityTable'] },
+      });
+
+      try {
+        await flushPromises();
+        nestedWrapper.vm.items = [{ id: '42' }];
+        await nestedWrapper.vm.$nextTick();
+
+        expect(nestedWrapper.vm.detailPagePaths.get('42')).toBe(
+          '/structures/a%20b/hierarchies/42'
+        );
+      } finally {
+        nestedWrapper.unmount();
+        mockRoute.matched = matched;
+        mockRoute.params = params;
+      }
+    });
+  });
+
+  describe('Test computed: creationRoute', () => {
+    it('should keep a plain creation page path', () => {
+      expect(wrapper.vm.creationRoute).toBe('/new');
+    });
+
+    it('should be undefined when no creation page path is configured', () => {
+      mockModuleOptions.creationPagePath = undefined;
+      const wrapperWithoutCreation = shallowMount(GenericTablePage, {
+        global: { stubs: ['GenericEntityTable'] },
+      });
+
+      expect(wrapperWithoutCreation.vm.creationRoute).toBeUndefined();
+      wrapperWithoutCreation.unmount();
+    });
+
+    it('should render the creation page path with the parameters of the route', async () => {
+      mockModuleOptions.creationPagePath =
+        '/structures/{{ params.structureId }}/hierarchies/new';
+      mockRoute.params = { structureId: 'a/b' };
+      const nestedWrapper = shallowMount(GenericTablePage, {
+        global: { stubs: ['GenericEntityTable'] },
+      });
+
+      try {
+        expect(nestedWrapper.vm.creationRoute).toBe(
+          '/structures/a%2Fb/hierarchies/new'
+        );
+      } finally {
+        nestedWrapper.unmount();
+        mockRoute.params = {};
+      }
+    });
   });
 
   describe('Test function: onRequest', () => {
@@ -353,7 +426,8 @@ describe('Test component: GenericTablePage', () => {
       expect(getEntities).toHaveBeenCalledWith(
         'test-instance-id',
         { dateFormat: 'yyyy/MM/dd HH:mm:ss' },
-        paginationEvent.pagination
+        paginationEvent.pagination,
+        mockApiEndpointContext
       );
       expect(mockToQuasarPagination).toHaveBeenCalledWith(
         buildEntityPage(),
@@ -382,7 +456,8 @@ describe('Test component: GenericTablePage', () => {
       expect(getEntities).toHaveBeenCalledWith(
         'test-instance-id',
         { name: 'paris', dateFormat: 'yyyy/MM/dd HH:mm:ss' },
-        expect.objectContaining({ page: 1 })
+        expect.objectContaining({ page: 1 }),
+        mockApiEndpointContext
       );
     });
 

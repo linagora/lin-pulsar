@@ -93,7 +93,7 @@
             :label="t('ButtonsCard.create')"
             class="buttons-card--create-button"
             data-cy="button_create"
-            :to="options.creationPagePath"
+            :to="creationRoute"
           />
         </template>
       </ButtonsCard>
@@ -202,6 +202,7 @@ import {
   useLinPulsarFilterUrl,
   useLinPulsarUserPreference,
   useNotify,
+  useNunjucks,
   usePagination,
   useScopedI18n,
   useUiDesign,
@@ -212,6 +213,8 @@ import { useRoute, useRouter } from 'vue-router';
 import ButtonsCard from '../components/card/ButtonsCard.vue';
 import LinPulsarSmartFilter from '../components/smart-filter/LinPulsarSmartFilter.vue';
 import GenericEntityTable from '../components/table/GenericEntityTable.vue';
+import { useApiEndpointContext } from '../composables/useApiEndpointContext';
+import { useRoutePathContext } from '../composables/useRoutePathContext';
 import { useColumnZones } from '../composables/useColumnZones';
 import type {
   GenericTableColumn,
@@ -220,14 +223,40 @@ import type {
 
 const router = useRouter();
 const route = useRoute();
+const apiEndpointContext = useApiEndpointContext();
+const routePathContext = useRoutePathContext();
 const instanceId = computed<string>(() => route.meta.instanceId as string);
-const parentPath = computed(() => route.matched[0]?.path);
+const { renderString } = useNunjucks();
+/**
+ * Path of the parent route of the page, with the parameters of the current route, such as
+ * `/structures/7/hierarchies` for the route `/structures/:structureId/hierarchies`. Each parameter
+ * value is URI-encoded.
+ */
+const parentPath = computed(() =>
+  (route.matched[0]?.path ?? '').replace(/:(\w+)/g, (_, name: string) =>
+    encodeURIComponent(String(route.params[name] ?? ''))
+  )
+);
 const i18nScope = computed<string>(() => `${instanceId.value}`);
 const uiNamespace = computed(() => `${instanceId.value}`);
 const options = computed(
   () =>
     getModuleHostConfiguration<ModuleGenericTablePageOptions>(instanceId.value)!
       .options
+);
+/**
+ * Route of the creation page, bound to the create button. `creationPagePath` is rendered as a
+ * Nunjucks template with the parameters of the current route (`params`) and the current query
+ * string (`query`) as context, so a nested resource can build it from its parent identifier
+ * (e.g. `"/structures/{{ params.structureId }}/hierarchies/new"`); a plain path is used as is.
+ * Undefined when no `creationPagePath` is configured, the button then having no link.
+ */
+const creationRoute = computed(() =>
+  options.value.creationPagePath
+    ? renderString(options.value.creationPagePath, {
+        ...routePathContext.value,
+      })
+    : undefined
 );
 
 const { t, te } = useScopedI18n(i18nScope.value);
@@ -597,7 +626,8 @@ function loadData(): Promise<void> {
   return getEntities<Record<string, unknown>>(
     instanceId.value,
     toQueryFilter(),
-    toPagination(pagination.value)
+    toPagination(pagination.value),
+    apiEndpointContext.value
   )
     .then((data) => {
       items.value = data.content;

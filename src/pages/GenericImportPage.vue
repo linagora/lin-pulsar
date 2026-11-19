@@ -191,6 +191,8 @@ import DropdownButton from '../components/button/DropdownButton.vue';
 import ButtonsCard from '../components/card/ButtonsCard.vue';
 import LoadFilesField from '../components/field/LoadFilesField.vue';
 import ImportedDataTable from '../components/table/ImportedDataTable.vue';
+import { useApiEndpointContext } from '../composables/useApiEndpointContext';
+import { useRoutePathContext } from '../composables/useRoutePathContext';
 import type { ImportedData, ImportStatus } from '../types/importedDataTable';
 import type {
   GenericImportPageUIProps,
@@ -208,6 +210,8 @@ const CLEAR_STATUSES: Record<string, ImportStatus[]> = {
 
 const router = useRouter();
 const route = useRoute();
+const apiEndpointContext = useApiEndpointContext();
+const routePathContext = useRoutePathContext();
 
 const instanceId = computed<string>(() => route.meta.instanceId as string);
 const i18nScope = computed<string>(() => `${instanceId.value}`);
@@ -255,15 +259,15 @@ const uiProps: GenericImportPageUIProps = {
 /**
  * Cancel the import and navigate back to the parent route.
  *
- * `parentPath` is rendered as a Nunjucks template with the current query
- * string (`query`), and pushed as a string so a rendered query or fragment
- * is kept.
+ * `parentPath` is rendered as a Nunjucks template with the parameters of the
+ * current route (`params`) and the current query string (`query`), and pushed
+ * as a string so a rendered query or fragment is kept.
  */
 function cancel() {
   router.push(
     renderString(options.value.parentPath, {
       entity: {},
-      query: route.query,
+      ...routePathContext.value,
     })
   );
 }
@@ -343,7 +347,7 @@ function importData(data: ImportedData): Promise<boolean> {
   data.__rowClass = '';
   const { __status, __error, __file, __id, __rowClass, ...dataToSend } = data;
 
-  return saveEntity(instanceId.value, dataToSend)
+  return saveEntity(instanceId.value, dataToSend, apiEndpointContext.value)
     .then(() => {
       data.__status = 'IMPORTED';
       return true;

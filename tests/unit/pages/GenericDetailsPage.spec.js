@@ -37,7 +37,7 @@ const mockRoute = {
     id: 'test-entity-id',
   },
   query: {
-    groupId: 'group-1',
+    groupId: 'group/1',
   },
 };
 
@@ -99,6 +99,14 @@ vi.mock('vue-router', () => ({
   }),
 }));
 
+const mockApiEndpointContext = vi.hoisted(() => ({
+  params: { parentId: 'parent-1' },
+}));
+
+vi.mock('../../../src/composables/useApiEndpointContext', () => ({
+  useApiEndpointContext: () => ({ value: mockApiEndpointContext }),
+}));
+
 function mountPage() {
   return shallowMount(GenericDetailsPage, {
     global: {
@@ -123,7 +131,8 @@ describe('Test component: GenericDetailsPage', () => {
 
       expect(getEntityById).toHaveBeenCalledWith(
         'test-instance-id',
-        'test-entity-id'
+        'test-entity-id',
+        mockApiEndpointContext
       );
       expect(wrapper.vm.entity).toEqual({ id: 'test-entity-id' });
       expect(wrapper.vm.isLoading).toBe(false);
@@ -160,7 +169,8 @@ describe('Test component: GenericDetailsPage', () => {
 
       expect(mockRenderString).toHaveBeenCalledWith('/page', {
         entity: { id: 'test-entity-id' },
-        query: { groupId: 'group-1' },
+        params: { id: 'test-entity-id' },
+        query: { groupId: 'group%2F1' },
       });
       expect(mockRouterBack).not.toHaveBeenCalled();
       expect(mockRouterPush).toHaveBeenCalledWith('/page');
@@ -187,7 +197,8 @@ describe('Test component: GenericDetailsPage', () => {
         '/groups/{{ query.groupId }}/members',
         {
           entity: {},
-          query: { groupId: 'group-1' },
+          params: { id: 'test-entity-id' },
+          query: { groupId: 'group%2F1' },
         }
       );
       expect(mockRouterPush).toHaveBeenCalledWith('/groups/group-1/members');
@@ -203,7 +214,8 @@ describe('Test component: GenericDetailsPage', () => {
         '/page/{{ entity.id }}/edit',
         {
           entity: { id: 'test-entity-id' },
-          query: { groupId: 'group-1' },
+          params: { id: 'test-entity-id' },
+          query: { groupId: 'group%2F1' },
         }
       );
     });
@@ -235,7 +247,8 @@ describe('Test component: GenericDetailsPage', () => {
 
       expect(getEntityById).toHaveBeenCalledWith(
         'test-instance-id',
-        'test-entity-id'
+        'test-entity-id',
+        mockApiEndpointContext
       );
     });
 

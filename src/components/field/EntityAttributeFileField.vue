@@ -52,6 +52,7 @@ import {
   useUiDesign,
 } from '@linagora/lin-pulsar-core';
 import { computed, ref, watch } from 'vue';
+import { useApiEndpointContext } from '../../composables/useApiEndpointContext';
 import type {
   AttributeFieldProps,
   EntityAttributeFieldOutputs,
@@ -93,13 +94,16 @@ const accept = computed(() =>
     : undefined
 );
 
+const apiEndpointContext = useApiEndpointContext();
+
 const rules = computed(() =>
   !props.ignoreRules && !props.definition.inputSettings?.ignoreRules
     ? useQuasarRules(
         props.instanceId,
         props.definition,
         ['maxFileSize', 'allowedExtensions'],
-        localI18nScope
+        localI18nScope,
+        apiEndpointContext
       )
     : []
 );
