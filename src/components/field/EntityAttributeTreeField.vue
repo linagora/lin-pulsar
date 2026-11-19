@@ -83,6 +83,7 @@ import {
   useUiDesign,
 } from '@linagora/lin-pulsar-core';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import { useApiEndpointContext } from '../../composables/useApiEndpointContext';
 import { fetchAllPages } from '../../services/paginationService';
 import { useRouteDependencies } from '../../composables/useRouteDependencies';
 import { toTreeNodes } from '../../services/treeService';
@@ -149,9 +150,17 @@ const selectedKey = computed(() =>
   localValue.value == null ? '' : String(localValue.value)
 );
 
+const apiEndpointContext = useApiEndpointContext();
+
 const rules = computed(() =>
   !props.ignoreRules && !settings.value.ignoreRules
-    ? useQuasarRules(props.instanceId, props.definition, [], localI18nScope)
+    ? useQuasarRules(
+        props.instanceId,
+        props.definition,
+        [],
+        localI18nScope,
+        apiEndpointContext
+      )
     : []
 );
 

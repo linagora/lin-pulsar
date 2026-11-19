@@ -44,6 +44,14 @@ const mockValidateFromApi = vi.fn(() => vi.fn());
 const mockTranslateOrDefault = vi.fn((defaultValue) => defaultValue);
 const mockGlobalTe = vi.fn(() => false);
 
+const mockApiEndpointContext = vi.hoisted(() => ({
+  value: { params: { structureId: 'structure-7' } },
+}));
+
+vi.mock('../../../../src/composables/useApiEndpointContext', () => ({
+  useApiEndpointContext: () => mockApiEndpointContext,
+}));
+
 vi.mock('@linagora/lin-pulsar-core', async () => {
   const { getNestedValue, setNestedValue } = await vi.importActual(
     '@linagora/lin-pulsar-core'
@@ -448,7 +456,7 @@ describe('Test component: EntityAttributeDateField', () => {
       expect(wrapper.vm.rules.length).toEqual(3);
     });
 
-    it('should call validateFromApi with instanceId and definition name when hasValidations is true', async () => {
+    it('should call validateFromApi with instanceId, definition name and the context of the route when hasValidations is true', async () => {
       await wrapper.setProps({
         definition: {
           name: 'birthdate',
@@ -460,7 +468,11 @@ describe('Test component: EntityAttributeDateField', () => {
         },
       });
 
-      expect(mockValidateFromApi).toHaveBeenCalledWith('id', 'birthdate');
+      expect(mockValidateFromApi).toHaveBeenCalledWith(
+        'id',
+        'birthdate',
+        mockApiEndpointContext
+      );
     });
 
     it('should pass the mask to the constraint rule factories when DD/MM/YYYY mask is set', async () => {

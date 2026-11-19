@@ -90,6 +90,10 @@ export interface ModuleGenericTablePageOptions extends ModulePageOptions {
    *
    * When the creation button is clicked, the user is redirected to this path.
    * This should correspond to a valid route exposed by the module.
+   *
+   * Supports Nunjucks template interpolation with a `params` variable holding the parameters of the
+   * current route and a `query` variable holding the current query string (e.g.
+   * `"/structures/{{ params.structureId }}/hierarchies/new"`); a plain path is used as is.
    */
   creationPagePath: string;
 
