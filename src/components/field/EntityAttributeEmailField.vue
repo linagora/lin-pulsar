@@ -54,6 +54,7 @@ import {
   useUiDesign,
 } from '@linagora/lin-pulsar-core';
 import { computed, ref, watch } from 'vue';
+import { useApiEndpointContext } from '../../composables/useApiEndpointContext';
 import type {
   AttributeFieldProps,
   EntityAttributeFieldOutputs,
@@ -81,13 +82,16 @@ const uiProps = ui<LinPulsarQInputProps>(
 );
 const { translateOrDefault } = useScopedI18n(localI18nScope);
 
+const apiEndpointContext = useApiEndpointContext();
+
 const rules = computed(() =>
   !props.ignoreRules && !props.definition.inputSettings?.ignoreRules
     ? useQuasarRules(
         props.instanceId,
         props.definition,
         ['minLength', 'maxLength', 'pattern', 'email'],
-        localI18nScope
+        localI18nScope,
+        apiEndpointContext.value
       )
     : []
 );

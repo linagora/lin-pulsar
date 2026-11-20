@@ -98,6 +98,7 @@ import type { Dayjs } from 'dayjs';
 import type { ValidationRule } from 'quasar';
 import { computed, ref, watch } from 'vue';
 import type { ComposerTranslation } from 'vue-i18n';
+import { useApiEndpointContext } from '../../composables/useApiEndpointContext';
 import type {
   AttributeFieldProps,
   EntityAttributeFieldOutputs,
@@ -273,6 +274,8 @@ const dateConstraints = computed(() => {
   ].filter((c) => c.dateRef != null);
 });
 
+const apiEndpointContext = useApiEndpointContext();
+
 const rules = computed(() => {
   if (props.ignoreRules || props.definition.inputSettings?.ignoreRules) {
     return [];
@@ -296,7 +299,11 @@ const rules = computed(() => {
 
   if (props.definition.hasValidations) {
     rulesFromConstraints.push(
-      validateFromApi(props.instanceId, props.definition.name)
+      validateFromApi(
+        props.instanceId,
+        props.definition.name,
+        apiEndpointContext.value
+      )
     );
   }
 

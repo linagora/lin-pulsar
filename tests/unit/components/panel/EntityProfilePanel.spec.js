@@ -31,6 +31,9 @@ import { isProxy, reactive } from 'vue';
 import EntityProfilePanel from '../../../../src/components/panel/EntityProfilePanel.vue';
 
 const mockRoute = {
+  params: {
+    structureId: 'structure-7',
+  },
   query: {
     groupId: 'group-1',
   },
@@ -907,10 +910,11 @@ describe('Test component: EntityProfilePanel', () => {
   });
 
   describe('Test computed: backRoute', () => {
-    it('should render parentPath as a Nunjucks template with the entity and query string as context', () => {
+    it('should render parentPath as a Nunjucks template with the entity, the route params and the query string as context', () => {
       expect(wrapper.vm.backRoute).toBe('/users');
       expect(mockRender).toHaveBeenCalledWith('/users', {
         entity: {},
+        params: { structureId: 'structure-7' },
         query: { groupId: 'group-1' },
       });
     });
@@ -922,6 +926,7 @@ describe('Test component: EntityProfilePanel', () => {
       expect(wrapper.vm.backRoute).toBe('/users');
       expect(mockRender).toHaveBeenCalledWith('/users', {
         entity,
+        params: { structureId: 'structure-7' },
         query: { groupId: 'group-1' },
       });
     });
@@ -936,6 +941,7 @@ describe('Test component: EntityProfilePanel', () => {
       expect(wrapper.vm.backRoute).toBe('/groups/group-1/members');
       expect(mockRender).toHaveBeenCalledWith(parentPath, {
         entity: {},
+        params: { structureId: 'structure-7' },
         query: { groupId: 'group-1' },
       });
     });

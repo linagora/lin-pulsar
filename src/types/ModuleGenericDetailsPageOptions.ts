@@ -98,7 +98,8 @@ export interface ModuleGenericDetailsPageOptions extends ModulePageOptions {
   sections: DetailSection[];
 
   /**
-   * Nunjucks template of the edit page path, rendered with the loaded entity as context, for example
+   * Nunjucks template of the edit page path, rendered with the loaded entity (`entity`), the parameters
+   * of the current route (`params`) and the current query string (`query`) as context, for example
    * `/applications/{{ entity.id }}/edit`.
    *
    * When set, the page renders an edit button redirecting to the rendered path.

@@ -54,12 +54,13 @@ export interface ModulePageOptions extends ModulePageLifecycleHostOptions {
    *
    * Defines the route to navigate to when returning to the previous page, for example on cancel.
    * Supports Nunjucks template interpolation with an `entity` variable holding the current entity
-   * state and a `query` variable holding the current query string, allowing the path to reference
-   * either (e.g. `"/groups/{{ query.groupId }}/members"`).
+   * state, a `params` variable holding the parameters of the current route and a `query` variable
+   * holding the current query string, allowing the path to reference any of them (e.g.
+   * `"/groups/{{ query.groupId }}/members"` or `"/structures/{{ params.structureId }}/hierarchies"`).
    *
-   * Prefer `query` for segments identifying the parent route: a generic page route is built from
-   * `basePath` + `pagePath` and declares no parent segment, so the query string is where such an
-   * identifier travels. `entity` is empty on a creation page until the form is filled, and on a
+   * Prefer `params` or `query` for segments identifying the parent route: they are read from the URL,
+   * `params` when the `basePath` declares the parent segment (e.g. `/structures/:structureId/hierarchies`),
+   * `query` otherwise. `entity` is empty on a creation page until the form is filled, and on a
    * details page whose entity failed to load.
    */
   parentPath: string;

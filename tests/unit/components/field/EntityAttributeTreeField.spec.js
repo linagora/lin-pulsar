@@ -33,6 +33,15 @@ const mockUi = vi.fn(() => ({}));
 const mockT = vi.fn((key) => key);
 const mockRules = [vi.fn()];
 
+const mockUseQuasarRules = vi.hoisted(() => vi.fn());
+const mockApiEndpointContext = vi.hoisted(() => ({
+  params: { structureId: 'structure-7' },
+}));
+
+vi.mock('../../../../src/composables/useApiEndpointContext', () => ({
+  useApiEndpointContext: () => ({ value: mockApiEndpointContext }),
+}));
+
 vi.mock('@linagora/lin-pulsar-core', async () => {
   const { getNestedValue, setNestedValue } = await vi.importActual(
     '@linagora/lin-pulsar-core'
@@ -47,7 +56,10 @@ vi.mock('@linagora/lin-pulsar-core', async () => {
       translateOrDefault: vi.fn(),
       t: mockT,
     }),
-    useQuasarRules: () => mockRules,
+    useQuasarRules: (...args) => {
+      mockUseQuasarRules(...args);
+      return mockRules;
+    },
     useNunjucks: () => ({
       renderString: (value, context) =>
         value.replace(
@@ -439,6 +451,19 @@ describe('Test component: EntityAttributeTreeField', () => {
   });
 
   describe('Test computed: rules', () => {
+    it('should pass the context of the route to the API validation rules', () => {
+      wrapper = shallowMount(EntityAttributeTreeField, mountingOptions);
+
+      expect(wrapper.vm.rules).toBeDefined();
+      expect(mockUseQuasarRules).toHaveBeenLastCalledWith(
+        expect.any(String),
+        expect.any(Object),
+        expect.any(Array),
+        expect.any(String),
+        mockApiEndpointContext
+      );
+    });
+
     it('should carry the configured validation rules', () => {
       wrapper = shallowMount(EntityAttributeTreeField, mountingOptions);
 

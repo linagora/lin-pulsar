@@ -93,6 +93,7 @@ import {
   useUiDesign,
 } from '@linagora/lin-pulsar-core';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import { useApiEndpointContext } from '../../composables/useApiEndpointContext';
 import { getDynamicListPage } from '../../services/dynamicListService';
 import { useRouteDependencies } from '../../composables/useRouteDependencies';
 import type {
@@ -190,13 +191,16 @@ const uiProps = {
 /** The caption of a disabled option, empty when the field has no `disabledText` translation. */
 const disabledText = computed(() => translateOrDefault('', 'disabledText'));
 
+const apiEndpointContext = useApiEndpointContext();
+
 const rules = computed(() =>
   !props.ignoreRules && !props.definition.inputSettings?.ignoreRules
     ? useQuasarRules(
         props.instanceId,
         props.definition,
         ['unique'],
-        localI18nScope
+        localI18nScope,
+        apiEndpointContext.value
       )
     : []
 );

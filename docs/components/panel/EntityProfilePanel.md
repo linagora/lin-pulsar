@@ -11,7 +11,7 @@ The component uses the `EntityProfilePanelProps` interface, which extends `Commo
 | Prop               | Type                                | Required | Default | Description                                                                                                                                                                                                                     |
 | ------------------ | ----------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `entity`           | `Record<string, unknown>`           | No       | `{}`    | Entity whose profile is displayed                                                                                                                                                                                               |
-| `parentPath`       | `string`                            | No       | —       | Back-button route, passed through Nunjucks with an `entity` and `query` context (plain strings are also valid). When missing, the back button is not rendered                                                                   |
+| `parentPath`       | `string`                            | No       | —       | Back-button route, passed through Nunjucks with an `entity`, `params` and `query` context (plain strings are also valid). When missing, the back button is not rendered                                                         |
 | `instanceId`       | `string`                            | No       | —       | Forwarded to every plugin zone, and used as a fallback prefix for the namespace and the scope                                                                                                                                   |
 | `statusKey`        | `string`                            | No       | —       | Entity key holding the status forwarded to `StatusBadge`. When absent, no badge is rendered. Requires `enableAvatar`                                                                                                            |
 | `fieldOrder`       | `string[]`                          | No       | —       | **Exhaustive** list of the attributes displayed in the details card, in that order                                                                                                                                              |
@@ -185,11 +185,12 @@ The actions and their dialogs resolve their translations under the `avatar.MenuB
 
 ## **Back Navigation**
 
-When `parentPath` is set, the back button links to the result of passing the path through Nunjucks with a context containing `entity` (the current entity prop) and `query` (the current query string). The link is handled by the Vue Router, so `Ctrl`, `Cmd` or middle click opens the parent page in a new tab. This is the same context the generic pages use, so a `parentPath` forwarded by a page resolves identically whether the page or the panel renders it. The path may embed either variable:
+When `parentPath` is set, the back button links to the result of passing the path through Nunjucks with a context containing `entity` (the current entity prop), `params` (the parameters of the current route) and `query` (the current query string). The link is handled by the Vue Router, so `Ctrl`, `Cmd` or middle click opens the parent page in a new tab. This is the same context the generic pages use, so a `parentPath` forwarded by a page resolves identically whether the page or the panel renders it. The path may embed any of these variables:
 
 ```
 /users/{{ query.groupId }}/members
 /users/{{ entity.groupId }}/members
+/structures/{{ params.structureId }}/hierarchies
 ```
 
 A static path such as `/users` is also valid — no template variables means the string is returned unchanged.
