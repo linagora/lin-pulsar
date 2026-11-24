@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.8](https://github.com/linagora/lin-pulsar/compare/v0.3.7...v0.3.8) (2026-11-24)
+
+
+### Features
+
+* pass the route of the page to the entity service to render a templated apiEndpoint ([d2f7e84](https://github.com/linagora/lin-pulsar/commit/d2f7e84f22abdea360f3ba6d8e7a0ffad60f22f1))
+
 ### [0.3.7](https://github.com/linagora/lin-pulsar/compare/v0.3.6...v0.3.7) (2026-11-10)
 
 
