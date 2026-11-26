@@ -57,6 +57,9 @@ so templates can read both the current context and the user input through the sa
 }
 ```
 
+A property reduced to a single lookup, such as `tags: '{{ entity.tags }}'`, sends the value it reads as is, an array or
+an object included, rather than its text: this is how a field holding a list, such as a grouped dynamic list, is sent.
+
 When the button targets an entity owned by another one (e.g. a role of an application), the owner is
 provided through the `parent` prop and stays untouched by the form values:
 

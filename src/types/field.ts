@@ -405,6 +405,30 @@ export interface DynamicListFieldProps extends AttributeFieldProps<FieldDynamicL
 }
 
 /**
+ * Settings for fields assigning a multiple selection of a dynamic list to each item of a collection
+ * held by the entity.
+ */
+export interface FieldGroupedDynamicListSettings extends FieldSettings {
+  /** Dot-notation path of the collection in the entity (e.g. `teams`). */
+  items: string;
+  /** Property of an item identifying it, copied into the stored value. Defaults to `id`. */
+  itemKey?: string;
+  /** Property holding the item key in each entry of the stored value. Defaults to `id`. */
+  keyProperty?: string;
+  /** Property holding the selected values in each entry of the stored value. Defaults to `values`. */
+  valuesProperty?: string;
+  /** Nunjucks template of the item label, rendered with `{ entity, item }`. */
+  itemLabel: string;
+  /** Nunjucks template of the item caption, rendered with `{ entity, item }`. */
+  itemCaption?: string;
+  /**
+   * Settings of the dynamic list rendered for each item, always with `multiple`: its templates are
+   * rendered with the item as `item`, next to `entity`.
+   */
+  field: FieldDynamicListSettings;
+}
+
+/**
  * Settings for fields selecting a node in a tree fetched from a backend endpoint.
  */
 export interface FieldTreeSettings extends FieldSettings {

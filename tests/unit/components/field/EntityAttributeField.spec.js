@@ -72,6 +72,38 @@ describe('Test component: EntityAttributeField', () => {
     });
   });
 
+  describe('Test computed: field', () => {
+    it('should resolve a field for every input type of the catalog', async () => {
+      for (const input of [
+        'Boolean',
+        'Number',
+        'Text',
+        'Date',
+        'List',
+        'DynamicList',
+        'TextArea',
+        'Email',
+        'File',
+        'Tree',
+        'GroupedDynamicList',
+      ]) {
+        await wrapper.setProps({
+          definition: { ...wrapper.props('definition'), input },
+        });
+
+        expect(wrapper.vm.field, input).toBeDefined();
+      }
+    });
+
+    it('should resolve no field for an unknown input type', async () => {
+      await wrapper.setProps({
+        definition: { ...wrapper.props('definition'), input: 'Unknown' },
+      });
+
+      expect(wrapper.vm.field).toBeUndefined();
+    });
+  });
+
   describe('Test function: updateEntity', () => {
     it('should emit event', () => {
       const updatedEntity = {

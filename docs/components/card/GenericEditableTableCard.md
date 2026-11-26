@@ -205,7 +205,7 @@ See [Generic Pages](../../generic-pages.md) for how to register a component in a
 - When an `updateBody` template is configured, it **fully replaces** the request body: it is rendered
   with `entity`, `item` and `formData` in the context, and only the properties declared in the
   template are sent — anything else from the form data is left out. A string property holding a
-  single dotted lookup resolving to a plain object is replaced by that object
+  single dotted lookup resolving to a plain object or an array is replaced by that value
 - On success: positive notification, `updated` event, items reload, dialog closes
 - On failure: negative notification, the dialog stays open for correction
 
