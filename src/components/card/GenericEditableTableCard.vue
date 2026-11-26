@@ -194,15 +194,16 @@ const isLoading = ref<boolean>(false);
 let eventSubscription: Subscription;
 
 /**
- * Table pagination state, updated from each paginated response. Rows are sorted by their last update
- * date, most recent first, until a sortable column is selected.
+ * Table pagination state, updated from each paginated response. Rows are sorted by the `defaultSort`
+ * prop until the user sorts a column; without `defaultSort`, no sort is sent and the backend applies
+ * its own default order.
  */
 const pagination = ref<QuasarPagination>({
   page: 1,
   rowsPerPage: 10,
   rowsNumber: 0,
-  sortBy: null,
-  descending: true,
+  sortBy: props.defaultSort?.sortBy ?? null,
+  descending: props.defaultSort?.descending ?? false,
 });
 
 const nunjucksContext = computed(() => ({

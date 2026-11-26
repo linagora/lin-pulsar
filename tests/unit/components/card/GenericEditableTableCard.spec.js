@@ -195,13 +195,41 @@ describe('Test component: GenericEditableTableCard', () => {
         rowsPerPage: 10,
         rowsNumber: 0,
         sortBy: null,
-        descending: true,
+        descending: false,
       });
       expect(mockHttpGet).toHaveBeenCalledWith('/api/parents/parent-1/items', {
         params: 'Converted pagination',
       });
       expect(wrapper.vm.items).toEqual([{ id: 'item-1' }]);
       expect(wrapper.vm.isLoading).toBe(false);
+    });
+
+    it('should sort the first page by the defaultSort prop', async () => {
+      mockToPagination.mockClear();
+      wrapper = mountComponent({
+        defaultSort: { sortBy: 'name', descending: true },
+      });
+
+      await flushPromises();
+
+      expect(mockToPagination).toHaveBeenCalledWith({
+        page: 1,
+        rowsPerPage: 10,
+        rowsNumber: 0,
+        sortBy: 'name',
+        descending: true,
+      });
+    });
+
+    it('should sort the first page ascending when the defaultSort prop has no direction', async () => {
+      mockToPagination.mockClear();
+      wrapper = mountComponent({ defaultSort: { sortBy: 'name' } });
+
+      await flushPromises();
+
+      expect(mockToPagination).toHaveBeenCalledWith(
+        expect.objectContaining({ sortBy: 'name', descending: false })
+      );
     });
 
     it('should update the pagination from the received page and the current pagination', async () => {
@@ -308,6 +336,25 @@ describe('Test component: GenericEditableTableCard', () => {
       expect(mockHttpGet).toHaveBeenCalledWith('/api/parents/parent-1/items', {
         params: 'Converted pagination',
       });
+    });
+
+    it('should send the sort selected by the user instead of the defaultSort prop', async () => {
+      wrapper = mountComponent({
+        defaultSort: { sortBy: 'name', descending: true },
+      });
+      await flushPromises();
+      mockToPagination.mockClear();
+      const requested = {
+        page: 1,
+        rowsPerPage: 10,
+        rowsNumber: 0,
+        sortBy: 'code',
+        descending: false,
+      };
+
+      await wrapper.vm.onRequest({ pagination: requested });
+
+      expect(mockToPagination).toHaveBeenCalledWith(requested);
     });
   });
 

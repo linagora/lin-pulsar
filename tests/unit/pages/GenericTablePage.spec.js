@@ -275,6 +275,73 @@ describe('Test component: GenericTablePage', () => {
     });
   });
 
+  describe('Test ref: pagination', () => {
+    /**
+     * Mounts the page with the given options and returns the pagination of its first request.
+     * @param options - Options overriding the base module options.
+     * @returns The pagination handed to `getEntities` by the first request.
+     */
+    function firstRequestPagination(options) {
+      mockModuleOptions = { ...baseModuleOptions, ...options };
+      getEntities.mockClear();
+      wrapper = shallowMount(GenericTablePage, {
+        global: { stubs: ['GenericEntityTable'] },
+      });
+
+      return getEntities.mock.calls[0][2];
+    }
+
+    it('should not sort the first request when no defaultSort is configured', () => {
+      expect(firstRequestPagination({})).toEqual({
+        page: 1,
+        rowsNumber: 0,
+        rowsPerPage: 10,
+        sortBy: null,
+        descending: false,
+      });
+    });
+
+    it('should sort the first request by the configured defaultSort', () => {
+      expect(
+        firstRequestPagination({
+          defaultSort: { sortBy: 'name', descending: true },
+        })
+      ).toEqual({
+        page: 1,
+        rowsNumber: 0,
+        rowsPerPage: 10,
+        sortBy: 'name',
+        descending: true,
+      });
+    });
+
+    it('should sort the first request ascending when the defaultSort has no direction', () => {
+      expect(
+        firstRequestPagination({ defaultSort: { sortBy: 'name' } })
+      ).toEqual(expect.objectContaining({ sortBy: 'name', descending: false }));
+    });
+
+    it('should send the sort selected by the user instead of the defaultSort', async () => {
+      firstRequestPagination({
+        defaultSort: { sortBy: 'name', descending: true },
+      });
+      getEntities.mockClear();
+
+      await wrapper.vm.onRequest({
+        pagination: {
+          page: 1,
+          rowsPerPage: 10,
+          sortBy: 'id',
+          descending: false,
+        },
+      });
+
+      expect(getEntities.mock.calls[0][2]).toEqual(
+        expect.objectContaining({ sortBy: 'id', descending: false })
+      );
+    });
+  });
+
   describe('Test function: loadData', () => {
     it('should retrieve data', async () => {
       wrapper.vm.items = [];

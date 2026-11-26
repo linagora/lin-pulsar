@@ -292,12 +292,17 @@ const favorites = computed<LinPulsarFilterSet[]>(() =>
 );
 
 const { toPagination, toQuasarPagination } = usePagination();
+/**
+ * Table pagination state, updated from each paginated response. Rows are sorted by the configured
+ * `defaultSort` until the user sorts a column; without `defaultSort`, no sort is sent and the backend
+ * applies its own default order.
+ */
 const pagination = ref<QuasarPagination>({
   page: 1,
   rowsNumber: 0,
-  sortBy: null,
+  sortBy: options.value.defaultSort?.sortBy ?? null,
   rowsPerPage: 10,
-  descending: true,
+  descending: options.value.defaultSort?.descending ?? false,
 });
 const columns = computed<GenericTableColumn[]>(() =>
   options.value.columns.map((column) => ({
