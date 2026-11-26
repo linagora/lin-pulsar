@@ -24,7 +24,7 @@
  * LinOpenFactory software.
  */
 
-import { shallowMount } from '@vue/test-utils';
+import { flushPromises, shallowMount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
 import EntityAttributeDynamicListField from '../../../../src/components/field/EntityAttributeDynamicListField.vue';
@@ -1849,6 +1849,203 @@ describe('Test component: EntityAttributeDynamicListField', () => {
           extraParameters: { type: 'value2' },
         },
       ]);
+    });
+  });
+
+  describe('Test setting: multiple', () => {
+    beforeEach(() => {
+      mountingOptions.props.definition.inputSettings.multiple = true;
+    });
+
+    it('should select several options', () => {
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      expect(wrapper.vm.isMultiple).toBe(true);
+    });
+
+    it('should select a single option by default', () => {
+      delete mountingOptions.props.definition.inputSettings.multiple;
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      expect(wrapper.vm.isMultiple).toBe(false);
+    });
+
+    it('should read the entity value as an array of option values', () => {
+      mountingOptions.props.entity.type = [1, 'value2'];
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      expect(wrapper.vm.localValue).toEqual(['1', 'value2']);
+    });
+
+    it('should emit as numbers the numeric values an optionValue lookup renders', async () => {
+      mountingOptions.props.entity.type = [42];
+      mountingOptions.props.definition.inputSettings.optionValue = '{{ id }}';
+      mountingOptions.props.definition.inputSettings.optionLabel =
+        '{{ label }} ({{ id }})';
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [
+          { label: 'A', id: 42 },
+          { label: 'B', id: 43 },
+          { label: 'C', id: 'C-44' },
+        ],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await flushPromises();
+
+      wrapper.vm.localValue = ['42', '43', 'C-44'];
+      wrapper.vm.updateValue();
+
+      expect(wrapper.emitted('update:entity')[0][0].type).toEqual([
+        42,
+        43,
+        'C-44',
+      ]);
+    });
+
+    it('should keep as strings the values a composed optionValue renders', async () => {
+      mountingOptions.props.definition.inputSettings.optionValue =
+        'ROLE_{{ id }}';
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [{ label: 'A', id: 42 }],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await flushPromises();
+
+      wrapper.vm.localValue = ['ROLE_42'];
+      wrapper.vm.updateValue();
+
+      expect(wrapper.emitted('update:entity')[0][0].type).toEqual(['ROLE_42']);
+    });
+
+    it('should emit the numeric values as numbers, whether preset or picked', async () => {
+      mountingOptions.props.entity.type = [1, 'value2'];
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [{ label: 'Three', value: 3 }],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await flushPromises();
+
+      wrapper.vm.localValue = ['1', 'value2', '3'];
+      wrapper.vm.updateValue();
+
+      expect(wrapper.emitted('update:entity')[0][0].type).toEqual([
+        1,
+        'value2',
+        3,
+      ]);
+    });
+
+    it('should read an unset entity value as an empty selection', () => {
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      expect(wrapper.vm.localValue).toEqual([]);
+    });
+
+    it('should add one placeholder per preset value not loaded yet', async () => {
+      mountingOptions.props.entity.type = ['value2', 'later-1', 'later-2'];
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+      await nextTick();
+
+      expect(wrapper.vm.allOptions.map((option) => option.value)).toEqual([
+        'later-2',
+        'later-1',
+        'value1',
+        'value2',
+        'value3',
+      ]);
+    });
+
+    it('should remove the placeholder of a preset value once its option is loaded', async () => {
+      mountingOptions.props.entity.type = ['later-1', 'later-2'];
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+      await nextTick();
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [{ label: 'Later 1', value: 'later-1' }],
+        last: true,
+      });
+
+      await wrapper.vm.fetchPage();
+
+      expect(
+        wrapper.vm.allOptions.filter((option) => option.value === 'later-1')
+      ).toEqual([{ label: 'Later 1', value: 'later-1' }]);
+      expect(wrapper.vm.allOptions[0]).toEqual({
+        label: 'later-2',
+        value: 'later-2',
+      });
+    });
+
+    it('should never disable the options holding a preset value', async () => {
+      mountingOptions.props.definition.inputSettings.optionDisabled =
+        '{{ disabled }}';
+      mountingOptions.props.entity.type = ['taken-1', 'taken-2'];
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [
+          { label: 'Taken 1', value: 'taken-1', disabled: true },
+          { label: 'Taken 2', value: 'taken-2', disabled: true },
+          { label: 'Other', value: 'other', disabled: true },
+        ],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      wrapper.vm.allOptions = [];
+
+      await wrapper.vm.fetchPage();
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'Taken 1', value: 'taken-1', disable: false },
+        { label: 'Taken 2', value: 'taken-2', disable: false },
+        { label: 'Other', value: 'other', disable: true },
+      ]);
+    });
+
+    it('should clear the selection to an empty array', () => {
+      mountingOptions.props.entity.type = ['value1'];
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      wrapper.vm.clearSelection();
+
+      expect(wrapper.vm.localValue).toEqual([]);
+      expect(wrapper.emitted('update:entity')[0]).toEqual([
+        { name: 'entity-name', type: [] },
+      ]);
+    });
+
+    it('should not emit when the selection is already empty', () => {
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      wrapper.vm.clearSelection();
+
+      expect(wrapper.emitted('update:entity')).toBeUndefined();
+    });
+
+    it('should not take a selection sent back by the parent as the preset', async () => {
+      mountingOptions.props.entity.type = ['value1'];
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      wrapper.vm.localValue = ['value1', 'value2'];
+
+      await wrapper.setProps({
+        entity: { name: 'entity-name', type: ['value1', 'value2'] },
+      });
+
+      expect(wrapper.vm.presetValue).toEqual(['value1']);
+    });
+
+    it('should take a value set from outside the field as the preset', async () => {
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      await wrapper.setProps({
+        entity: { name: 'entity-name', type: [3, 'value2'] },
+      });
+
+      expect(wrapper.vm.presetValue).toEqual(['3', 'value2']);
+      expect(wrapper.vm.localValue).toEqual(['3', 'value2']);
     });
   });
 });

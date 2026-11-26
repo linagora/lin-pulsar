@@ -23,6 +23,7 @@ Unlike `EntityAttributeListField`, which uses a static predefined list, this com
 - Optionally maps elements of any paginated entity endpoint to options through the `optionLabel` and `optionValue` Nunjucks templates, rendered with the element and the edited entity
 - Optionally disables individual options through the `optionDisabled` Nunjucks template, keeping them listed but unselectable, with a translated caption explaining why; the options follow the entity changes, and the one the entity was given is never disabled
 - Displays **labels** in the dropdown while storing only **values** in the entity
+- Optionally selects several options with `multiple`, shown as chips and stored as an array of values
 - Loads additional pages on virtual scroll (infinite scrolling pattern)
 - Resolves pre-filled entity values to their corresponding label via Quasar's `map-options`
 - Synchronizes the selected value with the entity model
@@ -118,7 +119,8 @@ export interface FieldDynamicListSettings extends FieldSettings {
    * Nunjucks template rendered with each fetched element as context, the edited entity being
    * available as `entity`, to build the option value (e.g. "{{ id }}"). When omitted, the element
    * `value` property is used. The rendered value is a string: an entity value given as a number,
-   * such as an integer identifier, is read as a string to match its option.
+   * such as an integer identifier, is read as a string to match its option, and emitted back as a
+   * number, like a number a template made of a single lookup (`{{ id }}`) renders.
    */
   optionValue?: string;
 
@@ -126,10 +128,17 @@ export interface FieldDynamicListSettings extends FieldSettings {
    * Nunjucks template rendered with each fetched element as context, the edited entity being
    * available as `entity` (e.g. "{{ disabled }}" or "{{ hasItem(entity.members, 'id', id) }}").
    * The option is disabled only when it renders to `true`: it stays listed but cannot be selected.
-   * The options are rendered again whenever the entity changes, and the option holding the value
-   * the entity was given is never disabled, so it can always be picked again.
+   * The options are rendered again whenever the entity changes, and the options holding the values
+   * the entity was given are never disabled, so they can always be picked again.
    */
   optionDisabled?: string;
+
+  /**
+   * When `true`, several options can be selected, shown as chips: the value is an array of option
+   * values, an empty array when nothing is selected, and every value the entity was given keeps its
+   * option enabled. `false` by default.
+   */
+  multiple?: boolean;
 
   /**
    * Controls uniqueness validation for this field.
@@ -271,7 +280,7 @@ The validation rules are executed in a specific order to ensure proper validatio
 1. **Required validation** (if applicable)
    - Depends on the `definition.required` property
    - If `definition.required` is `true`, this validation is automatically added as the **first rule** in the validation chain
-   - Ensures that a value is selected before proceeding to other validations
+   - Ensures that a value is selected before proceeding to other validations; with `multiple`, an empty array is missing (from lin-pulsar-core 0.1.11)
 
 2. **Specific validation rules** (in order)
    - The rules specified in the `useQuasarRules` parameters (`['unique']` for dynamic list fields)
@@ -286,11 +295,11 @@ The validation rules are executed in a specific order to ensure proper validatio
 
 ### Supported Validation Types
 
-| Setting       | Description                                                                          | Example             |
-| ------------- | ------------------------------------------------------------------------------------ | ------------------- |
-| `required`    | Marks the field as mandatory. Setting comes from the `definition.required` property. | `required: true`    |
-| `unique`      | Enforces that the selected value is unique among a list of existing values           | `unique: true`      |
-| `ignoreRules` | Bypass validation when set to `true`                                                 | `ignoreRules: true` |
+| Setting       | Description                                                                                                                                  | Example             |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| `required`    | Marks the field as mandatory. Setting comes from the `definition.required` property.                                                         | `required: true`    |
+| `unique`      | Enforces that the selected value is unique among a list of existing values; with `multiple`, the whole selection is compared to each of them | `unique: true`      |
+| `ignoreRules` | Bypass validation when set to `true`                                                                                                         | `ignoreRules: true` |
 
 ### Unique Rule — Parent Responsibility
 
@@ -351,14 +360,16 @@ The attribute `name` supports **dot notation** to target values located inside s
    - the entity value at `definition.name` (existing value string in entity, a number such as an integer identifier
      being read as a string, like the option values)
    - `null` (fallback if no entity value exists)
+   - with `multiple`, an array of those values instead, `[]` when the entity holds none
 
 2. The `route` template is rendered against the entity; as soon as it resolves **and** every declared `routeDependencies` value is non-empty, the first page of `{ label, value }` elements is fetched from the backend
-3. After the **first page** of each load, a preset value missing from the options gets a placeholder entry `{ label: value, value: value }` — unless that page failed, in which case the list stays empty so the error remains visible
-4. User scrolls through the dropdown → next page is fetched and appended; if the real option matching the preset value is loaded, the placeholder is automatically removed
+3. After the **first page** of each load, each preset value missing from the options gets a placeholder entry `{ label: value, value: value }` — unless that page failed, in which case the list stays empty so the error remains visible
+4. User scrolls through the dropdown → next page is fetched and appended; once the real option matching a preset value is loaded, its placeholder is automatically removed
 5. Quasar's `map-options` resolves the stored value string to its corresponding label for display
 6. User selects an element from the dropdown → `emit-value` ensures only the `value` string is stored
-7. `localValue` is updated via `v-model` (always a string)
-8. `updateValue()` emits `update:entity` with a new entity object
+7. `localValue` is updated via `v-model` (a string, or an array of strings with `multiple`)
+8. `updateValue()` emits `update:entity` with a new entity object, each value read from a number (an entity value or
+   a fetched element `value`) being emitted as a number again
 9. If the updated entity changes a value the route template depends on, the **selection is dropped** — a value picked from the previous route does not belong to the new one — and the options are discarded and refetched from page 0
 10. If the update empties a declared dependency, or makes the route render empty, the load is **suspended**: nothing is requested, and the options, the selection and the cursor all survive
 
@@ -569,7 +580,7 @@ option.disable = option.value !== presetValue && renderString(optionDisabled, co
 - The three templates share one context: the element itself, with the edited entity exposed as `entity` — e.g. `{{ hasItem(entity.members, 'id', id) }}` disables the members already assigned. An element carrying its own `entity` property shadows it
 - A disabled option stays listed but cannot be selected: Quasar skips it on click and keyboard navigation
 - `optionLabel` and `optionValue` are not required: `optionDisabled` alone switches the element to the rendered form, keeping its `label` and `value`
-- The **preset option is never disabled**: the value the entity holds from outside the field — the one loaded with it, as opposed to one picked in the dropdown — stays selectable whatever its template says, so the user can always come back to it after choosing another option. A route change drops it along with the selection
+- The **preset options are never disabled**: the values the entity holds from outside the field — the ones loaded with it, as opposed to those picked in the dropdown — stay selectable whatever their template says, so the user can always come back to them after choosing other options. A route change drops them along with the selection
 - The options **follow the entity**: whenever it changes, the loaded elements are rendered again, so a template reading another form field, such as a member added in the same form, disables or re-enables options already loaded. The pagination is untouched
 - A template that **fails to render** is reported through `validation.dynamicList.fetchError`, like a failed request: the page is not appended and the next scroll requests it again. A failure while rendering the loaded elements again keeps the options as they were
 
@@ -728,6 +739,27 @@ With the translation:
 
 - Every account found in `entity.members` is listed greyed out, with the caption under its label
 - Removing `disabledText` keeps the accounts disabled but renders the list on one line per option, as before
+
+### Multiple Selection Example
+
+```ts
+const definition = {
+  name: 'roleIds',
+  input: 'DynamicList',
+  type: 'Array',
+  required: false,
+  inputSettings: {
+    route: '/api/roles',
+    optionLabel: '{{ name }}',
+    optionValue: '{{ id }}',
+    multiple: true,
+  },
+};
+```
+
+- An entity holding `{ roleIds: [1, 2] }` shows the two roles as chips, read as `['1', '2']` like the option values
+- Each preset value gets a placeholder until its option is loaded, and keeps its option enabled under `optionDisabled`
+- Clearing the selection, or a route change, sets the value to `[]`
 
 ### Templated Route Example
 

@@ -343,7 +343,8 @@ export interface FieldDynamicListSettings extends FieldSettings {
    * Nunjucks template rendered with each fetched element as context, the edited entity being
    * available as `entity`, to build the option value (e.g. "{{ id }}"). When omitted, the element
    * `value` property is used. The rendered value is a string: an entity value given as a number,
-   * such as an integer identifier, is read as a string to match its option.
+   * such as an integer identifier, is read as a string to match its option, and emitted back as a
+   * number, like a number a template made of a single lookup (`{{ id }}`) renders.
    */
   optionValue?: string;
 
@@ -351,10 +352,17 @@ export interface FieldDynamicListSettings extends FieldSettings {
    * Nunjucks template rendered with each fetched element as context, the edited entity being
    * available as `entity` (e.g. "{{ disabled }}" or "{{ hasItem(entity.members, 'id', id) }}").
    * The option is disabled only when it renders to `true`: it stays listed but cannot be selected.
-   * The options are rendered again whenever the entity changes, and the option holding the value
-   * the entity was given is never disabled, so it can always be picked again.
+   * The options are rendered again whenever the entity changes, and the options holding the values
+   * the entity was given are never disabled, so they can always be picked again.
    */
   optionDisabled?: string;
+
+  /**
+   * When `true`, several options can be selected, shown as chips: the value is an array of option
+   * values, an empty array when nothing is selected, and every value the entity was given keeps its
+   * option enabled. `false` by default.
+   */
+  multiple?: boolean;
 
   /**
    * Controls uniqueness validation for this field.

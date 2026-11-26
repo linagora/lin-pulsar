@@ -41,6 +41,8 @@
     option-value="value"
     emit-value
     map-options
+    :multiple="isMultiple"
+    :use-chips="isMultiple"
     :rules="rules"
     :loading="isLoading"
     @virtual-scroll="onVirtualScroll"
@@ -152,21 +154,126 @@ let loadedElements: DynamicListElement[] = [];
 const pageSize = computed(() => props.definition.inputSettings?.size ?? 20);
 
 /**
+ * The numbers read as strings by `toOptionValue`, by string: the selection is emitted with them, so that a numeric
+ * identifier keeps its type in the entity whether it was picked or left as it was.
+ */
+const numericValues = new Map<string, number>();
+
+/**
  * Converts a number to a string: q-select compares the model with the option values strictly, and a rendered template
- * is always a string.
+ * is always a string. The number is remembered, to be emitted back as a number.
  * @param value - The value of the entity or of a fetched element.
  * @returns The value, a number as a string, `null` when unset.
  */
 function toOptionValue(value: unknown): unknown {
-  return typeof value === 'number' ? String(value) : (value ?? null);
+  if (typeof value === 'number') {
+    numericValues.set(String(value), value);
+    return String(value);
+  }
+  return value ?? null;
+}
+
+/** A template made of a single lookup, such as `{{ id }}`, capturing the path it reads. */
+const SINGLE_LOOKUP = /^\{\{\s*([\w$.]+)\s*\}\}$/;
+
+/**
+ * Renders the `optionValue` template of an element. When the template is a single lookup of a number,
+ * the number is remembered, to be emitted back as a number like the values `toOptionValue` reads.
+ * @param template - The `optionValue` template.
+ * @param context - The context of the element.
+ * @returns The rendered option value.
+ */
+function renderOptionValue(
+  template: string,
+  context: Record<string, unknown>
+): string {
+  const rendered = renderString(template, context);
+  const path = SINGLE_LOOKUP.exec(template.trim())?.[1];
+  const lookedUp = path ? getNestedValue(context, path) : undefined;
+
+  if (typeof lookedUp === 'number' && String(lookedUp) === rendered) {
+    numericValues.set(rendered, lookedUp);
+  }
+  return rendered;
+}
+
+/**
+ * Reads an option value back as the value it was converted from: a number read as a string is a number again.
+ * @param value - An option value of the select.
+ * @returns The value to store in the entity.
+ */
+function toEntityOptionValue(value: unknown): unknown {
+  return typeof value === 'string' && numericValues.has(value)
+    ? numericValues.get(value)
+    : value;
+}
+
+/** Whether several options can be selected, the value then being an array of option values. */
+const isMultiple = computed(() =>
+  Boolean(props.definition.inputSettings?.multiple)
+);
+
+/**
+ * Reads a value of the entity as the value of the select: an array of option values with `multiple`, an empty array
+ * when unset, a single option value otherwise.
+ * @param value - The value of the entity.
+ * @returns The value of the select.
+ */
+function toFieldValue(value: unknown): unknown {
+  if (!isMultiple.value) {
+    return toOptionValue(value);
+  }
+  if (value == null) {
+    return [];
+  }
+  return (Array.isArray(value) ? value : [value]).map(toOptionValue);
+}
+
+/**
+ * Reads a value of the select as the value to store in the entity, each number read as a string being a number again.
+ * @param value - The value of the select.
+ * @returns The value of the entity.
+ */
+function toEntityValue(value: unknown): unknown {
+  return Array.isArray(value)
+    ? value.map(toEntityOptionValue)
+    : toEntityOptionValue(value);
+}
+
+/**
+ * Lists the option values held by a value of the select, whether it is single or multiple.
+ * @param value - The value of the select.
+ * @returns The option values, empty when nothing is selected.
+ */
+function toValueList(value: unknown): unknown[] {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  return value == null ? [] : [value];
+}
+
+/**
+ * Tells whether two values of the select hold the same option values, in the same order.
+ * @param value - A value of the select.
+ * @param other - Another value of the select.
+ * @returns True when they hold the same option values.
+ */
+function isSameValue(value: unknown, other: unknown): boolean {
+  const values = toValueList(value);
+  const others = toValueList(other);
+
+  return (
+    values.length === others.length &&
+    values.every((item, index) => item === others[index])
+  );
 }
 
 const localValue = ref(
-  toOptionValue(getNestedValue(props.entity, props.definition.name))
+  toFieldValue(getNestedValue(props.entity, props.definition.name))
 );
 /**
- * The value the entity holds from outside the field, as opposed to one picked in it: its option is
- * never disabled, so the user can always come back to it after choosing another one.
+ * The value the entity holds from outside the field, as opposed to one picked in it: its options are
+ * never disabled, so the user can always come back to them after choosing others.
  */
 let presetValue = localValue.value;
 
@@ -238,10 +345,10 @@ const isDisabled = computed(
 watch(
   () => getNestedValue(props.entity, props.definition.name),
   (newValue) => {
-    const value = toOptionValue(newValue);
+    const value = toFieldValue(newValue);
     // A selection made here comes back through the parent already equal to `localValue`: only a
     // value set from outside, such as the entity once loaded, becomes the preset.
-    if (value !== localValue.value) {
+    if (!isSameValue(value, localValue.value)) {
       presetValue = value;
     }
     localValue.value = value;
@@ -258,7 +365,7 @@ watch(
     cancelFetch();
     if (requestedRoute !== null) {
       clearSelection();
-      presetValue = null;
+      presetValue = toFieldValue(null);
       loadedElements = [];
       allOptions.value = [];
     }
@@ -299,12 +406,12 @@ function isStale(pagedFetch: PagedFetch): boolean {
   return pagedFetch !== currentFetch;
 }
 
-/** Drops the selected value and the entity's, since it belongs to a route that no longer applies. */
+/** Drops the selected values and the entity's, since they belong to a route that no longer applies. */
 function clearSelection() {
-  if (localValue.value === null) {
+  if (toValueList(localValue.value).length === 0) {
     return;
   }
-  localValue.value = null;
+  localValue.value = toFieldValue(null);
   updateValue();
 }
 
@@ -423,15 +530,15 @@ function toOption(element: DynamicListElement): DynamicListElement {
   const option: DynamicListElement = {
     label: optionLabel ? renderString(optionLabel, context) : element.label,
     value: optionValue
-      ? renderString(optionValue, context)
+      ? renderOptionValue(optionValue, context)
       : (toOptionValue(element.value) as string),
   };
 
   if (optionDisabled) {
     // A template renders to a string: only the literal `true` disables, anything else keeps the
-    // option selectable. The preset option is exempt, so it can always be picked again.
+    // option selectable. The preset options are exempt, so they can always be picked again.
     option.disable =
-      option.value !== presetValue &&
+      !toValueList(presetValue).includes(option.value) &&
       renderString(optionDisabled, context).trim() === 'true';
   }
 
@@ -439,45 +546,36 @@ function toOption(element: DynamicListElement): DynamicListElement {
 }
 
 /**
- * Ensures the entity's preset value is represented in the options list.
- * If the value is not found among loaded options, a placeholder entry is
+ * Ensures every selected value is represented in the options list.
+ * For each value not found among loaded options, a placeholder entry is
  * prepended so that q-select can display the value instead of showing
  * an empty or raw string.
  */
 function ensurePresetValueInOptions() {
-  if (localValue.value == null) {
-    return;
-  }
-  const found = allOptions.value.some(
-    (option) => option.value === localValue.value
-  );
-  if (!found) {
-    allOptions.value.unshift({
-      label: String(localValue.value),
-      value: String(localValue.value),
-    });
+  for (const value of toValueList(localValue.value)) {
+    const found = allOptions.value.some((option) => option.value === value);
+    if (!found) {
+      allOptions.value.unshift({ label: String(value), value: String(value) });
+    }
   }
 }
 
 /**
- * Removes the placeholder entry once the real option has been loaded.
+ * Removes the placeholder entries once their real options have been loaded.
  * A placeholder is identified as a duplicate entry where label equals value.
  */
 function removePlaceholderIfResolved() {
-  if (localValue.value == null) {
-    return;
-  }
-  const matchingEntries = allOptions.value.filter(
-    (option) => option.value === localValue.value
-  );
-  if (matchingEntries.length > 1) {
-    const placeholderIndex = allOptions.value.findIndex(
-      (option) =>
-        option.value === localValue.value &&
-        option.label === String(localValue.value)
+  for (const value of toValueList(localValue.value)) {
+    const matchingEntries = allOptions.value.filter(
+      (option) => option.value === value
     );
-    if (placeholderIndex !== -1) {
-      allOptions.value.splice(placeholderIndex, 1);
+    if (matchingEntries.length > 1) {
+      const placeholderIndex = allOptions.value.findIndex(
+        (option) => option.value === value && option.label === String(value)
+      );
+      if (placeholderIndex !== -1) {
+        allOptions.value.splice(placeholderIndex, 1);
+      }
     }
   }
 }
@@ -496,12 +594,17 @@ function onVirtualScroll(payload: VirtualScrollPayload) {
 }
 
 /**
- * Emits an 'update:entity' event with the updated entity object when the selection changes.
+ * Emits an 'update:entity' event with the updated entity object when the selection changes, each
+ * numeric value being emitted as a number.
  */
 function updateValue() {
   emits(
     'update:entity',
-    setNestedValue(props.entity, props.definition.name, localValue.value)
+    setNestedValue(
+      props.entity,
+      props.definition.name,
+      toEntityValue(localValue.value)
+    )
   );
 }
 </script>
