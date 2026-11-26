@@ -20,8 +20,9 @@ Unlike `EntityAttributeListField`, which uses a static predefined list, this com
 - Drops the current selection on a route change, so a value picked under a previous scope is never carried over into the new list
 - Disables the field and holds the route back while a value declared in `routeDependencies` is still empty, and loads the options as soon as they all hold a value
 - Suspends a load it cannot perform instead of abandoning it, so restoring the value resumes the list where it stopped
-- Optionally maps elements of any paginated entity endpoint to options through the `optionLabel` and `optionValue` Nunjucks templates, rendered with the element and the edited entity
-- Optionally disables individual options through the `optionDisabled` Nunjucks template, keeping them listed but unselectable, with a translated caption explaining why; the options follow the entity changes, and the one the entity was given is never disabled
+- Optionally maps elements of any paginated entity endpoint to options through the `optionLabel` and `optionValue` Nunjucks templates, rendered with the element, the edited entity and the `context` prop
+- Accepts a `context` prop whose variables join `entity` in every template, so that a list repeated per item of a collection can depend on its item (`/api/teams/{{ item.id | urlencode }}/roles`)
+- Optionally disables individual options through the `optionDisabled` Nunjucks template, keeping them listed but unselectable, with a translated caption explaining why; the options follow the entity changes, and the ones the entity was given are never disabled
 - Displays **labels** in the dropdown while storing only **values** in the entity
 - Optionally selects several options with `multiple`, shown as chips and stored as an array of values
 - Loads additional pages on virtual scroll (infinite scrolling pattern)
@@ -37,16 +38,18 @@ Unlike `EntityAttributeListField`, which uses a static predefined list, this com
 
 ## **⚙️ Props**
 
-The component uses the shared `AttributeFieldProps` interface with `FieldDynamicListSettings`.
+The component uses `DynamicListFieldProps`: the shared `AttributeFieldProps` interface with `FieldDynamicListSettings`, plus an optional `context` and `templateEntity`.
 
-| Prop          | Type                                                        | Required | Description                                                                  |
-| ------------- | ----------------------------------------------------------- | -------- | ---------------------------------------------------------------------------- |
-| `instanceId`  | `string`                                                    | Yes      | Identifier used for contextual data                                          |
-| `i18nScope`   | `string`                                                    | Yes      | I18n scope for localizing the component                                      |
-| `uiNamespace` | `string`                                                    | Yes      | Base UI design namespace for styling                                         |
-| `definition`  | `LinPulsarAttributeConfiguration<FieldDynamicListSettings>` | Yes      | Attribute definition (name, type, input configuration)                       |
-| `entity`      | `Record<string, unknown>`                                   | Yes      | Entity object containing the dynamic list attribute value                    |
-| `ignoreRules` | `boolean`                                                   | No       | Indicates whether to bypass validation rules for this field (default: false) |
+| Prop             | Type                                                        | Required | Description                                                                                                                                                  |
+| ---------------- | ----------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `instanceId`     | `string`                                                    | Yes      | Identifier used for contextual data                                                                                                                          |
+| `i18nScope`      | `string`                                                    | Yes      | I18n scope for localizing the component                                                                                                                      |
+| `uiNamespace`    | `string`                                                    | Yes      | Base UI design namespace for styling                                                                                                                         |
+| `definition`     | `LinPulsarAttributeConfiguration<FieldDynamicListSettings>` | Yes      | Attribute definition (name, type, input configuration)                                                                                                       |
+| `entity`         | `Record<string, unknown>`                                   | Yes      | Entity object containing the dynamic list attribute value                                                                                                    |
+| `ignoreRules`    | `boolean`                                                   | No       | Indicates whether to bypass validation rules for this field (default: false)                                                                                 |
+| `context`        | `Record<string, unknown>`                                   | No       | Variables merged into the Nunjucks context of the route, dependency and option templates, next to `entity`, which a variable cannot hide (default: `{}`)     |
+| `templateEntity` | `Record<string, unknown>`                                   | No       | Entity the templates read as `entity`, the edited `entity` by default: a field editing a copy holding only its value keeps its templates on the whole entity |
 
 ### AttributeFieldProps Interface
 
@@ -430,6 +433,8 @@ The `route` is a Nunjucks template rendered against the edited entity, exposed a
 { "route": "/api/organizations/{{ entity.organizationId }}/units" }
 ```
 
+- The variables of the `context` prop are available next to `entity` (`{ ...context, entity }`, a variable named `entity` being hidden), and a dependency path can point into them (`item.id`); a context change that changes the rendered route reloads the options like an entity change
+- With `templateEntity`, the templates read it as `entity` instead of the edited entity, which still holds the value of the field
 - A route without `{{` is used as-is
 - It is rendered from the **first render onwards**: the field never guesses whether the entity is loaded yet, which is why `routeDependencies` exists — see _Declaring the interpolated values is the integrator's responsibility_
 - A template that has not resolved renders empty, and the load simply suspends. Only a `route` missing from `inputSettings` is reported as an error.

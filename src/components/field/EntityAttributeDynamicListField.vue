@@ -99,10 +99,9 @@ import { useApiEndpointContext } from '../../composables/useApiEndpointContext';
 import { getDynamicListPage } from '../../services/dynamicListService';
 import { useRouteDependencies } from '../../composables/useRouteDependencies';
 import type {
-  AttributeFieldProps,
   DynamicListElement,
+  DynamicListFieldProps,
   EntityAttributeFieldOutputs,
-  FieldDynamicListSettings,
 } from '../../types/field';
 
 /** Payload received from the Quasar virtual scroll event. */
@@ -127,12 +126,10 @@ interface PagedFetch {
   hasPendingRequest: boolean;
 }
 
-const props = withDefaults(
-  defineProps<AttributeFieldProps<FieldDynamicListSettings>>(),
-  {
-    ignoreRules: false,
-  }
-);
+const props = withDefaults(defineProps<DynamicListFieldProps>(), {
+  ignoreRules: false,
+  context: () => ({}),
+});
 const emits = defineEmits<EntityAttributeFieldOutputs>();
 const localI18nScope = `${props.i18nScope}.fields.${props.definition.name}`;
 
@@ -312,8 +309,14 @@ const rules = computed(() =>
     : []
 );
 
-/** The context the route template and the dependency paths are both resolved against. */
-const renderContext = computed(() => ({ entity: props.entity }));
+/**
+ * The context the route template and the dependency paths are both resolved against: the context
+ * variables, and the entity, which a variable cannot hide.
+ */
+const renderContext = computed(() => ({
+  ...props.context,
+  entity: props.templateEntity ?? props.entity,
+}));
 
 const { areRouteDependenciesSatisfied: areDependenciesSatisfied } =
   useRouteDependencies(
@@ -389,9 +392,15 @@ watch(
   { immediate: true }
 );
 
-// The templates read the entity: a change of another field, such as a member added in the same
-// form, can disable or re-enable options already loaded.
-watch(() => props.entity, refreshOptions, { deep: true });
+// The templates read the entity and the context: a change of another field, such as a member added
+// in the same form, can disable or re-enable options already loaded.
+watch(
+  [() => props.entity, () => props.templateEntity, () => props.context],
+  refreshOptions,
+  {
+    deep: true,
+  }
+);
 
 // Leaving the page is one more way for a fetch to become useless: abort it instead of paying for a
 // response nobody will read.
@@ -512,7 +521,8 @@ function refreshOptions() {
 /**
  * Maps a fetched element to a dropdown option. When the `optionLabel`, `optionValue` or
  * `optionDisabled` settings are configured, they are rendered as Nunjucks templates with the
- * element as context and the edited entity as `entity`, allowing the field to consume any
+ * element as context, the edited entity as `entity` and the variables of the `context` prop, the
+ * element winning over them, allowing the field to consume any
  * paginated entity endpoint. Otherwise the element is used as-is, its numeric value read as a string.
  * @param element - The element fetched from the backend.
  * @returns The dropdown option.
@@ -525,8 +535,9 @@ function toOption(element: DynamicListElement): DynamicListElement {
     return { ...element, value: toOptionValue(element.value) as string };
   }
 
-  // The element wins over `entity`: an element carrying an `entity` property keeps its own.
-  const context = { entity: props.entity, ...element };
+  // The element wins over `entity` and the context: an element carrying an `entity` property keeps
+  // its own.
+  const context = { ...renderContext.value, ...element };
   const option: DynamicListElement = {
     label: optionLabel ? renderString(optionLabel, context) : element.label,
     value: optionValue

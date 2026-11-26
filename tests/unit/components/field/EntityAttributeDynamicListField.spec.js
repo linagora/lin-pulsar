@@ -2048,4 +2048,143 @@ describe('Test component: EntityAttributeDynamicListField', () => {
       expect(wrapper.vm.localValue).toEqual(['3', 'value2']);
     });
   });
+
+  describe('Test prop: templateEntity', () => {
+    it('should render the templates with it as entity, the value being read from the entity', () => {
+      mountingOptions.props.definition.inputSettings.route =
+        '/api/{{ entity.name }}';
+      mountingOptions.props.templateEntity = { name: 'whole-entity' };
+      mountingOptions.props.entity = { type: 'value1' };
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      expect(wrapper.vm.renderedRoute).toEqual('/api/whole-entity');
+      expect(wrapper.vm.localValue).toEqual('value1');
+    });
+
+    it('should render the loaded options again when it changes, without any request', async () => {
+      mountingOptions.props.definition.inputSettings.optionDisabled =
+        '{{ entity.locked }}';
+      mountingOptions.props.templateEntity = { name: 'entity-name' };
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [{ label: 'Value 1', value: 'value1' }],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await flushPromises();
+      mockGetDynamicListPage.mockClear();
+
+      await wrapper.setProps({
+        templateEntity: { name: 'entity-name', locked: 'true' },
+      });
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'Value 1', value: 'value1', disable: true },
+      ]);
+      expect(mockGetDynamicListPage).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Test prop: context', () => {
+    beforeEach(() => {
+      mountingOptions.props.context = { item: { id: 'TEAM_42' } };
+    });
+
+    it('should render the route template against the context', async () => {
+      mountingOptions.props.definition.inputSettings.route =
+        '/api/teams/{{ item.id }}/roles';
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+
+      expect(wrapper.vm.renderedRoute).toEqual('/api/teams/TEAM_42/roles');
+      expect(mockGetDynamicListPage).toHaveBeenCalledWith(
+        '/api/teams/TEAM_42/roles',
+        expect.anything(),
+        expect.anything()
+      );
+    });
+
+    it('should resolve the route dependencies against the context', async () => {
+      mountingOptions.props.definition.inputSettings.routeDependencies = [
+        'item.id',
+      ];
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      expect(wrapper.vm.areDependenciesSatisfied).toEqual(true);
+
+      await wrapper.setProps({ context: { item: { id: '' } } });
+
+      expect(wrapper.vm.areDependenciesSatisfied).toEqual(false);
+    });
+
+    it('should render the option templates with the context', async () => {
+      mountingOptions.props.definition.inputSettings.optionLabel =
+        '{{ name }} ({{ item.id }})';
+      mountingOptions.props.definition.inputSettings.optionValue = '{{ id }}';
+      mountingOptions.props.definition.inputSettings.optionDisabled =
+        '{{ item.locked }}';
+      mountingOptions.props.context = {
+        item: { id: 'TEAM_42', locked: 'true' },
+      };
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [{ id: 'ROLE_1', name: 'Manager' }],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      wrapper.vm.allOptions = [];
+
+      await wrapper.vm.fetchPage();
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'Manager (TEAM_42)', value: 'ROLE_1', disable: true },
+      ]);
+    });
+
+    it('should let the element win over the context', async () => {
+      mountingOptions.props.definition.inputSettings.optionLabel = '{{ item }}';
+      mountingOptions.props.context = { item: 'from-context' };
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [{ item: 'from-element', value: 'v1' }],
+      });
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      wrapper.vm.allOptions = [];
+
+      await wrapper.vm.fetchPage();
+
+      expect(wrapper.vm.allOptions[0].label).toEqual('from-element');
+    });
+
+    it('should keep the entity available next to the context', async () => {
+      mountingOptions.props.definition.inputSettings.route =
+        '/api/{{ entity.name }}/{{ item.id }}';
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      expect(wrapper.vm.renderedRoute).toEqual('/api/entity-name/TEAM_42');
+    });
+
+    it('should keep the entity over a context variable named entity', () => {
+      mountingOptions.props.definition.inputSettings.route =
+        '/api/{{ entity.name }}';
+      mountingOptions.props.context = { entity: { name: 'from-context' } };
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+
+      expect(wrapper.vm.renderedRoute).toEqual('/api/entity-name');
+    });
+
+    it('should reload the options when the context changes the route', async () => {
+      mountingOptions.props.definition.inputSettings.route =
+        '/api/teams/{{ item.id }}/roles';
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+
+      await wrapper.setProps({ context: { item: { id: 'TEAM_43' } } });
+      await nextTick();
+
+      expect(mockGetDynamicListPage).toHaveBeenLastCalledWith(
+        '/api/teams/TEAM_43/roles',
+        expect.anything(),
+        expect.anything()
+      );
+    });
+  });
 });

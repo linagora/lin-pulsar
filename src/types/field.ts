@@ -376,6 +376,26 @@ export interface FieldDynamicListSettings extends FieldSettings {
 }
 
 /**
+ * Props of the dynamic list field: those of every attribute field, plus a context and an entity for
+ * its templates.
+ */
+export interface DynamicListFieldProps extends AttributeFieldProps<FieldDynamicListSettings> {
+  /**
+   * Variables merged into the Nunjucks context of the `route`, `routeDependencies`, `optionLabel`,
+   * `optionValue` and `optionDisabled` templates, next to `entity`, which a variable cannot hide
+   * (e.g. `{ item }` for a list repeated per item of a collection). A fetched element wins over them
+   * in the option templates.
+   */
+  context?: Record<string, unknown>;
+  /**
+   * Entity the templates read as `entity`, the edited `entity` by default: a field editing a copy
+   * holding only its value can keep the templates on the whole entity. It wins over a `context`
+   * variable named `entity`.
+   */
+  templateEntity?: Record<string, unknown>;
+}
+
+/**
  * Settings for fields selecting a node in a tree fetched from a backend endpoint.
  */
 export interface FieldTreeSettings extends FieldSettings {
