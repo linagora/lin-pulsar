@@ -26,6 +26,7 @@ action buttons, dialogs, and confirmation flows.
 | Prop name          | Type                                | Default    | Description                                                                                                                                                                       |
 | ------------------ | ----------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `columns`          | `QTableColumn[]`                    | —          | Columns of the table. Labels are translated through the component i18n scope                                                                                                      |
+| `defaultSort`      | `GenericTableDefaultSort`           | —          | Initial sort of the table, kept until the user sorts a column. Without it, no `sort` parameter is sent (see [Sorting](#sorting))                                                  |
 | `formFields`       | `LinPulsarAttributeConfiguration[]` | `[]`       | Form fields rendered in the creation and edition form dialogs (see `FormDialog`). Optional when `readOnly` is `true` or when neither `create` nor `update` endpoint is configured |
 | `editFormFields`   | `LinPulsarAttributeConfiguration[]` | —          | Form fields rendered in the edition form dialog instead of `formFields` when configured                                                                                           |
 | `updateBody`       | `Record<string, unknown>`           | `formData` | Nunjucks template replacing the update request body, rendered with `entity`, `item` and `formData`                                                                                |
@@ -176,8 +177,8 @@ See [Generic Pages](../../generic-pages.md) for how to register a component in a
   a missing identifier. A card configured without an `entity` prop loads its static endpoint as usual
 - The table is paginated on the server side through the lin-pulsar-core `usePagination` composable: each
   request sends the current page and sort converted by `toPagination` (10 rows per page by default,
-  sorted by `updateDate` descending until a sortable column is selected). Query parameters already
-  present in the `find` endpoint are preserved
+  sorted by `defaultSort` until a sortable column is selected, see [Sorting](#sorting)). Query
+  parameters already present in the `find` endpoint are preserved
 - The `find` endpoint must return a paginated response (`content`, `totalElements`, `number`, `size`),
   which drives the table pagination
 - Changing the page, the rows per page or the sort reloads the items; so does every successful
@@ -185,6 +186,28 @@ See [Generic Pages](../../generic-pages.md) for how to register a component in a
 - Events listed in `reloadOn` reload the items when they are emitted through the UI event subject,
   typically by a `FormDialogButton` hosted in another zone of the page
 - On failure, the items are cleared and a negative notification is displayed
+
+### Sorting
+
+- Columns marked as `sortable: true` can be sorted by clicking their header. The sort is sent as a single
+  `sort=<column>,<asc|desc>` query parameter, where `<column>` is the `name` of the sorted column
+- When no column is sorted, no `sort` parameter is sent and the backend applies its own default order
+- The `defaultSort` prop sorts the table from its first request, and shows the sorted column as such in the table
+  header. It is kept by the following requests (page change, `reloadOn`, creation, update and deletion) until the
+  user sorts a column:
+
+  ```ts
+  {
+    defaultSort: { sortBy: 'updateDate', descending: true },
+  }
+  ```
+
+- `sortBy` is sent as is as the sort column. The table header only shows it as sorted when it matches the
+  `name` of a column marked as `sortable: true`. `descending` is optional and defaults to `false` (ascending)
+- Once the user sorts a column, the selected sort replaces the default sort
+- When a click clears the sort, no `sort` parameter is sent: the default sort is only applied again when the card is
+  mounted again. A click on the column of the default sort continues its cycle from the default direction: with
+  `descending: true`, the first click on this column already clears the sort
 
 ### Add item
 
