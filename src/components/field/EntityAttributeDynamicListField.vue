@@ -46,6 +46,7 @@
     :rules="rules"
     :loading="isLoading"
     @virtual-scroll="onVirtualScroll"
+    @popup-show="onPopupShow"
     @update:model-value="updateValue"
   >
     <template
@@ -66,13 +67,30 @@
         </q-item-section>
       </q-item>
     </template>
+    <!-- While the first page waits for the opening or loads, the slot lets the empty list open; once
+         loaded, it says that the list is empty when the field has a noOption translation. -->
     <template
-      v-if="displayedError"
+      v-if="displayedError || isWaitingForOpening || isLoading || noOptionText"
       #no-option
     >
       <q-item>
-        <q-item-section class="text-negative">
+        <q-item-section
+          v-if="displayedError"
+          class="text-negative"
+        >
           {{ displayedError }}
+        </q-item-section>
+        <q-item-section
+          v-else-if="isWaitingForOpening || isLoading"
+          class="items-center"
+        >
+          <q-spinner />
+        </q-item-section>
+        <q-item-section
+          v-else
+          v-bind="uiProps.noOption"
+        >
+          {{ noOptionText }}
         </q-item-section>
       </q-item>
     </template>
@@ -147,6 +165,13 @@ let currentFetch: PagedFetch | null = null;
 let requestedRoute: string | null = null;
 /** The elements the options are rendered from, kept so they can be rendered again when the entity changes. */
 let loadedElements: DynamicListElement[] = [];
+/**
+ * Whether the first page waits for the list to be opened (`loadOnOpen`): true until the first opening, so that a form
+ * repeating the field does not send one request per field when it opens.
+ */
+const isWaitingForOpening = ref(
+  Boolean(props.definition.inputSettings?.loadOnOpen)
+);
 
 const pageSize = computed(() => props.definition.inputSettings?.size ?? 20);
 
@@ -282,6 +307,10 @@ const uiProps = {
   item: ui<LinPulsarQItemProps>(localUiNamespace, 'q-item'),
   section: ui<LinPulsarQItemSectionProps>(localUiNamespace, 'q-item-section'),
   label: ui<LinPulsarQItemLabelProps>(localUiNamespace, 'q-item-label'),
+  noOption: ui<LinPulsarQItemSectionProps>(
+    `${localUiNamespace}.no-option`,
+    'q-item-section'
+  ),
   /** A caption by default: the design configuration can still turn it into any other label style. */
   disabledCaption: {
     caption: true,
@@ -291,6 +320,9 @@ const uiProps = {
     ),
   },
 };
+
+/** The message of a loaded list without option, empty when the field has no `noOption` translation. */
+const noOptionText = computed(() => translateOrDefault('', 'noOption'));
 
 /** The caption of a disabled option, empty when the field has no `disabledText` translation. */
 const disabledText = computed(() => translateOrDefault('', 'disabledText'));
@@ -345,6 +377,19 @@ const isDisabled = computed(
     !areDependenciesSatisfied.value
 );
 
+/**
+ * Tells whether a list waiting for its opening loads at once: a disabled list is never opened, so it
+ * loads as soon as it holds preset values to label, whether at mount or once the entity is loaded.
+ * @returns True when the list must load without waiting for its opening.
+ */
+function isLoadedAtOnceWhileDisabled(): boolean {
+  return (
+    isWaitingForOpening.value &&
+    isDisabled.value &&
+    toValueList(localValue.value).length > 0
+  );
+}
+
 watch(
   () => getNestedValue(props.entity, props.definition.name),
   (newValue) => {
@@ -355,6 +400,10 @@ watch(
       presetValue = value;
     }
     localValue.value = value;
+    if (currentFetch && isLoadedAtOnceWhileDisabled()) {
+      isWaitingForOpening.value = false;
+      loadFirstPage(currentFetch);
+    }
   }
 );
 
@@ -383,11 +432,15 @@ watch(
     };
     currentFetch = pagedFetch;
 
-    await fetchPage();
-    if (isStale(pagedFetch) || error.value) {
+    if (isLoadedAtOnceWhileDisabled()) {
+      isWaitingForOpening.value = false;
+    }
+    if (isWaitingForOpening.value) {
+      // The preset values keep their placeholder until the list is opened and loaded.
+      ensurePresetValueInOptions();
       return;
     }
-    ensurePresetValueInOptions();
+    await loadFirstPage(pagedFetch);
   },
   { immediate: true }
 );
@@ -405,6 +458,40 @@ watch(
 // Leaving the page is one more way for a fetch to become useless: abort it instead of paying for a
 // response nobody will read.
 onBeforeUnmount(cancelFetch);
+
+/**
+ * Loads the first page of a fetch, then gives a placeholder to each preset value it does not hold.
+ * @param pagedFetch - The fetch to load, the current one.
+ */
+async function loadFirstPage(pagedFetch: PagedFetch) {
+  await fetchPage();
+  if (isStale(pagedFetch) || error.value) {
+    return;
+  }
+  ensurePresetValueInOptions();
+}
+
+/**
+ * Loads the first page when the list is opened for the first time, with `loadOnOpen`. Any later
+ * route change then loads at once, like without it. A first page that failed is requested again on
+ * each opening: without option, no scroll could request it.
+ */
+async function onPopupShow() {
+  const pagedFetch = currentFetch;
+  const hasFirstPageFailed =
+    pagedFetch !== null &&
+    pagedFetch.nextPage === 0 &&
+    !pagedFetch.hasPendingRequest &&
+    error.value !== null;
+
+  if (!isWaitingForOpening.value && !hasFirstPageFailed) {
+    return;
+  }
+  isWaitingForOpening.value = false;
+  if (pagedFetch) {
+    await loadFirstPage(pagedFetch);
+  }
+}
 
 /**
  * Whether a fetch was replaced while it was awaiting, which makes its outcome no longer applicable.

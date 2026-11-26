@@ -365,6 +365,15 @@ export interface FieldDynamicListSettings extends FieldSettings {
   multiple?: boolean;
 
   /**
+   * When `true`, the first page is requested when the list is opened for the first time instead of
+   * on mount, so that a form repeating the field does not send one request per field when it opens.
+   * The preset values keep a placeholder until then, and a later route change loads at once. A
+   * disabled list loads as soon as it holds preset values, since it is never opened.
+   * Read once, when the field is mounted. `false` by default.
+   */
+  loadOnOpen?: boolean;
+
+  /**
    * Controls uniqueness validation for this field.
    * - When `true`: uniqueness validation is enabled but no reference values are provided yet.
    *   The parent component or page **must** replace this boolean with the actual array of

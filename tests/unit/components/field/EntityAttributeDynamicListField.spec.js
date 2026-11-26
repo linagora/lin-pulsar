@@ -24,7 +24,8 @@
  * LinOpenFactory software.
  */
 
-import { flushPromises, shallowMount } from '@vue/test-utils';
+import { flushPromises, mount, shallowMount } from '@vue/test-utils';
+import { Quasar } from 'quasar';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
 import EntityAttributeDynamicListField from '../../../../src/components/field/EntityAttributeDynamicListField.vue';
@@ -2185,6 +2186,197 @@ describe('Test component: EntityAttributeDynamicListField', () => {
         expect.anything(),
         expect.anything()
       );
+    });
+  });
+
+  describe('Test setting: loadOnOpen', () => {
+    beforeEach(() => {
+      mountingOptions.props.definition.inputSettings.loadOnOpen = true;
+    });
+
+    it('should not request anything until the list is opened', async () => {
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+      await nextTick();
+
+      expect(mockGetDynamicListPage).not.toHaveBeenCalled();
+      expect(wrapper.vm.allOptions).toEqual([]);
+    });
+
+    it('should show a placeholder for each preset value before the list is opened', async () => {
+      mountingOptions.props.definition.inputSettings.multiple = true;
+      mountingOptions.props.entity.type = ['value1', 'value9'];
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+
+      expect(wrapper.vm.allOptions).toEqual([
+        { label: 'value9', value: 'value9' },
+        { label: 'value1', value: 'value1' },
+      ]);
+    });
+
+    it('should load the first page when the list is opened, then resolve the placeholders', async () => {
+      mountingOptions.props.entity.type = 'value2';
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+
+      await wrapper.vm.onPopupShow();
+
+      expect(mockGetDynamicListPage).toHaveBeenCalledTimes(1);
+      expect(mockGetDynamicListPage).toHaveBeenCalledWith(
+        '/api/types',
+        { page: 0, size: 10 },
+        expect.anything()
+      );
+      expect(wrapper.vm.allOptions).toEqual(mockPage.content);
+    });
+
+    it('should not load the first page again when the list is opened again', async () => {
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+
+      await wrapper.vm.onPopupShow();
+      await wrapper.vm.onPopupShow();
+
+      expect(mockGetDynamicListPage).toHaveBeenCalledTimes(1);
+    });
+
+    it('should load at once a route changed after the list was opened', async () => {
+      mountingOptions.props.definition.inputSettings.route =
+        '/api/{{ entity.name }}';
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+      await wrapper.vm.onPopupShow();
+
+      await wrapper.setProps({ entity: { name: 'other' } });
+      await nextTick();
+
+      expect(mockGetDynamicListPage).toHaveBeenLastCalledWith(
+        '/api/other',
+        { page: 0, size: 10 },
+        expect.anything()
+      );
+    });
+
+    it('should not load anything when opened while a dependency is empty', async () => {
+      mountingOptions.props.definition.inputSettings.routeDependencies = [
+        'entity.organizationId',
+      ];
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+
+      await wrapper.vm.onPopupShow();
+
+      expect(mockGetDynamicListPage).not.toHaveBeenCalled();
+    });
+
+    it('should open and load an empty list when it is clicked', async () => {
+      mountingOptions.props.definition.inputSettings.multiple = true;
+      wrapper = mount(EntityAttributeDynamicListField, {
+        ...mountingOptions,
+        attachTo: document.body,
+        global: { plugins: [[Quasar, {}]] },
+      });
+      await flushPromises();
+
+      await wrapper.find('.q-field__control').trigger('click');
+      await flushPromises();
+
+      expect(mockGetDynamicListPage).toHaveBeenCalledTimes(1);
+      wrapper.unmount();
+    });
+
+    it('should say that a loaded list is empty when it has a noOption translation', async () => {
+      mockTranslateOrDefault.mockImplementation((defaultValue, key) =>
+        key === 'noOption' ? 'No role for this team' : defaultValue
+      );
+      mockGetDynamicListPage.mockResolvedValue({
+        ...mockPage,
+        content: [],
+        last: true,
+      });
+      wrapper = mount(EntityAttributeDynamicListField, {
+        ...mountingOptions,
+        attachTo: document.body,
+        global: { plugins: [[Quasar, {}]] },
+      });
+      await flushPromises();
+
+      await wrapper.find('.q-field__control').trigger('click');
+      await flushPromises();
+
+      expect(document.body.textContent).toContain('No role for this team');
+      wrapper.unmount();
+    });
+
+    it('should load at once a disabled list holding preset values, since it is never opened', async () => {
+      mountingOptions.props.definition.inputSettings.disable = true;
+      mountingOptions.props.entity.type = 'value2';
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await flushPromises();
+
+      expect(mockGetDynamicListPage).toHaveBeenCalledTimes(1);
+      expect(wrapper.vm.allOptions).toEqual(mockPage.content);
+    });
+
+    it('should load a disabled list once its preset values arrive, such as an entity loaded after the form', async () => {
+      mountingOptions.props.definition.inputSettings.disable = true;
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await flushPromises();
+
+      await wrapper.setProps({
+        entity: { ...mountingOptions.props.entity, type: 'value2' },
+      });
+      await flushPromises();
+
+      expect(mockGetDynamicListPage).toHaveBeenCalledTimes(1);
+      expect(wrapper.vm.allOptions).toEqual(mockPage.content);
+    });
+
+    it('should not load a disabled list without preset value', async () => {
+      mountingOptions.props.definition.inputSettings.disable = true;
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await flushPromises();
+
+      expect(mockGetDynamicListPage).not.toHaveBeenCalled();
+    });
+
+    it('should request a failed first page again when the list is opened again', async () => {
+      mockGetDynamicListPage.mockRejectedValueOnce(new Error('network'));
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+
+      await wrapper.vm.onPopupShow();
+      expect(wrapper.vm.error).toBe('validation.dynamicList.fetchError');
+
+      await wrapper.vm.onPopupShow();
+
+      expect(mockGetDynamicListPage).toHaveBeenCalledTimes(2);
+      expect(wrapper.vm.error).toBeNull();
+      expect(wrapper.vm.allOptions).toEqual(mockPage.content);
+    });
+
+    it('should request a failed first page again on opening without loadOnOpen', async () => {
+      delete mountingOptions.props.definition.inputSettings.loadOnOpen;
+      mockGetDynamicListPage.mockRejectedValueOnce(new Error('network'));
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await flushPromises();
+
+      await wrapper.vm.onPopupShow();
+
+      expect(mockGetDynamicListPage).toHaveBeenCalledTimes(2);
+      expect(wrapper.vm.allOptions).toEqual(mockPage.content);
+    });
+
+    it('should load on mount without loadOnOpen, and ignore the opening', async () => {
+      delete mountingOptions.props.definition.inputSettings.loadOnOpen;
+      wrapper = shallowMount(EntityAttributeDynamicListField, mountingOptions);
+      await nextTick();
+      await nextTick();
+
+      await wrapper.vm.onPopupShow();
+
+      expect(mockGetDynamicListPage).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -1272,7 +1272,8 @@ disabled through `inputSettings.optionDisabled`; the caption itself is styled by
       "q-item-label": {},
       "disabled-caption": {
         "q-item-label": { "caption": true, "class": "text-negative" }
-      }
+      },
+      "no-option": { "q-item-section": {} }
     }
   }
 }

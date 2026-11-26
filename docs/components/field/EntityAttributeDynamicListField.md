@@ -25,6 +25,8 @@ Unlike `EntityAttributeListField`, which uses a static predefined list, this com
 - Optionally disables individual options through the `optionDisabled` Nunjucks template, keeping them listed but unselectable, with a translated caption explaining why; the options follow the entity changes, and the ones the entity was given are never disabled
 - Displays **labels** in the dropdown while storing only **values** in the entity
 - Optionally selects several options with `multiple`, shown as chips and stored as an array of values
+- Optionally defers the first page to the first opening of the list with `loadOnOpen`, the preset values showing a placeholder until then; a disabled list holding preset values loads at once, since it is never opened
+- Requests a failed first page again when the list is opened again
 - Loads additional pages on virtual scroll (infinite scrolling pattern)
 - Resolves pre-filled entity values to their corresponding label via Quasar's `map-options`
 - Synchronizes the selected value with the entity model
@@ -144,6 +146,15 @@ export interface FieldDynamicListSettings extends FieldSettings {
   multiple?: boolean;
 
   /**
+   * When `true`, the first page is requested when the list is opened for the first time instead of
+   * on mount, so that a form repeating the field does not send one request per field when it opens.
+   * The preset values keep a placeholder until then, and a later route change loads at once. A
+   * disabled list loads as soon as it holds preset values, since it is never opened.
+   * Read once, when the field is mounted. `false` by default.
+   */
+  loadOnOpen?: boolean;
+
+  /**
    * Controls uniqueness validation for this field.
    * - When `true`: uniqueness validation is enabled but no reference values are provided yet.
    *   The parent component or page **must** replace this boolean with the actual array of
@@ -189,15 +200,18 @@ The component uses `useScopedI18n` to resolve translations for multiple UI text 
 
 ### Supported Translation Keys
 
-| Key            | Usage in UI                                  |
-| -------------- | -------------------------------------------- |
-| `label`        | Select label                                 |
-| `hint`         | Helper text                                  |
-| `prefix`       | Input prefix                                 |
-| `suffix`       | Input suffix                                 |
-| `disabledText` | Caption displayed under each disabled option |
+| Key            | Usage in UI                                            |
+| -------------- | ------------------------------------------------------ |
+| `label`        | Select label                                           |
+| `hint`         | Helper text                                            |
+| `prefix`       | Input prefix                                           |
+| `suffix`       | Input suffix                                           |
+| `disabledText` | Caption displayed under each disabled option           |
+| `noOption`     | Message displayed when the loaded list holds no option |
 
 `disabledText` is specific to this field: it only applies to the options `optionDisabled` disabled — see _Disabled Options_.
+
+`noOption` is also specific to this field: without it, a loaded list without option does not open, as in Quasar.
 
 ### Error Translation Keys
 
@@ -244,6 +258,7 @@ UI customization is handled via the `lin-pulsar-core` design system using `useUi
 | _(none)_           | `q-item-section` | `LinPulsarQItemSectionProps` | The section holding the option label and caption          |
 | _(none)_           | `q-item-label`   | `LinPulsarQItemLabelProps`   | The option label                                          |
 | `disabled-caption` | `q-item-label`   | `LinPulsarQItemLabelProps`   | The `disabledText` caption of each disabled option        |
+| `no-option`        | `q-item-section` | `LinPulsarQItemSectionProps` | The `noOption` message of a loaded list without option    |
 
 The option elements are only rendered when the field has a `disabledText` translation: without it, Quasar renders the options itself and these keys have no effect. The props Quasar computes for an option (`clickable`, `active`, `disable`, `focused`...) win over the `q-item` design entry.
 
@@ -365,8 +380,8 @@ The attribute `name` supports **dot notation** to target values located inside s
    - `null` (fallback if no entity value exists)
    - with `multiple`, an array of those values instead, `[]` when the entity holds none
 
-2. The `route` template is rendered against the entity; as soon as it resolves **and** every declared `routeDependencies` value is non-empty, the first page of `{ label, value }` elements is fetched from the backend
-3. After the **first page** of each load, each preset value missing from the options gets a placeholder entry `{ label: value, value: value }` — unless that page failed, in which case the list stays empty so the error remains visible
+2. The `route` template is rendered against the entity; as soon as it resolves **and** every declared `routeDependencies` value is non-empty, the first page of `{ label, value }` elements is fetched from the backend — with `loadOnOpen`, only when the list is opened for the first time, each preset value showing a placeholder until then
+3. After the **first page** of each load, each preset value missing from the options gets a placeholder entry `{ label: value, value: value }` — unless that page failed, in which case the list stays empty so the error remains visible, and the page is requested again at the next opening
 4. User scrolls through the dropdown → next page is fetched and appended; once the real option matching a preset value is loaded, its placeholder is automatically removed
 5. Quasar's `map-options` resolves the stored value string to its corresponding label for display
 6. User selects an element from the dropdown → `emit-value` ensures only the `value` string is stored
@@ -424,6 +439,7 @@ const error = ref<string | null>(null);
 
 - `isLoading`: `true` while a page fetch is in progress; shows a loading spinner in the `q-select`
 - `error`: the failure of the last request. A missing `route` is reported separately — see _Error Translation Keys_ — and the `#no-option` slot displays whichever of the two applies
+- While the first page waits for the opening (`loadOnOpen`) or loads, the `#no-option` slot shows a spinner: an empty list can therefore open, which is what starts the load with `loadOnOpen`
 
 ### Route Resolution
 
