@@ -221,6 +221,12 @@ import type {
   ModuleGenericTablePageOptions,
 } from '../types/ModuleGenericTablePageOptions';
 
+/**
+ * Default value of the `dateFormat` query parameter, matching the values built by the date filter
+ * panel with its default mask.
+ */
+const DEFAULT_DATE_FORMAT = 'yyyy/MM/dd HH:mm:ss';
+
 const router = useRouter();
 const route = useRoute();
 const apiEndpointContext = useApiEndpointContext();
@@ -360,15 +366,19 @@ function onFiltersChange(newFilters: LinPulsarFilter[]): Promise<void> {
 /**
  * Converts the active filters into a query filter object, ready to be sent
  * to the entities API.
+ *
+ * The `dateFormat` parameter, telling the backend how to parse the values of the date filters, is
+ * added only when at least one active filter is of type `date`.
  * @returns A query filter built from the active filters.
  */
 function toQueryFilter(): QueryFilter {
-  return {
-    ...Object.fromEntries(
-      filters.value.map((filter) => [filter.name, filter.toString()])
-    ),
-    dateFormat: 'yyyy/MM/dd HH:mm:ss',
-  };
+  const queryFilter: QueryFilter = Object.fromEntries(
+    filters.value.map((filter) => [filter.name, filter.toString()])
+  );
+  if (filters.value.some((filter) => filter.type === 'date')) {
+    queryFilter.dateFormat = DEFAULT_DATE_FORMAT;
+  }
+  return queryFilter;
 }
 
 /**

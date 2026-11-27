@@ -425,7 +425,7 @@ describe('Test component: GenericTablePage', () => {
       expect(getEntities).toHaveBeenCalledTimes(1);
       expect(getEntities).toHaveBeenCalledWith(
         'test-instance-id',
-        { dateFormat: 'yyyy/MM/dd HH:mm:ss' },
+        {},
         paginationEvent.pagination,
         mockApiEndpointContext
       );
@@ -455,7 +455,28 @@ describe('Test component: GenericTablePage', () => {
       expect(mockSetFiltersInUrl).toHaveBeenCalledWith(newFilters, []);
       expect(getEntities).toHaveBeenCalledWith(
         'test-instance-id',
-        { name: 'paris', dateFormat: 'yyyy/MM/dd HH:mm:ss' },
+        { name: 'paris' },
+        expect.objectContaining({ page: 1 }),
+        mockApiEndpointContext
+      );
+    });
+
+    it('should send the date format when a date filter is applied', async () => {
+      vi.clearAllMocks();
+      const newFilters = [
+        new MockLinPulsarFilter('createdAt', 'date', {}, [
+          '2026/11/25 00:00:00_bt_2026/11/25 23:59:59',
+        ]),
+      ];
+
+      await wrapper.vm.onFiltersChange(newFilters);
+
+      expect(getEntities).toHaveBeenCalledWith(
+        'test-instance-id',
+        {
+          createdAt: '2026/11/25 00:00:00_bt_2026/11/25 23:59:59',
+          dateFormat: 'yyyy/MM/dd HH:mm:ss',
+        },
         expect.objectContaining({ page: 1 }),
         mockApiEndpointContext
       );
@@ -517,16 +538,52 @@ describe('Test component: GenericTablePage', () => {
         new MockLinPulsarFilter('name', 'text', {}, ['paris', 'lyon']),
       ];
 
-      expect(wrapper.vm.toQueryFilter()).toEqual({
+      expect(wrapper.vm.toQueryFilter()).toStrictEqual({
         name: 'paris|lyon',
-        dateFormat: 'yyyy/MM/dd HH:mm:ss',
       });
     });
 
     it('should return an empty object when there are no active filters', () => {
       wrapper.vm.filters = [];
 
-      expect(wrapper.vm.toQueryFilter()).toEqual({
+      expect(wrapper.vm.toQueryFilter()).toStrictEqual({});
+    });
+
+    it.each(['text', 'number', 'list', 'tree'])(
+      'should not send the date format when only a %s filter is active',
+      (type) => {
+        wrapper.vm.filters = [
+          new MockLinPulsarFilter('field', type, {}, ['1']),
+        ];
+
+        expect(wrapper.vm.toQueryFilter()).toStrictEqual({ field: '1' });
+      }
+    );
+
+    it('should send the default date format when a date filter is active', () => {
+      wrapper.vm.filters = [
+        new MockLinPulsarFilter('createdAt', 'date', {}, [
+          '2026/11/25 00:00:00',
+        ]),
+      ];
+
+      expect(wrapper.vm.toQueryFilter()).toStrictEqual({
+        createdAt: '2026/11/25 00:00:00',
+        dateFormat: 'yyyy/MM/dd HH:mm:ss',
+      });
+    });
+
+    it('should send the date format along with the other active filters', () => {
+      wrapper.vm.filters = [
+        new MockLinPulsarFilter('name', 'text', {}, ['paris']),
+        new MockLinPulsarFilter('createdAt', 'date', {}, [
+          '2026/11/25 00:00:00',
+        ]),
+      ];
+
+      expect(wrapper.vm.toQueryFilter()).toStrictEqual({
+        name: 'paris',
+        createdAt: '2026/11/25 00:00:00',
         dateFormat: 'yyyy/MM/dd HH:mm:ss',
       });
     });
