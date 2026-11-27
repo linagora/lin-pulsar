@@ -35,6 +35,12 @@ The header contains two toolbars:
 ### **Page Container**
 
 - Uses `router-view` to render module-specific content dynamically
+- Mounts the page again whenever the path of its route changes: a module declares one page, whose path only changes
+  with its parameters, such as the identifier of a details page or the parent of a nested resource. A link to another
+  entity of the same module therefore renders a fresh page, its zones included. A change of the query string keeps the
+  page
+- A page declaring its own child routes is mounted again on every navigation between them, since each one changes the
+  path: such a page keeps its state outside of the component, in a store or in the query string
 
 ### **Zone Renderer**
 

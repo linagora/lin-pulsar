@@ -217,6 +217,24 @@ describe('Test component: GenericEditionPage', () => {
 
       expect(wrapper.vm.isLoading).toBe(false);
     });
+
+    it('should neither notify nor navigate when the load fails after the page is left', async () => {
+      let rejectLoad;
+      vi.mocked(getEntityById).mockReturnValueOnce(
+        new Promise((_, reject) => {
+          rejectLoad = reject;
+        })
+      );
+      const page = mountPage();
+      vi.clearAllMocks();
+
+      page.unmount();
+      rejectLoad(new Error('load error'));
+      await flushPromises();
+
+      expect(mockNotify).not.toHaveBeenCalled();
+      expect(mockRouterPush).not.toHaveBeenCalled();
+    });
   });
 
   describe('Test function: save', () => {

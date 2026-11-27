@@ -105,9 +105,12 @@ JSON only:
 
 - On page mount (`onMounted`), the entity is automatically fetched with `getEntityById(instanceId, entityId, apiEndpointContext)`.
 - The entity identifier comes from the `:id` route parameter.
+- A link to another entity of the same module mounts the page again (see [BaseLayout](../layouts/BaseLayout.md)), which
+  fetches the new entity.
 - The endpoint URL is resolved from the module configuration file (`apiEndpoint`), rendered with the route of the page
   when it is templated (see [Nested Resources](../generic-pages.md#-nested-resources)).
-- On failure, a negative notification (`{instanceId}.error`) is displayed and the user is navigated back.
+- On failure, a negative notification (`{instanceId}.error`) is displayed and the user is navigated back, unless the
+  page was left meanwhile.
 - When `reloadDetailsOn` is configured, the entity is reloaded every time a UI event with one of the configured keys is emitted.
 
 ---

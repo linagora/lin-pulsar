@@ -104,6 +104,7 @@ When the page is mounted:
 
    - A negative notification (`{instanceId}.error`) is displayed.
    - The user is redirected to the parent route.
+   - Neither happens when the page was left meanwhile.
 
 ---
 
