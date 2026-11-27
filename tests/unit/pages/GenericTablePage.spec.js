@@ -587,6 +587,35 @@ describe('Test component: GenericTablePage', () => {
         dateFormat: 'yyyy/MM/dd HH:mm:ss',
       });
     });
+
+    it('should send the configured date format when a date filter is active', () => {
+      mockModuleOptions.dateFormat = 'dd/MM/yyyy HH:mm:ss';
+      wrapper = shallowMount(GenericTablePage, {
+        global: { stubs: ['GenericEntityTable'] },
+      });
+      wrapper.vm.filters = [
+        new MockLinPulsarFilter('createdAt', 'date', {}, [
+          '25/11/2026 00:00:00',
+        ]),
+      ];
+
+      expect(wrapper.vm.toQueryFilter()).toStrictEqual({
+        createdAt: '25/11/2026 00:00:00',
+        dateFormat: 'dd/MM/yyyy HH:mm:ss',
+      });
+    });
+
+    it('should not send the configured date format when no date filter is active', () => {
+      mockModuleOptions.dateFormat = 'dd/MM/yyyy HH:mm:ss';
+      wrapper = shallowMount(GenericTablePage, {
+        global: { stubs: ['GenericEntityTable'] },
+      });
+      wrapper.vm.filters = [
+        new MockLinPulsarFilter('name', 'text', {}, ['paris']),
+      ];
+
+      expect(wrapper.vm.toQueryFilter()).toStrictEqual({ name: 'paris' });
+    });
   });
 
   describe('Test constant: filters', () => {

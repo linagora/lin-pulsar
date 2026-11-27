@@ -368,7 +368,8 @@ function onFiltersChange(newFilters: LinPulsarFilter[]): Promise<void> {
  * to the entities API.
  *
  * The `dateFormat` parameter, telling the backend how to parse the values of the date filters, is
- * added only when at least one active filter is of type `date`.
+ * added only when at least one active filter is of type `date`. Its value is `options.dateFormat`,
+ * or {@link DEFAULT_DATE_FORMAT} when the option is not configured.
  * @returns A query filter built from the active filters.
  */
 function toQueryFilter(): QueryFilter {
@@ -376,7 +377,7 @@ function toQueryFilter(): QueryFilter {
     filters.value.map((filter) => [filter.name, filter.toString()])
   );
   if (filters.value.some((filter) => filter.type === 'date')) {
-    queryFilter.dateFormat = DEFAULT_DATE_FORMAT;
+    queryFilter.dateFormat = options.value.dateFormat ?? DEFAULT_DATE_FORMAT;
   }
   return queryFilter;
 }

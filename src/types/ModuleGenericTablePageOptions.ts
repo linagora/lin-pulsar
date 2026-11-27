@@ -117,6 +117,17 @@ export interface ModuleGenericTablePageOptions extends ModulePageOptions {
   filters?: LinPulsarFilter[];
 
   /**
+   * Pattern of the `dateFormat` query parameter, telling the backend how to parse the values of the
+   * active `date` filters. It is sent only when at least one active filter is of type `date`.
+   *
+   * It must match the `mask` (or the translated `maskI18NKey`) of the date filters followed by
+   * ` HH:mm:ss`, in the date pattern syntax of the backend (e.g. `dd/MM/yyyy HH:mm:ss` for a
+   * `DD/MM/YYYY` mask). Defaults to `yyyy/MM/dd HH:mm:ss`, which matches the default mask of the
+   * date filter panel.
+   */
+  dateFormat?: string;
+
+  /**
    * UI event keys triggering a reload of the table data.
    *
    * When an event with one of these keys is emitted on the UI event bus, the page reloads the
