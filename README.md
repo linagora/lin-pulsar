@@ -183,8 +183,11 @@ The library organizes components by category. For each component, documentation 
 - 📋 **EntityAttributeListField** — Single-selection dropdown for list attributes with predefined values
   → Documentation is inside: [`EntityAttributeListField.md`](./docs/components/field/EntityAttributeListField.md)
 
-- 📋 **EntityAttributeDynamicListField** — Single-selection dropdown for dynamic list attributes with lazy loading from a backend endpoint
+- 📋 **EntityAttributeDynamicListField** — Single or multiple selection dropdown for dynamic list attributes with lazy loading from a backend endpoint
   → Documentation is inside: [`EntityAttributeDynamicListField.md`](./docs/components/field/EntityAttributeDynamicListField.md)
+
+- 🗂️ **EntityAttributeGroupedDynamicListField** — One multi-select dynamic list per item of a collection of the entity, such as the roles of each team
+  → Documentation is inside: [`EntityAttributeGroupedDynamicListField.md`](./docs/components/field/EntityAttributeGroupedDynamicListField.md)
 
 - 📧 **EntityAttributeEmailField** — Email attribute input with format validation and scoped translations
   → Documentation is inside: [`EntityAttributeEmailField.md`](./docs/components/field/EntityAttributeEmailField.md)

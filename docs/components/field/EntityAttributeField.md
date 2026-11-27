@@ -4,7 +4,7 @@ The **EntityAttributeField** component is a dynamic field renderer responsible f
 attribute of an entity based on its definition.
 
 It acts as a **dispatcher component** that selects and loads the appropriate attribute field implementation
-(Boolean, Number, Text, TextArea, Date, List, DynamicList, Email, File, Tree, etc.) and propagates entity updates upward.
+(Boolean, Number, Text, TextArea, Date, List, DynamicList, Email, File, Tree, GroupedDynamicList, etc.) and propagates entity updates upward.
 
 ---
 
@@ -89,18 +89,19 @@ interface EntityAttributeFieldOutputs {
 The component determines which field component to render based on
 `definition.input`:
 
-| Input Type    | Loaded Component                  |
-| ------------- | --------------------------------- |
-| `Boolean`     | `EntityAttributeBooleanField`     |
-| `Number`      | `EntityAttributeNumberField`      |
-| `Text`        | `EntityAttributeTextField`        |
-| `Date`        | `EntityAttributeDateField`        |
-| `List`        | `EntityAttributeListField`        |
-| `DynamicList` | `EntityAttributeDynamicListField` |
-| `TextArea`    | `EntityAttributeTextAreaField`    |
-| `Email`       | `EntityAttributeEmailField`       |
-| `File`        | `EntityAttributeFileField`        |
-| `Tree`        | `EntityAttributeTreeField`        |
+| Input Type           | Loaded Component                         |
+| -------------------- | ---------------------------------------- |
+| `Boolean`            | `EntityAttributeBooleanField`            |
+| `Number`             | `EntityAttributeNumberField`             |
+| `Text`               | `EntityAttributeTextField`               |
+| `Date`               | `EntityAttributeDateField`               |
+| `List`               | `EntityAttributeListField`               |
+| `DynamicList`        | `EntityAttributeDynamicListField`        |
+| `TextArea`           | `EntityAttributeTextAreaField`           |
+| `Email`              | `EntityAttributeEmailField`              |
+| `File`               | `EntityAttributeFileField`               |
+| `Tree`               | `EntityAttributeTreeField`               |
+| `GroupedDynamicList` | `EntityAttributeGroupedDynamicListField` |
 
 Components are **lazy-loaded** using `defineAsyncComponent` to reduce initial
 bundle size.
@@ -173,7 +174,7 @@ With the entity:
 }
 ```
 
-All field types (`Text`, `Number`, `Boolean`, `Date`, `List`, `DynamicList`, `TextArea`, `Email`, `File`, `Tree`) support nested attributes:
+All field types (`Text`, `Number`, `Boolean`, `Date`, `List`, `DynamicList`, `TextArea`, `Email`, `File`, `Tree`, `GroupedDynamicList`) support nested attributes:
 
 - The initial value is read from the nested path
 - Updating the value rewrites only the targeted nested property, preserving the rest of the entity structure

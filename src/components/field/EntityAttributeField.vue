@@ -74,6 +74,9 @@ const fieldTypes: Record<string, Component> = {
   Email: defineAsyncComponent(() => import('./EntityAttributeEmailField.vue')),
   File: defineAsyncComponent(() => import('./EntityAttributeFileField.vue')),
   Tree: defineAsyncComponent(() => import('./EntityAttributeTreeField.vue')),
+  GroupedDynamicList: defineAsyncComponent(
+    () => import('./EntityAttributeGroupedDynamicListField.vue')
+  ),
 };
 
 const field = computed<Component | undefined>(

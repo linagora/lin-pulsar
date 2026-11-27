@@ -20,9 +20,13 @@ Unlike `EntityAttributeListField`, which uses a static predefined list, this com
 - Drops the current selection on a route change, so a value picked under a previous scope is never carried over into the new list
 - Disables the field and holds the route back while a value declared in `routeDependencies` is still empty, and loads the options as soon as they all hold a value
 - Suspends a load it cannot perform instead of abandoning it, so restoring the value resumes the list where it stopped
-- Optionally maps elements of any paginated entity endpoint to options through the `optionLabel` and `optionValue` Nunjucks templates, rendered with the element and the edited entity
-- Optionally disables individual options through the `optionDisabled` Nunjucks template, keeping them listed but unselectable, with a translated caption explaining why; the options follow the entity changes, and the one the entity was given is never disabled
+- Optionally maps elements of any paginated entity endpoint to options through the `optionLabel` and `optionValue` Nunjucks templates, rendered with the element, the edited entity and the `context` prop
+- Accepts a `context` prop whose variables join `entity` in every template, so that a list repeated per item of a collection can depend on its item (`/api/teams/{{ item.id | urlencode }}/roles`)
+- Optionally disables individual options through the `optionDisabled` Nunjucks template, keeping them listed but unselectable, with a translated caption explaining why; the options follow the entity changes, and the ones the entity was given are never disabled
 - Displays **labels** in the dropdown while storing only **values** in the entity
+- Optionally selects several options with `multiple`, shown as chips and stored as an array of values
+- Optionally defers the first page to the first opening of the list with `loadOnOpen`, the preset values showing a placeholder until then; a disabled list holding preset values loads at once, since it is never opened
+- Requests a failed first page again when the list is opened again
 - Loads additional pages on virtual scroll (infinite scrolling pattern)
 - Resolves pre-filled entity values to their corresponding label via Quasar's `map-options`
 - Synchronizes the selected value with the entity model
@@ -36,16 +40,18 @@ Unlike `EntityAttributeListField`, which uses a static predefined list, this com
 
 ## **⚙️ Props**
 
-The component uses the shared `AttributeFieldProps` interface with `FieldDynamicListSettings`.
+The component uses `DynamicListFieldProps`: the shared `AttributeFieldProps` interface with `FieldDynamicListSettings`, plus an optional `context` and `templateEntity`.
 
-| Prop          | Type                                                        | Required | Description                                                                  |
-| ------------- | ----------------------------------------------------------- | -------- | ---------------------------------------------------------------------------- |
-| `instanceId`  | `string`                                                    | Yes      | Identifier used for contextual data                                          |
-| `i18nScope`   | `string`                                                    | Yes      | I18n scope for localizing the component                                      |
-| `uiNamespace` | `string`                                                    | Yes      | Base UI design namespace for styling                                         |
-| `definition`  | `LinPulsarAttributeConfiguration<FieldDynamicListSettings>` | Yes      | Attribute definition (name, type, input configuration)                       |
-| `entity`      | `Record<string, unknown>`                                   | Yes      | Entity object containing the dynamic list attribute value                    |
-| `ignoreRules` | `boolean`                                                   | No       | Indicates whether to bypass validation rules for this field (default: false) |
+| Prop             | Type                                                        | Required | Description                                                                                                                                                  |
+| ---------------- | ----------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `instanceId`     | `string`                                                    | Yes      | Identifier used for contextual data                                                                                                                          |
+| `i18nScope`      | `string`                                                    | Yes      | I18n scope for localizing the component                                                                                                                      |
+| `uiNamespace`    | `string`                                                    | Yes      | Base UI design namespace for styling                                                                                                                         |
+| `definition`     | `LinPulsarAttributeConfiguration<FieldDynamicListSettings>` | Yes      | Attribute definition (name, type, input configuration)                                                                                                       |
+| `entity`         | `Record<string, unknown>`                                   | Yes      | Entity object containing the dynamic list attribute value                                                                                                    |
+| `ignoreRules`    | `boolean`                                                   | No       | Indicates whether to bypass validation rules for this field (default: false)                                                                                 |
+| `context`        | `Record<string, unknown>`                                   | No       | Variables merged into the Nunjucks context of the route, dependency and option templates, next to `entity`, which a variable cannot hide (default: `{}`)     |
+| `templateEntity` | `Record<string, unknown>`                                   | No       | Entity the templates read as `entity`, the edited `entity` by default: a field editing a copy holding only its value keeps its templates on the whole entity |
 
 ### AttributeFieldProps Interface
 
@@ -118,7 +124,8 @@ export interface FieldDynamicListSettings extends FieldSettings {
    * Nunjucks template rendered with each fetched element as context, the edited entity being
    * available as `entity`, to build the option value (e.g. "{{ id }}"). When omitted, the element
    * `value` property is used. The rendered value is a string: an entity value given as a number,
-   * such as an integer identifier, is read as a string to match its option.
+   * such as an integer identifier, is read as a string to match its option, and emitted back as a
+   * number, like a number a template made of a single lookup (`{{ id }}`) renders.
    */
   optionValue?: string;
 
@@ -126,10 +133,26 @@ export interface FieldDynamicListSettings extends FieldSettings {
    * Nunjucks template rendered with each fetched element as context, the edited entity being
    * available as `entity` (e.g. "{{ disabled }}" or "{{ hasItem(entity.members, 'id', id) }}").
    * The option is disabled only when it renders to `true`: it stays listed but cannot be selected.
-   * The options are rendered again whenever the entity changes, and the option holding the value
-   * the entity was given is never disabled, so it can always be picked again.
+   * The options are rendered again whenever the entity changes, and the options holding the values
+   * the entity was given are never disabled, so they can always be picked again.
    */
   optionDisabled?: string;
+
+  /**
+   * When `true`, several options can be selected, shown as chips: the value is an array of option
+   * values, an empty array when nothing is selected, and every value the entity was given keeps its
+   * option enabled. `false` by default.
+   */
+  multiple?: boolean;
+
+  /**
+   * When `true`, the first page is requested when the list is opened for the first time instead of
+   * on mount, so that a form repeating the field does not send one request per field when it opens.
+   * The preset values keep a placeholder until then, and a later route change loads at once. A
+   * disabled list loads as soon as it holds preset values, since it is never opened.
+   * Read once, when the field is mounted. `false` by default.
+   */
+  loadOnOpen?: boolean;
 
   /**
    * Controls uniqueness validation for this field.
@@ -177,15 +200,18 @@ The component uses `useScopedI18n` to resolve translations for multiple UI text 
 
 ### Supported Translation Keys
 
-| Key            | Usage in UI                                  |
-| -------------- | -------------------------------------------- |
-| `label`        | Select label                                 |
-| `hint`         | Helper text                                  |
-| `prefix`       | Input prefix                                 |
-| `suffix`       | Input suffix                                 |
-| `disabledText` | Caption displayed under each disabled option |
+| Key            | Usage in UI                                            |
+| -------------- | ------------------------------------------------------ |
+| `label`        | Select label                                           |
+| `hint`         | Helper text                                            |
+| `prefix`       | Input prefix                                           |
+| `suffix`       | Input suffix                                           |
+| `disabledText` | Caption displayed under each disabled option           |
+| `noOption`     | Message displayed when the loaded list holds no option |
 
 `disabledText` is specific to this field: it only applies to the options `optionDisabled` disabled — see _Disabled Options_.
+
+`noOption` is also specific to this field: without it, a loaded list without option does not open, as in Quasar.
 
 ### Error Translation Keys
 
@@ -232,6 +258,7 @@ UI customization is handled via the `lin-pulsar-core` design system using `useUi
 | _(none)_           | `q-item-section` | `LinPulsarQItemSectionProps` | The section holding the option label and caption          |
 | _(none)_           | `q-item-label`   | `LinPulsarQItemLabelProps`   | The option label                                          |
 | `disabled-caption` | `q-item-label`   | `LinPulsarQItemLabelProps`   | The `disabledText` caption of each disabled option        |
+| `no-option`        | `q-item-section` | `LinPulsarQItemSectionProps` | The `noOption` message of a loaded list without option    |
 
 The option elements are only rendered when the field has a `disabledText` translation: without it, Quasar renders the options itself and these keys have no effect. The props Quasar computes for an option (`clickable`, `active`, `disable`, `focused`...) win over the `q-item` design entry.
 
@@ -271,7 +298,7 @@ The validation rules are executed in a specific order to ensure proper validatio
 1. **Required validation** (if applicable)
    - Depends on the `definition.required` property
    - If `definition.required` is `true`, this validation is automatically added as the **first rule** in the validation chain
-   - Ensures that a value is selected before proceeding to other validations
+   - Ensures that a value is selected before proceeding to other validations; with `multiple`, an empty array is missing (from lin-pulsar-core 0.1.11)
 
 2. **Specific validation rules** (in order)
    - The rules specified in the `useQuasarRules` parameters (`['unique']` for dynamic list fields)
@@ -286,11 +313,11 @@ The validation rules are executed in a specific order to ensure proper validatio
 
 ### Supported Validation Types
 
-| Setting       | Description                                                                          | Example             |
-| ------------- | ------------------------------------------------------------------------------------ | ------------------- |
-| `required`    | Marks the field as mandatory. Setting comes from the `definition.required` property. | `required: true`    |
-| `unique`      | Enforces that the selected value is unique among a list of existing values           | `unique: true`      |
-| `ignoreRules` | Bypass validation when set to `true`                                                 | `ignoreRules: true` |
+| Setting       | Description                                                                                                                                  | Example             |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| `required`    | Marks the field as mandatory. Setting comes from the `definition.required` property.                                                         | `required: true`    |
+| `unique`      | Enforces that the selected value is unique among a list of existing values; with `multiple`, the whole selection is compared to each of them | `unique: true`      |
+| `ignoreRules` | Bypass validation when set to `true`                                                                                                         | `ignoreRules: true` |
 
 ### Unique Rule — Parent Responsibility
 
@@ -351,14 +378,16 @@ The attribute `name` supports **dot notation** to target values located inside s
    - the entity value at `definition.name` (existing value string in entity, a number such as an integer identifier
      being read as a string, like the option values)
    - `null` (fallback if no entity value exists)
+   - with `multiple`, an array of those values instead, `[]` when the entity holds none
 
-2. The `route` template is rendered against the entity; as soon as it resolves **and** every declared `routeDependencies` value is non-empty, the first page of `{ label, value }` elements is fetched from the backend
-3. After the **first page** of each load, a preset value missing from the options gets a placeholder entry `{ label: value, value: value }` — unless that page failed, in which case the list stays empty so the error remains visible
-4. User scrolls through the dropdown → next page is fetched and appended; if the real option matching the preset value is loaded, the placeholder is automatically removed
+2. The `route` template is rendered against the entity; as soon as it resolves **and** every declared `routeDependencies` value is non-empty, the first page of `{ label, value }` elements is fetched from the backend — with `loadOnOpen`, only when the list is opened for the first time, each preset value showing a placeholder until then
+3. After the **first page** of each load, each preset value missing from the options gets a placeholder entry `{ label: value, value: value }` — unless that page failed, in which case the list stays empty so the error remains visible, and the page is requested again at the next opening
+4. User scrolls through the dropdown → next page is fetched and appended; once the real option matching a preset value is loaded, its placeholder is automatically removed
 5. Quasar's `map-options` resolves the stored value string to its corresponding label for display
 6. User selects an element from the dropdown → `emit-value` ensures only the `value` string is stored
-7. `localValue` is updated via `v-model` (always a string)
-8. `updateValue()` emits `update:entity` with a new entity object
+7. `localValue` is updated via `v-model` (a string, or an array of strings with `multiple`)
+8. `updateValue()` emits `update:entity` with a new entity object, each value read from a number (an entity value or
+   a fetched element `value`) being emitted as a number again
 9. If the updated entity changes a value the route template depends on, the **selection is dropped** — a value picked from the previous route does not belong to the new one — and the options are discarded and refetched from page 0
 10. If the update empties a declared dependency, or makes the route render empty, the load is **suspended**: nothing is requested, and the options, the selection and the cursor all survive
 
@@ -410,6 +439,7 @@ const error = ref<string | null>(null);
 
 - `isLoading`: `true` while a page fetch is in progress; shows a loading spinner in the `q-select`
 - `error`: the failure of the last request. A missing `route` is reported separately — see _Error Translation Keys_ — and the `#no-option` slot displays whichever of the two applies
+- While the first page waits for the opening (`loadOnOpen`) or loads, the `#no-option` slot shows a spinner: an empty list can therefore open, which is what starts the load with `loadOnOpen`
 
 ### Route Resolution
 
@@ -419,6 +449,8 @@ The `route` is a Nunjucks template rendered against the edited entity, exposed a
 { "route": "/api/organizations/{{ entity.organizationId }}/units" }
 ```
 
+- The variables of the `context` prop are available next to `entity` (`{ ...context, entity }`, a variable named `entity` being hidden), and a dependency path can point into them (`item.id`); a context change that changes the rendered route reloads the options like an entity change
+- With `templateEntity`, the templates read it as `entity` instead of the edited entity, which still holds the value of the field
 - A route without `{{` is used as-is
 - It is rendered from the **first render onwards**: the field never guesses whether the entity is loaded yet, which is why `routeDependencies` exists — see _Declaring the interpolated values is the integrator's responsibility_
 - A template that has not resolved renders empty, and the load simply suspends. Only a `route` missing from `inputSettings` is reported as an error.
@@ -569,7 +601,7 @@ option.disable = option.value !== presetValue && renderString(optionDisabled, co
 - The three templates share one context: the element itself, with the edited entity exposed as `entity` — e.g. `{{ hasItem(entity.members, 'id', id) }}` disables the members already assigned. An element carrying its own `entity` property shadows it
 - A disabled option stays listed but cannot be selected: Quasar skips it on click and keyboard navigation
 - `optionLabel` and `optionValue` are not required: `optionDisabled` alone switches the element to the rendered form, keeping its `label` and `value`
-- The **preset option is never disabled**: the value the entity holds from outside the field — the one loaded with it, as opposed to one picked in the dropdown — stays selectable whatever its template says, so the user can always come back to it after choosing another option. A route change drops it along with the selection
+- The **preset options are never disabled**: the values the entity holds from outside the field — the ones loaded with it, as opposed to those picked in the dropdown — stay selectable whatever their template says, so the user can always come back to them after choosing other options. A route change drops them along with the selection
 - The options **follow the entity**: whenever it changes, the loaded elements are rendered again, so a template reading another form field, such as a member added in the same form, disables or re-enables options already loaded. The pagination is untouched
 - A template that **fails to render** is reported through `validation.dynamicList.fetchError`, like a failed request: the page is not appended and the next scroll requests it again. A failure while rendering the loaded elements again keeps the options as they were
 
@@ -728,6 +760,27 @@ With the translation:
 
 - Every account found in `entity.members` is listed greyed out, with the caption under its label
 - Removing `disabledText` keeps the accounts disabled but renders the list on one line per option, as before
+
+### Multiple Selection Example
+
+```ts
+const definition = {
+  name: 'roleIds',
+  input: 'DynamicList',
+  type: 'Array',
+  required: false,
+  inputSettings: {
+    route: '/api/roles',
+    optionLabel: '{{ name }}',
+    optionValue: '{{ id }}',
+    multiple: true,
+  },
+};
+```
+
+- An entity holding `{ roleIds: [1, 2] }` shows the two roles as chips, read as `['1', '2']` like the option values
+- Each preset value gets a placeholder until its option is loaded, and keeps its option enabled under `optionDisabled`
+- Clearing the selection, or a route change, sets the value to `[]`
 
 ### Templated Route Example
 

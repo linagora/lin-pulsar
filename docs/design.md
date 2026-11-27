@@ -1272,7 +1272,8 @@ disabled through `inputSettings.optionDisabled`; the caption itself is styled by
       "q-item-label": {},
       "disabled-caption": {
         "q-item-label": { "caption": true, "class": "text-negative" }
-      }
+      },
+      "no-option": { "q-item-section": {} }
     }
   }
 }
@@ -1317,6 +1318,44 @@ the field namespace.
   }
 }
 ```
+
+---
+
+### EntityAttributeGroupedDynamicListField
+
+One multi-select dynamic list per item of a collection of the entity, wrapped in a `q-field`. The list of each item is
+a nested `EntityAttributeDynamicListField` named `field`, whose entries (`q-select`, `q-item`, `disabled-caption`...)
+sit under `field`.
+
+**Namespace:** `{uiNamespace}.{FIELD_NAME}`
+
+```json
+{
+  "[PARENT_NAMESPACE]": {
+    "[FIELD_NAME]": {
+      "q-field": { "borderless": true },
+      "list": { "q-list": {} },
+      "item": { "q-item": {} },
+      "item-section": { "q-item-section": {} },
+      "item-label": { "q-item-label": {} },
+      "item-caption": { "q-item-label": { "caption": true } },
+      "field-section": { "q-item-section": {} },
+      "empty": { "q-item": {} },
+      "empty-avatar": { "q-item-section": {} },
+      "empty-icon": { "q-icon": { "name": "info" } },
+      "empty-message": { "q-item-section": {} },
+      "field": {
+        "q-select": { "dense": true, "outlined": true }
+      }
+    }
+  }
+}
+```
+
+Notes:
+
+- `item-caption` is a caption and `empty-icon` shows `info` by default: both are only replaced when the
+  configuration sets them.
 
 ---
 

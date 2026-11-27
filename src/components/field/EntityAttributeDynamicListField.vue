@@ -41,9 +41,12 @@
     option-value="value"
     emit-value
     map-options
+    :multiple="isMultiple"
+    :use-chips="isMultiple"
     :rules="rules"
     :loading="isLoading"
     @virtual-scroll="onVirtualScroll"
+    @popup-show="onPopupShow"
     @update:model-value="updateValue"
   >
     <template
@@ -64,13 +67,30 @@
         </q-item-section>
       </q-item>
     </template>
+    <!-- While the first page waits for the opening or loads, the slot lets the empty list open; once
+         loaded, it says that the list is empty when the field has a noOption translation. -->
     <template
-      v-if="displayedError"
+      v-if="displayedError || isWaitingForOpening || isLoading || noOptionText"
       #no-option
     >
       <q-item>
-        <q-item-section class="text-negative">
+        <q-item-section
+          v-if="displayedError"
+          class="text-negative"
+        >
           {{ displayedError }}
+        </q-item-section>
+        <q-item-section
+          v-else-if="isWaitingForOpening || isLoading"
+          class="items-center"
+        >
+          <q-spinner />
+        </q-item-section>
+        <q-item-section
+          v-else
+          v-bind="uiProps.noOption"
+        >
+          {{ noOptionText }}
         </q-item-section>
       </q-item>
     </template>
@@ -97,10 +117,9 @@ import { useApiEndpointContext } from '../../composables/useApiEndpointContext';
 import { getDynamicListPage } from '../../services/dynamicListService';
 import { useRouteDependencies } from '../../composables/useRouteDependencies';
 import type {
-  AttributeFieldProps,
   DynamicListElement,
+  DynamicListFieldProps,
   EntityAttributeFieldOutputs,
-  FieldDynamicListSettings,
 } from '../../types/field';
 
 /** Payload received from the Quasar virtual scroll event. */
@@ -125,12 +144,10 @@ interface PagedFetch {
   hasPendingRequest: boolean;
 }
 
-const props = withDefaults(
-  defineProps<AttributeFieldProps<FieldDynamicListSettings>>(),
-  {
-    ignoreRules: false,
-  }
-);
+const props = withDefaults(defineProps<DynamicListFieldProps>(), {
+  ignoreRules: false,
+  context: () => ({}),
+});
 const emits = defineEmits<EntityAttributeFieldOutputs>();
 const localI18nScope = `${props.i18nScope}.fields.${props.definition.name}`;
 
@@ -148,25 +165,137 @@ let currentFetch: PagedFetch | null = null;
 let requestedRoute: string | null = null;
 /** The elements the options are rendered from, kept so they can be rendered again when the entity changes. */
 let loadedElements: DynamicListElement[] = [];
+/**
+ * Whether the first page waits for the list to be opened (`loadOnOpen`): true until the first opening, so that a form
+ * repeating the field does not send one request per field when it opens.
+ */
+const isWaitingForOpening = ref(
+  Boolean(props.definition.inputSettings?.loadOnOpen)
+);
 
 const pageSize = computed(() => props.definition.inputSettings?.size ?? 20);
 
 /**
+ * The numbers read as strings by `toOptionValue`, by string: the selection is emitted with them, so that a numeric
+ * identifier keeps its type in the entity whether it was picked or left as it was.
+ */
+const numericValues = new Map<string, number>();
+
+/**
  * Converts a number to a string: q-select compares the model with the option values strictly, and a rendered template
- * is always a string.
+ * is always a string. The number is remembered, to be emitted back as a number.
  * @param value - The value of the entity or of a fetched element.
  * @returns The value, a number as a string, `null` when unset.
  */
 function toOptionValue(value: unknown): unknown {
-  return typeof value === 'number' ? String(value) : (value ?? null);
+  if (typeof value === 'number') {
+    numericValues.set(String(value), value);
+    return String(value);
+  }
+  return value ?? null;
+}
+
+/** A template made of a single lookup, such as `{{ id }}`, capturing the path it reads. */
+const SINGLE_LOOKUP = /^\{\{\s*([\w$.]+)\s*\}\}$/;
+
+/**
+ * Renders the `optionValue` template of an element. When the template is a single lookup of a number,
+ * the number is remembered, to be emitted back as a number like the values `toOptionValue` reads.
+ * @param template - The `optionValue` template.
+ * @param context - The context of the element.
+ * @returns The rendered option value.
+ */
+function renderOptionValue(
+  template: string,
+  context: Record<string, unknown>
+): string {
+  const rendered = renderString(template, context);
+  const path = SINGLE_LOOKUP.exec(template.trim())?.[1];
+  const lookedUp = path ? getNestedValue(context, path) : undefined;
+
+  if (typeof lookedUp === 'number' && String(lookedUp) === rendered) {
+    numericValues.set(rendered, lookedUp);
+  }
+  return rendered;
+}
+
+/**
+ * Reads an option value back as the value it was converted from: a number read as a string is a number again.
+ * @param value - An option value of the select.
+ * @returns The value to store in the entity.
+ */
+function toEntityOptionValue(value: unknown): unknown {
+  return typeof value === 'string' && numericValues.has(value)
+    ? numericValues.get(value)
+    : value;
+}
+
+/** Whether several options can be selected, the value then being an array of option values. */
+const isMultiple = computed(() =>
+  Boolean(props.definition.inputSettings?.multiple)
+);
+
+/**
+ * Reads a value of the entity as the value of the select: an array of option values with `multiple`, an empty array
+ * when unset, a single option value otherwise.
+ * @param value - The value of the entity.
+ * @returns The value of the select.
+ */
+function toFieldValue(value: unknown): unknown {
+  if (!isMultiple.value) {
+    return toOptionValue(value);
+  }
+  if (value == null) {
+    return [];
+  }
+  return (Array.isArray(value) ? value : [value]).map(toOptionValue);
+}
+
+/**
+ * Reads a value of the select as the value to store in the entity, each number read as a string being a number again.
+ * @param value - The value of the select.
+ * @returns The value of the entity.
+ */
+function toEntityValue(value: unknown): unknown {
+  return Array.isArray(value)
+    ? value.map(toEntityOptionValue)
+    : toEntityOptionValue(value);
+}
+
+/**
+ * Lists the option values held by a value of the select, whether it is single or multiple.
+ * @param value - The value of the select.
+ * @returns The option values, empty when nothing is selected.
+ */
+function toValueList(value: unknown): unknown[] {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  return value == null ? [] : [value];
+}
+
+/**
+ * Tells whether two values of the select hold the same option values, in the same order.
+ * @param value - A value of the select.
+ * @param other - Another value of the select.
+ * @returns True when they hold the same option values.
+ */
+function isSameValue(value: unknown, other: unknown): boolean {
+  const values = toValueList(value);
+  const others = toValueList(other);
+
+  return (
+    values.length === others.length &&
+    values.every((item, index) => item === others[index])
+  );
 }
 
 const localValue = ref(
-  toOptionValue(getNestedValue(props.entity, props.definition.name))
+  toFieldValue(getNestedValue(props.entity, props.definition.name))
 );
 /**
- * The value the entity holds from outside the field, as opposed to one picked in it: its option is
- * never disabled, so the user can always come back to it after choosing another one.
+ * The value the entity holds from outside the field, as opposed to one picked in it: its options are
+ * never disabled, so the user can always come back to them after choosing others.
  */
 let presetValue = localValue.value;
 
@@ -178,6 +307,10 @@ const uiProps = {
   item: ui<LinPulsarQItemProps>(localUiNamespace, 'q-item'),
   section: ui<LinPulsarQItemSectionProps>(localUiNamespace, 'q-item-section'),
   label: ui<LinPulsarQItemLabelProps>(localUiNamespace, 'q-item-label'),
+  noOption: ui<LinPulsarQItemSectionProps>(
+    `${localUiNamespace}.no-option`,
+    'q-item-section'
+  ),
   /** A caption by default: the design configuration can still turn it into any other label style. */
   disabledCaption: {
     caption: true,
@@ -187,6 +320,9 @@ const uiProps = {
     ),
   },
 };
+
+/** The message of a loaded list without option, empty when the field has no `noOption` translation. */
+const noOptionText = computed(() => translateOrDefault('', 'noOption'));
 
 /** The caption of a disabled option, empty when the field has no `disabledText` translation. */
 const disabledText = computed(() => translateOrDefault('', 'disabledText'));
@@ -205,8 +341,14 @@ const rules = computed(() =>
     : []
 );
 
-/** The context the route template and the dependency paths are both resolved against. */
-const renderContext = computed(() => ({ entity: props.entity }));
+/**
+ * The context the route template and the dependency paths are both resolved against: the context
+ * variables, and the entity, which a variable cannot hide.
+ */
+const renderContext = computed(() => ({
+  ...props.context,
+  entity: props.templateEntity ?? props.entity,
+}));
 
 const { areRouteDependenciesSatisfied: areDependenciesSatisfied } =
   useRouteDependencies(
@@ -235,16 +377,33 @@ const isDisabled = computed(
     !areDependenciesSatisfied.value
 );
 
+/**
+ * Tells whether a list waiting for its opening loads at once: a disabled list is never opened, so it
+ * loads as soon as it holds preset values to label, whether at mount or once the entity is loaded.
+ * @returns True when the list must load without waiting for its opening.
+ */
+function isLoadedAtOnceWhileDisabled(): boolean {
+  return (
+    isWaitingForOpening.value &&
+    isDisabled.value &&
+    toValueList(localValue.value).length > 0
+  );
+}
+
 watch(
   () => getNestedValue(props.entity, props.definition.name),
   (newValue) => {
-    const value = toOptionValue(newValue);
+    const value = toFieldValue(newValue);
     // A selection made here comes back through the parent already equal to `localValue`: only a
     // value set from outside, such as the entity once loaded, becomes the preset.
-    if (value !== localValue.value) {
+    if (!isSameValue(value, localValue.value)) {
       presetValue = value;
     }
     localValue.value = value;
+    if (currentFetch && isLoadedAtOnceWhileDisabled()) {
+      isWaitingForOpening.value = false;
+      loadFirstPage(currentFetch);
+    }
   }
 );
 
@@ -258,7 +417,7 @@ watch(
     cancelFetch();
     if (requestedRoute !== null) {
       clearSelection();
-      presetValue = null;
+      presetValue = toFieldValue(null);
       loadedElements = [];
       allOptions.value = [];
     }
@@ -273,22 +432,66 @@ watch(
     };
     currentFetch = pagedFetch;
 
-    await fetchPage();
-    if (isStale(pagedFetch) || error.value) {
+    if (isLoadedAtOnceWhileDisabled()) {
+      isWaitingForOpening.value = false;
+    }
+    if (isWaitingForOpening.value) {
+      // The preset values keep their placeholder until the list is opened and loaded.
+      ensurePresetValueInOptions();
       return;
     }
-    ensurePresetValueInOptions();
+    await loadFirstPage(pagedFetch);
   },
   { immediate: true }
 );
 
-// The templates read the entity: a change of another field, such as a member added in the same
-// form, can disable or re-enable options already loaded.
-watch(() => props.entity, refreshOptions, { deep: true });
+// The templates read the entity and the context: a change of another field, such as a member added
+// in the same form, can disable or re-enable options already loaded.
+watch(
+  [() => props.entity, () => props.templateEntity, () => props.context],
+  refreshOptions,
+  {
+    deep: true,
+  }
+);
 
 // Leaving the page is one more way for a fetch to become useless: abort it instead of paying for a
 // response nobody will read.
 onBeforeUnmount(cancelFetch);
+
+/**
+ * Loads the first page of a fetch, then gives a placeholder to each preset value it does not hold.
+ * @param pagedFetch - The fetch to load, the current one.
+ */
+async function loadFirstPage(pagedFetch: PagedFetch) {
+  await fetchPage();
+  if (isStale(pagedFetch) || error.value) {
+    return;
+  }
+  ensurePresetValueInOptions();
+}
+
+/**
+ * Loads the first page when the list is opened for the first time, with `loadOnOpen`. Any later
+ * route change then loads at once, like without it. A first page that failed is requested again on
+ * each opening: without option, no scroll could request it.
+ */
+async function onPopupShow() {
+  const pagedFetch = currentFetch;
+  const hasFirstPageFailed =
+    pagedFetch !== null &&
+    pagedFetch.nextPage === 0 &&
+    !pagedFetch.hasPendingRequest &&
+    error.value !== null;
+
+  if (!isWaitingForOpening.value && !hasFirstPageFailed) {
+    return;
+  }
+  isWaitingForOpening.value = false;
+  if (pagedFetch) {
+    await loadFirstPage(pagedFetch);
+  }
+}
 
 /**
  * Whether a fetch was replaced while it was awaiting, which makes its outcome no longer applicable.
@@ -299,12 +502,12 @@ function isStale(pagedFetch: PagedFetch): boolean {
   return pagedFetch !== currentFetch;
 }
 
-/** Drops the selected value and the entity's, since it belongs to a route that no longer applies. */
+/** Drops the selected values and the entity's, since they belong to a route that no longer applies. */
 function clearSelection() {
-  if (localValue.value === null) {
+  if (toValueList(localValue.value).length === 0) {
     return;
   }
-  localValue.value = null;
+  localValue.value = toFieldValue(null);
   updateValue();
 }
 
@@ -405,7 +608,8 @@ function refreshOptions() {
 /**
  * Maps a fetched element to a dropdown option. When the `optionLabel`, `optionValue` or
  * `optionDisabled` settings are configured, they are rendered as Nunjucks templates with the
- * element as context and the edited entity as `entity`, allowing the field to consume any
+ * element as context, the edited entity as `entity` and the variables of the `context` prop, the
+ * element winning over them, allowing the field to consume any
  * paginated entity endpoint. Otherwise the element is used as-is, its numeric value read as a string.
  * @param element - The element fetched from the backend.
  * @returns The dropdown option.
@@ -418,20 +622,21 @@ function toOption(element: DynamicListElement): DynamicListElement {
     return { ...element, value: toOptionValue(element.value) as string };
   }
 
-  // The element wins over `entity`: an element carrying an `entity` property keeps its own.
-  const context = { entity: props.entity, ...element };
+  // The element wins over `entity` and the context: an element carrying an `entity` property keeps
+  // its own.
+  const context = { ...renderContext.value, ...element };
   const option: DynamicListElement = {
     label: optionLabel ? renderString(optionLabel, context) : element.label,
     value: optionValue
-      ? renderString(optionValue, context)
+      ? renderOptionValue(optionValue, context)
       : (toOptionValue(element.value) as string),
   };
 
   if (optionDisabled) {
     // A template renders to a string: only the literal `true` disables, anything else keeps the
-    // option selectable. The preset option is exempt, so it can always be picked again.
+    // option selectable. The preset options are exempt, so they can always be picked again.
     option.disable =
-      option.value !== presetValue &&
+      !toValueList(presetValue).includes(option.value) &&
       renderString(optionDisabled, context).trim() === 'true';
   }
 
@@ -439,45 +644,36 @@ function toOption(element: DynamicListElement): DynamicListElement {
 }
 
 /**
- * Ensures the entity's preset value is represented in the options list.
- * If the value is not found among loaded options, a placeholder entry is
+ * Ensures every selected value is represented in the options list.
+ * For each value not found among loaded options, a placeholder entry is
  * prepended so that q-select can display the value instead of showing
  * an empty or raw string.
  */
 function ensurePresetValueInOptions() {
-  if (localValue.value == null) {
-    return;
-  }
-  const found = allOptions.value.some(
-    (option) => option.value === localValue.value
-  );
-  if (!found) {
-    allOptions.value.unshift({
-      label: String(localValue.value),
-      value: String(localValue.value),
-    });
+  for (const value of toValueList(localValue.value)) {
+    const found = allOptions.value.some((option) => option.value === value);
+    if (!found) {
+      allOptions.value.unshift({ label: String(value), value: String(value) });
+    }
   }
 }
 
 /**
- * Removes the placeholder entry once the real option has been loaded.
+ * Removes the placeholder entries once their real options have been loaded.
  * A placeholder is identified as a duplicate entry where label equals value.
  */
 function removePlaceholderIfResolved() {
-  if (localValue.value == null) {
-    return;
-  }
-  const matchingEntries = allOptions.value.filter(
-    (option) => option.value === localValue.value
-  );
-  if (matchingEntries.length > 1) {
-    const placeholderIndex = allOptions.value.findIndex(
-      (option) =>
-        option.value === localValue.value &&
-        option.label === String(localValue.value)
+  for (const value of toValueList(localValue.value)) {
+    const matchingEntries = allOptions.value.filter(
+      (option) => option.value === value
     );
-    if (placeholderIndex !== -1) {
-      allOptions.value.splice(placeholderIndex, 1);
+    if (matchingEntries.length > 1) {
+      const placeholderIndex = allOptions.value.findIndex(
+        (option) => option.value === value && option.label === String(value)
+      );
+      if (placeholderIndex !== -1) {
+        allOptions.value.splice(placeholderIndex, 1);
+      }
     }
   }
 }
@@ -496,12 +692,17 @@ function onVirtualScroll(payload: VirtualScrollPayload) {
 }
 
 /**
- * Emits an 'update:entity' event with the updated entity object when the selection changes.
+ * Emits an 'update:entity' event with the updated entity object when the selection changes, each
+ * numeric value being emitted as a number.
  */
 function updateValue() {
   emits(
     'update:entity',
-    setNestedValue(props.entity, props.definition.name, localValue.value)
+    setNestedValue(
+      props.entity,
+      props.definition.name,
+      toEntityValue(localValue.value)
+    )
   );
 }
 </script>

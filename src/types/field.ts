@@ -343,7 +343,8 @@ export interface FieldDynamicListSettings extends FieldSettings {
    * Nunjucks template rendered with each fetched element as context, the edited entity being
    * available as `entity`, to build the option value (e.g. "{{ id }}"). When omitted, the element
    * `value` property is used. The rendered value is a string: an entity value given as a number,
-   * such as an integer identifier, is read as a string to match its option.
+   * such as an integer identifier, is read as a string to match its option, and emitted back as a
+   * number, like a number a template made of a single lookup (`{{ id }}`) renders.
    */
   optionValue?: string;
 
@@ -351,10 +352,26 @@ export interface FieldDynamicListSettings extends FieldSettings {
    * Nunjucks template rendered with each fetched element as context, the edited entity being
    * available as `entity` (e.g. "{{ disabled }}" or "{{ hasItem(entity.members, 'id', id) }}").
    * The option is disabled only when it renders to `true`: it stays listed but cannot be selected.
-   * The options are rendered again whenever the entity changes, and the option holding the value
-   * the entity was given is never disabled, so it can always be picked again.
+   * The options are rendered again whenever the entity changes, and the options holding the values
+   * the entity was given are never disabled, so they can always be picked again.
    */
   optionDisabled?: string;
+
+  /**
+   * When `true`, several options can be selected, shown as chips: the value is an array of option
+   * values, an empty array when nothing is selected, and every value the entity was given keeps its
+   * option enabled. `false` by default.
+   */
+  multiple?: boolean;
+
+  /**
+   * When `true`, the first page is requested when the list is opened for the first time instead of
+   * on mount, so that a form repeating the field does not send one request per field when it opens.
+   * The preset values keep a placeholder until then, and a later route change loads at once. A
+   * disabled list loads as soon as it holds preset values, since it is never opened.
+   * Read once, when the field is mounted. `false` by default.
+   */
+  loadOnOpen?: boolean;
 
   /**
    * Controls uniqueness validation for this field.
@@ -365,6 +382,50 @@ export interface FieldDynamicListSettings extends FieldSettings {
    * - When `false` or omitted: no uniqueness validation is performed.
    */
   unique?: boolean;
+}
+
+/**
+ * Props of the dynamic list field: those of every attribute field, plus a context and an entity for
+ * its templates.
+ */
+export interface DynamicListFieldProps extends AttributeFieldProps<FieldDynamicListSettings> {
+  /**
+   * Variables merged into the Nunjucks context of the `route`, `routeDependencies`, `optionLabel`,
+   * `optionValue` and `optionDisabled` templates, next to `entity`, which a variable cannot hide
+   * (e.g. `{ item }` for a list repeated per item of a collection). A fetched element wins over them
+   * in the option templates.
+   */
+  context?: Record<string, unknown>;
+  /**
+   * Entity the templates read as `entity`, the edited `entity` by default: a field editing a copy
+   * holding only its value can keep the templates on the whole entity. It wins over a `context`
+   * variable named `entity`.
+   */
+  templateEntity?: Record<string, unknown>;
+}
+
+/**
+ * Settings for fields assigning a multiple selection of a dynamic list to each item of a collection
+ * held by the entity.
+ */
+export interface FieldGroupedDynamicListSettings extends FieldSettings {
+  /** Dot-notation path of the collection in the entity (e.g. `teams`). */
+  items: string;
+  /** Property of an item identifying it, copied into the stored value. Defaults to `id`. */
+  itemKey?: string;
+  /** Property holding the item key in each entry of the stored value. Defaults to `id`. */
+  keyProperty?: string;
+  /** Property holding the selected values in each entry of the stored value. Defaults to `values`. */
+  valuesProperty?: string;
+  /** Nunjucks template of the item label, rendered with `{ entity, item }`. */
+  itemLabel: string;
+  /** Nunjucks template of the item caption, rendered with `{ entity, item }`. */
+  itemCaption?: string;
+  /**
+   * Settings of the dynamic list rendered for each item, always with `multiple`: its templates are
+   * rendered with the item as `item`, next to `entity`.
+   */
+  field: FieldDynamicListSettings;
 }
 
 /**
