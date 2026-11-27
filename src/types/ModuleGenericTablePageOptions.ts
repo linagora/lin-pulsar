@@ -53,6 +53,23 @@ export interface GenericTableColumn
 }
 
 /**
+ * Initial sort of a generic table, kept until the user sorts a column.
+ */
+export interface GenericTableDefaultSort {
+  /**
+   * Column sent to the backend as the sort column, in the `sort=<sortBy>,<direction>` query parameter.
+   * The table header shows it as sorted when it matches the `name` of a sortable column.
+   */
+  sortBy: string;
+
+  /**
+   * Whether the sort is descending (`true`) or ascending (`false`).
+   * @default false
+   */
+  descending?: boolean;
+}
+
+/**
  * Configuration options for a generic table page.
  *
  * Defines how a table-based page is rendered, including its columns,
@@ -69,6 +86,14 @@ export interface ModuleGenericTablePageOptions extends ModulePageOptions {
    * Each column should follow Quasar's QTableColumn definition.
    */
   columns: GenericTableColumn[];
+
+  /**
+   * Initial sort of the table, kept until the user sorts a column.
+   *
+   * Optional. When omitted, no `sort` query parameter is sent until the user sorts a column, and the
+   * backend applies its own default order.
+   */
+  defaultSort?: GenericTableDefaultSort;
 
   /**
    * Whether the actions card should be displayed on the page.

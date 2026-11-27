@@ -32,6 +32,7 @@ The component is driven by `ModuleGenericTablePageOptions`:
 interface ModuleGenericTablePageOptions {
   idKey: string;
   columns: GenericTableColumn[];
+  defaultSort?: GenericTableDefaultSort;
   enableActions: boolean;
   enableSeeButton?: boolean;
   creationPagePath: string;
@@ -39,20 +40,26 @@ interface ModuleGenericTablePageOptions {
   filters?: LinPulsarFilter[];
   reloadTableOn?: string[];
 }
+
+interface GenericTableDefaultSort {
+  sortBy: string;
+  descending?: boolean; // defaults to false (ascending)
+}
 ```
 
 ### **Options**
 
-| Option             | Type                   | Description                                                                                                                          |
-| ------------------ | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `idKey`            | `string`               | Key used to identify each row and build detail routes                                                                                |
-| `columns`          | `GenericTableColumn[]` | Table column definitions (extends Quasar QTableColumn with formatting options)                                                       |
-| `enableActions`    | `boolean`              | Enables or disables the actions card above the table                                                                                 |
-| `enableSeeButton`  | `boolean`              | Optional. Shows the per-row "see" button unless explicitly set to `false`                                                            |
-| `creationPagePath` | `string`               | Route path used for the "create" button navigation. Supports Nunjucks template interpolation with the `params` and `query` variables |
-| `keepQueryParams`  | `string[]`             | Optional. URL query parameter keys to preserve as-is when the active filters are synced to the URL                                   |
-| `filters`          | `LinPulsarFilter[]`    | Optional. Filter definitions rendered by `LinPulsarSmartFilter`. Omitted or empty disables the smart filter                          |
-| `reloadTableOn`    | `string[]`             | Optional. UI event keys (from the `uiEventSubject` bus) triggering a reload of the table data (see [Data Loading](#data-loading))    |
+| Option             | Type                      | Description                                                                                                                                |
+| ------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `idKey`            | `string`                  | Key used to identify each row and build detail routes                                                                                      |
+| `columns`          | `GenericTableColumn[]`    | Table column definitions (extends Quasar QTableColumn with formatting options)                                                             |
+| `defaultSort`      | `GenericTableDefaultSort` | Optional. Initial sort of the table, kept until the user sorts a column. Without it, no `sort` parameter is sent (see [Sorting](#sorting)) |
+| `enableActions`    | `boolean`                 | Enables or disables the actions card above the table                                                                                       |
+| `enableSeeButton`  | `boolean`                 | Optional. Shows the per-row "see" button unless explicitly set to `false`                                                                  |
+| `creationPagePath` | `string`                  | Route path used for the "create" button navigation. Supports Nunjucks template interpolation with the `params` and `query` variables       |
+| `keepQueryParams`  | `string[]`                | Optional. URL query parameter keys to preserve as-is when the active filters are synced to the URL                                         |
+| `filters`          | `LinPulsarFilter[]`       | Optional. Filter definitions rendered by `LinPulsarSmartFilter`. Omitted or empty disables the smart filter                                |
+| `reloadTableOn`    | `string[]`                | Optional. UI event keys (from the `uiEventSubject` bus) triggering a reload of the table data (see [Data Loading](#data-loading))          |
 
 ---
 
@@ -239,6 +246,33 @@ The component supports full server-side pagination:
 Columns marked as `sortable: true` can be sorted by clicking their header.
 
 Each click cycles through: **No sort → Ascending → Descending → No sort**.
+
+The sort is sent to the backend as a single `sort=<column>,<asc|desc>` query parameter, where `<column>` is the `name`
+of the sorted column. When no column is sorted, no `sort` parameter is sent and the backend applies its own default
+order.
+
+### **Default sort**
+
+`defaultSort` sorts the table from its first request, and shows the sorted column as such in the table header. It is
+kept by the following requests (page change, filters, `reloadTableOn`) until the user sorts a column:
+
+```json
+"defaultSort": {
+  "sortBy": "updateDate",
+  "descending": true
+}
+```
+
+- `sortBy` is sent as is as the sort column. The table header only shows it as sorted when it matches the `name` of a
+  column marked as `sortable: true`.
+- `descending` is optional and defaults to `false` (ascending).
+- Once the user sorts a column, the selected sort replaces the default sort.
+- When a click clears the sort, no `sort` parameter is sent: the default sort is only applied again when the page is
+  displayed again. A click on the column of the default sort continues its cycle from the default direction: with
+  `"descending": true`, the first click on this column already clears the sort.
+
+> **Migration**: without `defaultSort`, the first request was previously sorted by `updateDate` descending. A table
+> relying on this order must now declare the `defaultSort` above.
 
 ---
 

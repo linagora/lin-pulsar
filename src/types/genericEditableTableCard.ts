@@ -26,7 +26,10 @@
 
 import type { LinPulsarAttributeConfiguration } from '@linagora/lin-pulsar-core';
 import type { CommonComponentProps } from './common';
-import type { GenericTableColumn } from './ModuleGenericTablePageOptions';
+import type {
+  GenericTableColumn,
+  GenericTableDefaultSort,
+} from './ModuleGenericTablePageOptions';
 
 /**
  * API endpoints used by the GenericEditableTableCard component.
@@ -94,6 +97,14 @@ export interface GenericEditableTableCardProps extends CommonComponentProps {
    * the per-row delete button.
    */
   columns: GenericTableColumn[];
+
+  /**
+   * Initial sort of the table, kept until the user sorts a column.
+   *
+   * Optional. When omitted, no `sort` query parameter is sent until the user sorts a column, and the
+   * backend applies its own default order.
+   */
+  defaultSort?: GenericTableDefaultSort;
 
   /**
    * Form fields rendered in the creation and edition form dialogs, defined as an array of
