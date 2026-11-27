@@ -76,6 +76,8 @@ When the user selects a filter in the left column, the editor on the right displ
 
 Switching from one filter to another always resets the editor to its initial state, even if both filters share the same type.
 
+The `date` panel emits the date in its display mask (`maskI18NKey`, then `mask`, then `YYYY/MM/DD` by default), followed by a time (e.g. `2026/11/25 00:00:00`). The backend must parse it with a matching pattern: in a [GenericTablePage](../../pages/GenericTablePage.md#date-filters), set the `dateFormat` option of the page when a date filter uses another mask than the default one.
+
 ---
 
 ## **Event Flow**
@@ -250,6 +252,8 @@ const filterSet = [new LinPulsarFilterSet('id', 'label', [])];
   />
 </template>
 ```
+
+> **Note:** the `createdAt` filter takes its mask from the `application.dateFormat` translation. The `dateFormat` sent to the backend must match it (see [Filter Type → Panel Mapping](#filter-type--panel-mapping)).
 
 > **Note:** `LinPulsarFilter` auto-generates a stable `id` via `crypto.randomUUID()` at construction time. Define the filter instances once (outside `setup` or in a constant) to prevent `id` regeneration on every render — each active filter chip is keyed by `id`, so regeneration would cause the chip list to unnecessarily re-render.
 
