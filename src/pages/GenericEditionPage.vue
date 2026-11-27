@@ -204,7 +204,7 @@ import {
   useScopedI18n,
   useUiDesign,
 } from '@linagora/lin-pulsar-core';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ButtonsCard from '../components/card/ButtonsCard.vue';
 import EntityAttributeField from '../components/field/EntityAttributeField.vue';
@@ -231,6 +231,8 @@ const options = computed(() => moduleConfig.value.options);
 
 const entity = ref<Record<string, unknown>>({});
 const isLoading = ref(false);
+// A load may end after the page is left (another entity, another module): it must then neither notify nor navigate.
+let isUnmounted = false;
 
 const { t, te } = useScopedI18n(i18nScope.value);
 const { Notify } = useNotify();
@@ -310,7 +312,8 @@ function goBack() {
 }
 
 /**
- * Loads the entity data based on the route identifier. On failure, notifies the user and navigates back.
+ * Loads the entity data based on the route identifier. On failure, notifies the user and navigates back, unless the
+ * page was left meanwhile.
  */
 async function loadData() {
   isLoading.value = true;
@@ -321,6 +324,10 @@ async function loadData() {
       apiEndpointContext.value
     );
   } catch {
+    if (isUnmounted) {
+      return;
+    }
+
     Notify({
       type: 'negative',
       message: t('error'),
@@ -333,6 +340,10 @@ async function loadData() {
 
 onMounted(() => {
   loadData();
+});
+
+onUnmounted(() => {
+  isUnmounted = true;
 });
 </script>
 

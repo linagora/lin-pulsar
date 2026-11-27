@@ -157,6 +157,10 @@ templated endpoint (encoding of the values) are described in the
 [entity service documentation](https://github.com/linagora/lin-pulsar-core/blob/main/docs/services.md#templated-endpoint)
 of `lin-pulsar-core`. A plain `apiEndpoint` is used as is.
 
+The identifier of a parent resource belongs in the path parameters, not in the query string: the layout mounts the
+page again when its path changes, not when only its query string does (see [BaseLayout](layouts/BaseLayout.md)), so an
+`apiEndpoint` reading the query string is not loaded again when only the query string changes.
+
 The path options are rendered with the same `params` and `query`, built by the `useRoutePathContext` composable:
 each value is URI-encoded, so that it stays a single segment of the rendered path. The `apiEndpoint` context of
 `useApiEndpointContext` is not encoded, the entity service of `lin-pulsar-core` encoding it itself.

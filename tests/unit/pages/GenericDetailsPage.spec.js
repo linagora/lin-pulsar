@@ -269,5 +269,23 @@ describe('Test component: GenericDetailsPage', () => {
 
       expect(mockSubscription.unsubscribe).toHaveBeenCalled();
     });
+
+    it('should neither notify nor navigate when the load fails after the page is left', async () => {
+      let rejectLoad;
+      vi.mocked(getEntityById).mockReturnValueOnce(
+        new Promise((_, reject) => {
+          rejectLoad = reject;
+        })
+      );
+      wrapper = mountPage();
+
+      wrapper.unmount();
+      rejectLoad(new Error('boom'));
+      await flushPromises();
+
+      expect(mockNotify).not.toHaveBeenCalled();
+      expect(mockRouterPush).not.toHaveBeenCalled();
+      expect(mockRouterBack).not.toHaveBeenCalled();
+    });
   });
 });

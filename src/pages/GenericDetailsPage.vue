@@ -228,6 +228,8 @@ const { renderString } = useNunjucks();
 const entity = ref<Record<string, unknown> | null>(null);
 const isLoading = ref<boolean>(false);
 let eventSubscription: Subscription;
+// A load may end after the page is left (another entity, another module): it must then neither notify nor navigate.
+let isUnmounted = false;
 
 const uiProps = computed(() => ({
   editButton: ui<LinPulsarQBtnProps>(
@@ -238,7 +240,7 @@ const uiProps = computed(() => ({
 
 /**
  * Loads the entity data based on the route identifier. On failure, notifies the user and navigates
- * back.
+ * back, unless the page was left meanwhile.
  */
 async function loadData() {
   isLoading.value = true;
@@ -249,6 +251,10 @@ async function loadData() {
       apiEndpointContext.value
     );
   } catch {
+    if (isUnmounted) {
+      return;
+    }
+
     Notify({
       type: 'negative',
       message: t('error'),
@@ -310,6 +316,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  isUnmounted = true;
   eventSubscription?.unsubscribe();
 });
 </script>

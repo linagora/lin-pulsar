@@ -80,10 +80,11 @@
     </q-header>
 
     <q-page-container>
+      <!-- A module declares one page: its path only changes with its parameters, which name another entity. -->
       <router-view v-slot="{ Component, route }">
         <component
           :is="Component"
-          :key="(route.meta.instanceId as string | undefined) ?? route.path"
+          :key="route.path"
         />
       </router-view>
     </q-page-container>
