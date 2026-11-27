@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.9](https://github.com/linagora/lin-pulsar/compare/v0.3.8...v0.3.9) (2026-11-27)
+
+
+### Bug Fixes
+
+* mount the page again when the path of its route changes ([e43f444](https://github.com/linagora/lin-pulsar/commit/e43f4446f3c8a5d1517ca6eca081ff7683e6ba44))
+
 ### [0.3.8](https://github.com/linagora/lin-pulsar/compare/v0.3.7...v0.3.8) (2026-11-24)
 
 
