@@ -37,22 +37,24 @@ interface ModuleGenericTablePageOptions {
   creationPagePath: string;
   keepQueryParams?: string[];
   filters?: LinPulsarFilter[];
+  dateFormat?: string;
   reloadTableOn?: string[];
 }
 ```
 
 ### **Options**
 
-| Option             | Type                   | Description                                                                                                                          |
-| ------------------ | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `idKey`            | `string`               | Key used to identify each row and build detail routes                                                                                |
-| `columns`          | `GenericTableColumn[]` | Table column definitions (extends Quasar QTableColumn with formatting options)                                                       |
-| `enableActions`    | `boolean`              | Enables or disables the actions card above the table                                                                                 |
-| `enableSeeButton`  | `boolean`              | Optional. Shows the per-row "see" button unless explicitly set to `false`                                                            |
-| `creationPagePath` | `string`               | Route path used for the "create" button navigation. Supports Nunjucks template interpolation with the `params` and `query` variables |
-| `keepQueryParams`  | `string[]`             | Optional. URL query parameter keys to preserve as-is when the active filters are synced to the URL                                   |
-| `filters`          | `LinPulsarFilter[]`    | Optional. Filter definitions rendered by `LinPulsarSmartFilter`. Omitted or empty disables the smart filter                          |
-| `reloadTableOn`    | `string[]`             | Optional. UI event keys (from the `uiEventSubject` bus) triggering a reload of the table data (see [Data Loading](#data-loading))    |
+| Option             | Type                   | Description                                                                                                                                                |
+| ------------------ | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `idKey`            | `string`               | Key used to identify each row and build detail routes                                                                                                      |
+| `columns`          | `GenericTableColumn[]` | Table column definitions (extends Quasar QTableColumn with formatting options)                                                                             |
+| `enableActions`    | `boolean`              | Enables or disables the actions card above the table                                                                                                       |
+| `enableSeeButton`  | `boolean`              | Optional. Shows the per-row "see" button unless explicitly set to `false`                                                                                  |
+| `creationPagePath` | `string`               | Route path used for the "create" button navigation. Supports Nunjucks template interpolation with the `params` and `query` variables                       |
+| `keepQueryParams`  | `string[]`             | Optional. URL query parameter keys to preserve as-is when the active filters are synced to the URL                                                         |
+| `filters`          | `LinPulsarFilter[]`    | Optional. Filter definitions rendered by `LinPulsarSmartFilter`. Omitted or empty disables the smart filter                                                |
+| `dateFormat`       | `string`               | Optional. Value of the `dateFormat` query parameter sent with active `date` filters. Defaults to `yyyy/MM/dd HH:mm:ss` (see [Date filters](#date-filters)) |
+| `reloadTableOn`    | `string[]`             | Optional. UI event keys (from the `uiEventSubject` bus) triggering a reload of the table data (see [Data Loading](#data-loading))                          |
 
 ---
 
@@ -255,6 +257,41 @@ Rendered only when `options.filters` is provided and non-empty.
   4. `loadData()` is called, sending the active filters as a query filter (built by `toQueryFilter`) to `getEntities`
 
 Each active filter is serialized to a query param using `filter.toString()`, keyed by `filter.name`. See `useLinPulsarFilterUrl` in `@linagora/lin-pulsar-core` for the exact URL format, and [LinPulsarSmartFilter](../components/smart-filter/LinPulsarSmartFilter.md) for the filtering UI and supported filter types.
+
+### **Date filters**
+
+A `date` filter sends the date as typed in its panel, in the panel mask (`maskI18NKey`, then `mask`, then the default
+`YYYY/MM/DD`), followed by a time: `2026/11/25 00:00:00_bt_2026/11/25 23:59:59` for the "equals" operator. To let the
+backend parse these values, the request also carries a `dateFormat` query parameter, **only when at least one active
+filter is of type `date`**. Without an active date filter, the request carries only the filters and the pagination
+parameters.
+
+Its value is `options.dateFormat`, or `yyyy/MM/dd HH:mm:ss` when the option is not set, which matches the default mask.
+When a date filter declares another mask, set `dateFormat` to the same pattern followed by ` HH:mm:ss`, in the date
+pattern syntax of the backend:
+
+```json
+{
+  "options": {
+    "dateFormat": "dd/MM/yyyy HH:mm:ss",
+    "filters": [
+      {
+        "name": "createdAt",
+        "type": "date",
+        "options": { "fieldName": "createdAt", "mask": "DD/MM/YYYY" },
+        "values": []
+      }
+    ]
+  }
+}
+```
+
+The request then is `?createdAt=25/11/2026 00:00:00_bt_25/11/2026 23:59:59&dateFormat=dd/MM/yyyy HH:mm:ss`.
+
+> **Limits:** `dateFormat` is a single value for the whole page, so all the date filters of a page must share the same
+> mask. A mask read from a `maskI18NKey` translated differently in each language cannot be matched by a fixed
+> `dateFormat`. Filter values are also kept in the URL and in the saved favorites in the configured mask: changing the
+> mask or `dateFormat` afterwards makes these values unreadable by the backend.
 
 ---
 
